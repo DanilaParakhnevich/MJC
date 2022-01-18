@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'demo.StringUtils'
+    }
+    baseName 'utils'
+    version '1.3.5'
+    extension = 'jar'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+dependencies {
+    implementation 'io.github.schorcher.stringInterpolator:JavaStringInterpolator:0.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+}
+
+test {
+    useJUnitPlatform()
+}
