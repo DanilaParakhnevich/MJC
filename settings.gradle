@@ -1,2 +1,3 @@
 rootProject.name = 'SecondModule'
+include 'gifts_logic'
 
