@@ -5,14 +5,14 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="certificate" class="by.parakhnevich.logic.bean.Certificate"/>
+    <bean id="certificate" class="com.epam.esm.bean.Certificate" scope="prototype"/>
 
-    <bean id="tag" class="by.parakhnevich.logic.bean.Tag" />
+    <bean id="tag" class="com.epam.esm.bean.Tag" scope="prototype"/>
 
     <bean id = "dataSource"
-          class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
+          class = "com.zaxxer.hikari.HikariDataSource">
         <property name = "driverClassName" value = "org.postgresql.Driver"/>
-        <property name = "url" value = "jdbc:postgresql://localhost:5432/postgres"/>
+        <property name = "jdbcUrl" value = "jdbc:postgresql://localhost:5432/postgres"/>
         <property name = "username" value = "postgres"/>
         <property name = "password" value = "molotok5074344"/>
     </bean>

@@ -1,6 +1,6 @@
-package by.parakhnevich.logic.dao;
+package com.epam.esm.dao;
 
-import by.parakhnevich.logic.bean.Entity;
+import com.epam.esm.bean.Entity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;

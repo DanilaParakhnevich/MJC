@@ -1,8 +1,8 @@
-package by.parakhnevich.logic.dao.impl;
+package com.epam.esm.dao.impl;
 
-import by.parakhnevich.logic.bean.Tag;
-import by.parakhnevich.logic.dao.DAO;
-import by.parakhnevich.logic.dao.mapper.TagMapper;
+import com.epam.esm.bean.Tag;
+import com.epam.esm.dao.DAO;
+import com.epam.esm.dao.mapper.TagMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;

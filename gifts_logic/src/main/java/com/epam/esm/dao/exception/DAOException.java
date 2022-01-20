@@ -1,4 +1,4 @@
-package by.parakhnevich.logic.dao.exception;
+package com.epam.esm.dao.exception;
 
 public class DAOException extends Exception{
     public DAOException() {

@@ -1,4 +1,4 @@
-package by.parakhnevich.logic.bean;
+package com.epam.esm.bean;
 
 import java.util.ArrayList;
 import java.util.List;
