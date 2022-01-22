@@ -3,7 +3,6 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.bean.Certificate;
 import com.epam.esm.dao.CertificateDAO;
 import com.epam.esm.dao.mapper.CertificateMapper;
-import com.epam.esm.dao.mapper.TagMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
