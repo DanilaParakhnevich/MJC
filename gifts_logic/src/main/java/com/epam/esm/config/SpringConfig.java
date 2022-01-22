@@ -17,12 +17,11 @@ public class SpringConfig {
             new ClassPathXmlApplicationContext("beans.xml");
     @Bean
     public DataSource dataSource () {
-        System.out.println(2);
         return (HikariDataSource) context.getBean("dataSource");
     }
 
     @Bean
-    JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 }
