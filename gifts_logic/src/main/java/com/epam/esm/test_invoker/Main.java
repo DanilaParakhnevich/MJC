@@ -1,15 +1,17 @@
 package com.epam.esm.test_invoker;
 
-import com.epam.esm.bean.Tag;
+import com.epam.esm.bean.Certificate;
 import com.epam.esm.config.SpringConfig;
-import com.epam.esm.dao.impl.TagDAOImpl;
+import com.epam.esm.dao.CertificateDAO;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.text.ParseException;
 
 public class Main {
-    public static void main(String[] args) {
-        Tag tag = new Tag();
-        tag.setId(1);
-        tag.setName("xixixi");
-        SpringConfig config = new SpringConfig();
-        System.out.println(new TagDAOImpl(config.jdbcTemplate(config.dataSource())).delete(tag));
+    public static void main(String[] args) throws ParseException {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        CertificateDAO dao = context.getBean(CertificateDAO.class);
+        System.out.println(dao.findAll());
     }
 }
+

@@ -15,9 +15,9 @@ public abstract class TagDAO extends DAO{
 
     public abstract Optional<Tag> findById(long id);
 
-    public abstract List<Tag> findAll();
+    public abstract Optional<Tag> findByName(String name);
 
-    public abstract boolean update (Tag tag);
+    public abstract List<Tag> findAll();
 
     public abstract boolean delete (Tag tag);
 }

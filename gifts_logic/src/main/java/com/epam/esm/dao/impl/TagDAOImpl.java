@@ -1,24 +1,25 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.bean.Tag;
-import com.epam.esm.dao.DAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.mapper.TagMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class TagDAOImpl extends TagDAO {
     private static final String ADD_TAG = "insert into tag (name) values (?)";
     private static final String FIND_BY_ID = "select * from tag where id = ?";
+    private static final String FIND_BY_NAME = "select * from tag where name = ?";
     private static final String FIND_ALL = "select * from tag";
-    private static final String UPDATE_TAG = "update tag set name = ? where id = ?";
     private static final String DELETE_TAG = "delete from tag where id = ?";
     private static final TagMapper TAG_MAPPER = new TagMapper();
 
 
-    public TagDAOImpl(JdbcTemplate jdbcTemplate) {
+    TagDAOImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
@@ -35,13 +36,14 @@ public class TagDAOImpl extends TagDAO {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(FIND_ALL, TAG_MAPPER);
+    public Optional<Tag> findByName(String name) {
+        return Optional.ofNullable(jdbcTemplate
+                .queryForObject(FIND_BY_NAME, new Object[]{name},TAG_MAPPER));
     }
 
     @Override
-    public boolean update(Tag tag) {
-        return jdbcTemplate.update(UPDATE_TAG, tag.getName(), tag.getId()) >= 1;
+    public List<Tag> findAll() {
+        return jdbcTemplate.query(FIND_ALL, TAG_MAPPER);
     }
 
     @Override

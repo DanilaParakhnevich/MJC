@@ -1,9 +1,14 @@
 package com.epam.esm.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
+@Scope(scopeName = "prototype")
 public class Certificate implements Entity{
     private long id;
     private String name;

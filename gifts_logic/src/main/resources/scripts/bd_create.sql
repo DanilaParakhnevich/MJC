@@ -1,15 +1,15 @@
 drop table certificate_by_tag;
+drop table tag;
 drop table gift_certificate;
 
 create table if not exists gift_certificate (id bigserial primary key,
                                name varchar (50),
                                description varchar (250),
-                               price money,
+                               price double precision,
                                duration int,
                                create_date timestamp,
                                last_update_date timestamp);
 
-drop table tag;
 
 create table if not exists tag (id bigserial primary key,
                     name varchar (35));
