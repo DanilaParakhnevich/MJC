@@ -1,3 +1,5 @@
 rootProject.name = 'SecondModule'
-include 'gifts_logic'
+include 'service'
+include 'dao'
+include 'controller'
 
