@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 @Component
 @Scope("singleton")
-public class CertificateMapper implements RowMapper<CertificateEntity> {
+public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
     private static final String TIME_ZONE = "UTC";
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm'Z'";
 
