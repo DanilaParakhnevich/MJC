@@ -4,6 +4,7 @@ import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.exception.ServiceException;
 
 import java.util.List;
 
@@ -12,9 +13,11 @@ public interface CertificateService extends Service{
 
     List<CertificateClientModel> findAll();
 
-    CertificateClientModel findCertificateById();
+    CertificateClientModel findCertificateById(long id) throws ServiceException;
 
-    CertificateClientModel findByTagName(String tagName);
+    List<CertificateClientModel> findByName(String name);
 
-    boolean removeTag(TagClientModel tag, long certificateId);
+    CertificateClientModel findByTag(TagEntity tag) throws ServiceException;
+
+    boolean removeAllTagsByCertificateId(long id);
 }

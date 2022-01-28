@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Mapper
 @Component
-public interface TagMapper {
+public interface TagClientModelMapper {
 
-    TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
+    TagClientModelMapper INSTANCE = Mappers.getMapper(TagClientModelMapper.class);
     @Mappings({
             @Mapping(source = "id",target = "id"),
             @Mapping(source = "name",target = "name"),

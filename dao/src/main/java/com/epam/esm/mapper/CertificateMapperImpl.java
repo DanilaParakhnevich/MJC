@@ -28,8 +28,8 @@ public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
         certificate.setDescription(rs.getString("description"));
         certificate.setPrice(rs.getDouble("price"));
         certificate.setDuration(rs.getLong("duration"));
-        certificate.setCreateDate(df.format(rs.getString("create_date")));
-        certificate.setLastUpdateDate(df.format(rs.getString("last_update_date")));
+        certificate.setCreateDate(rs.getString("create_date"));
+        certificate.setLastUpdateDate(rs.getString("last_update_date"));
         return certificate;
     }
 }

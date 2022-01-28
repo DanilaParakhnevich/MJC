@@ -3,6 +3,7 @@ package com.epam.esm;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.exception.ServiceException;
+import com.epam.esm.validator.exception.ValidatorException;
 
 import java.util.List;
 

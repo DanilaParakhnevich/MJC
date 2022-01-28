@@ -2,8 +2,8 @@ package com.epam.esm.impl;
 
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDAO;
+import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.CertificateMapperImpl;
-import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,31 +15,31 @@ import java.util.*;
 
 @Component
 @Scope("singleton")
-public class CertificateDAOImpl extends CertificateDAO {
+public class CertificateDAOImpl implements CertificateDAO {
     private static final String ADD_CERTIFICATE = "insert into gift_certificate " +
             "(name, description, price, duration, create_date, last_update_date)" +
             " values (?, ?, ?, ?, ?, ?)";
     private static final String ADD_TAG_TO_CERTIFICATE = "insert into certificate_by_tag (id_certificate, id_tag)" +
             " values (?, ?)";
-    private static final String FIND_BY_ID = "select * from certificate where id = ?";
-    private static final String FIND_BY_NAME = "select * from certificate where name like CONCAT('%', ?, '%')";
-    private static final String FIND_ALL = "select * from certificate";
-    private static final String UPDATE_CERTIFICATE = "update certificate set name = ?, description = ?, " +
+    private static final String FIND_BY_ID = "select * from gift_certificate where id = ?";
+    private static final String FIND_BY_NAME = "select * from gift_certificate where name like CONCAT('%', ?, '%')";
+    private static final String FIND_BY_TAG = "select * from gift_certificate" +
+            " join certificate_by_tag on gift_certificate.id = certificate_by_tag.id_certificate" +
+            " join tag on certificate_by_tag.id_tag = tag.id where tag.id = ?";
+    private static final String FIND_ALL = "select * from gift_certificate";
+    private static final String UPDATE_CERTIFICATE = "update gift_certificate set name = ?, description = ?, " +
             "price = ?, duration = ?, create_date = ?, last_update_date = ? where id = ?";
-    private static final String DELETE_TAG = "delete from certificate where id = ?";
+    private static final String DELETE_CERTIFICATE = "delete from gift_certificate where id = ?";
     private static final String DELETE_TAGS_BY_CERTIFICATE = "delete from certificate_by_tag where certificate_id = ?";
     private static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm";
     private static final String DATA_PATTERN = "\\+0([0-9]){1}\\:00";
     private static final long DAY_IN_MILLISECONDS = 86400000;
     private static final SimpleDateFormat ISO_8601_DATE_FORMAT
             = new SimpleDateFormat(ISO8601_PATTERN, Locale.getDefault());
-    @Autowired()
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private CertificateMapperImpl mapper;
-
-
-    CertificateDAOImpl(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
-    }
 
     @Override
     public Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException {
@@ -64,6 +64,12 @@ public class CertificateDAOImpl extends CertificateDAO {
     }
 
     @Override
+    public Optional<CertificateEntity> findByTag(TagEntity tag) {
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(FIND_BY_TAG, mapper, tag.getId()));
+    }
+
+    @Override
     public List<CertificateEntity> findAll() {
         return jdbcTemplate.query(FIND_ALL, mapper);
     }
@@ -78,7 +84,7 @@ public class CertificateDAOImpl extends CertificateDAO {
 
     @Override
     public boolean delete(CertificateEntity certificate) {
-        return jdbcTemplate.update(DELETE_TAG, certificate.getId()) == 1;
+        return jdbcTemplate.update(DELETE_CERTIFICATE, certificate.getId()) == 1;
     }
 
     @Override
@@ -100,5 +106,9 @@ public class CertificateDAOImpl extends CertificateDAO {
 
     public void setMapper(CertificateMapperImpl mapper) {
         this.mapper = mapper;
+    }
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 }

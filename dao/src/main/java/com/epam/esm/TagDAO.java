@@ -6,18 +6,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class TagDAO extends DAO {
-    protected TagDAO(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
-    }
+public interface TagDAO extends DAO {
+    Optional<TagEntity> add(TagEntity tag);
 
-    public abstract Optional<TagEntity> add(TagEntity tag);
+    Optional<TagEntity> findById(long id);
 
-    public abstract Optional<TagEntity> findById(long id);
+    List<TagEntity> findByCertificateId(long id);
 
-    public abstract Optional<TagEntity> findByName(String name);
+    Optional<TagEntity> findByName(String name);
 
-    public abstract List<TagEntity> findAll();
+    List<TagEntity> findAll();
 
-    public abstract boolean delete (TagEntity tag);
+    boolean delete (TagEntity tag);
 }
