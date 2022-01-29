@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.CertificateClientModel;
-import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.exception.ServiceException;
@@ -10,6 +9,8 @@ import java.util.List;
 
 public interface CertificateService extends Service{
     CertificateClientModel addCertificate(CertificateEntity certificate);
+
+    boolean addTagToCertificate(long certificateId, long tagId);
 
     List<CertificateClientModel> findAll();
 

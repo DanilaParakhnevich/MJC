@@ -51,6 +51,11 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    public boolean addTagToCertificate(long certificateId, long tagId) {
+        return certificateDAO.addTagToCertificate(certificateId, tagId);
+    }
+
+    @Override
     public List<CertificateClientModel> findAll() {
         return certificateDAO.findAll().stream()
                 .map(a -> {
