@@ -8,30 +8,36 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+import static org.springframework.http.HttpStatus.*;
+
+@RestController()
 @RequestMapping("/tags")
 public class TagController {
     @Autowired
     private TagService tagService;
 
     @PostMapping
-    public boolean createTag(@RequestBody TagEntity tag) {
-        return tagService.addTag(tag) != null;
+    @ResponseStatus(CREATED)
+    public TagClientModel addCertificate(@RequestBody TagEntity tag) {
+        return tagService.add(tag);
     }
 
     @GetMapping
+    @ResponseStatus(OK)
     public List<TagClientModel> findAll() {
         return tagService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(OK)
     public TagClientModel findById(@PathVariable long id) {
         return tagService.findTagById(id);
     }
 
-    @DeleteMapping
-    public boolean deleteTag(@RequestBody TagEntity tag) {
-        return tagService.removeTag(tag);
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public boolean deleteTag(@PathVariable long id) {
+        return tagService.deleteById(id);
     }
 
     public void setTagService(TagService tagService) {

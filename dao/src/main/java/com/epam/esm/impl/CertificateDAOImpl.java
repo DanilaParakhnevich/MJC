@@ -2,7 +2,6 @@ package com.epam.esm.impl;
 
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDAO;
-import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.CertificateMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
@@ -25,17 +23,17 @@ public class CertificateDAOImpl implements CertificateDAO {
     private static final String FIND_BY_NAME = "select * from gift_certificate where name like CONCAT('%', ?, '%')";
     private static final String FIND_BY_TAG = "select * from gift_certificate" +
             " join certificate_by_tag on gift_certificate.id = certificate_by_tag.id_certificate" +
-            " join tag on certificate_by_tag.id_tag = tag.id where tag.id = ?";
+            " join tag on certificate_by_tag.id_tag = tag.id where tag.name = ?";
     private static final String FIND_ALL = "select * from gift_certificate";
     private static final String UPDATE_CERTIFICATE = "update gift_certificate set name = ?, description = ?, " +
             "price = ?, duration = ?, create_date = ?, last_update_date = ? where id = ?";
     private static final String DELETE_CERTIFICATE = "delete from gift_certificate where id = ?";
-    private static final String DELETE_TAGS_BY_CERTIFICATE = "delete from certificate_by_tag where certificate_id = ?";
-    private static final String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm";
-    private static final String DATA_PATTERN = "\\+0([0-9]){1}\\:00";
-    private static final long DAY_IN_MILLISECONDS = 86400000;
-    private static final SimpleDateFormat ISO_8601_DATE_FORMAT
-            = new SimpleDateFormat(ISO8601_PATTERN, Locale.getDefault());
+    private static final String DELETE_TAGS_BY_CERTIFICATE = "delete from certificate_by_tag" +
+            " where id_certificate = ?";
+    private static final String FIND_LAST_ADDED_CERTIFICATE = "select * from gift_certificate" +
+            " where id = (select MAX(id) from gift_certificate)";
+
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -46,16 +44,17 @@ public class CertificateDAOImpl implements CertificateDAO {
         return Optional.ofNullable(jdbcTemplate.update(ADD_CERTIFICATE,
                 certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(),
-                convertISO8601ToDate(certificate.getCreateDate()),
-                convertISO8601ToDate(certificate.getLastUpdateDate()))
-                == 1 ? certificate : null);
+                certificate.getCreateDate(), certificate.getLastUpdateDate())
+                == 1 ? findLastCertificate() : null);
     }
 
 
     @Override
     public Optional<CertificateEntity> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate
-                .queryForObject(FIND_BY_ID, mapper, id));
+        List<CertificateEntity> certificates = jdbcTemplate
+                .query(FIND_BY_ID, mapper, id);
+        return certificates.isEmpty() ? Optional.empty()
+                : Optional.ofNullable(certificates.get(0));
     }
 
     @Override
@@ -64,9 +63,8 @@ public class CertificateDAOImpl implements CertificateDAO {
     }
 
     @Override
-    public Optional<CertificateEntity> findByTag(TagEntity tag) {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(FIND_BY_TAG, mapper, tag.getId()));
+    public List<CertificateEntity> findByTagName(String name) {
+        return jdbcTemplate.query(FIND_BY_TAG, mapper, name);
     }
 
     @Override
@@ -78,13 +76,13 @@ public class CertificateDAOImpl implements CertificateDAO {
     public boolean update(CertificateEntity certificate) throws ParseException {
         return jdbcTemplate.update(UPDATE_CERTIFICATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
-                certificate.getDuration(), convertISO8601ToDate(certificate.getCreateDate()),
-                convertISO8601ToDate(certificate.getLastUpdateDate()), certificate.getId()) >= 1;
+                certificate.getDuration(), certificate.getCreateDate(),
+                certificate.getLastUpdateDate(), certificate.getId()) >= 1;
     }
 
     @Override
-    public boolean delete(CertificateEntity certificate) {
-        return jdbcTemplate.update(DELETE_CERTIFICATE, certificate.getId()) == 1;
+    public boolean deleteById(long id) {
+        return jdbcTemplate.update(DELETE_CERTIFICATE, id) == 1;
     }
 
     @Override
@@ -97,11 +95,8 @@ public class CertificateDAOImpl implements CertificateDAO {
         return jdbcTemplate.update(DELETE_TAGS_BY_CERTIFICATE, certificateId) >= 1;
     }
 
-    private Date convertISO8601ToDate(String iso8601Date) throws ParseException {
-        String date = iso8601Date.replaceAll(DATA_PATTERN, "+0$100");
-        Date parsedDate = ISO_8601_DATE_FORMAT.parse(date);
-        parsedDate.setTime(parsedDate.getTime() + DAY_IN_MILLISECONDS);
-        return parsedDate;
+    private CertificateEntity findLastCertificate() {
+        return jdbcTemplate.queryForObject(FIND_LAST_ADDED_CERTIFICATE, mapper);
     }
 
     public void setMapper(CertificateMapperImpl mapper) {

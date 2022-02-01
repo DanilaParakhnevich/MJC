@@ -4,13 +4,13 @@ import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.TagDAO;
 import com.epam.esm.TagService;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.mapper.TagClientModelMapper;
 import com.epam.esm.validator.TagValidator;
-import com.epam.esm.validator.exception.ValidatorException;
+import com.epam.esm.validator.exception.UnknownTagException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @Scope("singleton")
 public class TagServiceImpl implements TagService {
-    private static final String TAG_ID_INCORRECT = "Tag with this id is not exist";
-    private static final String TAG_NAME_INCORRECT = "Tag with this name is not exist";
+    private static final String NONEXISTENT_TAG = "nonexistent.tag";
     @Autowired
     private TagValidator validator;
     @Autowired
@@ -28,16 +27,20 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
-    public TagClientModel addTag(TagEntity tag) throws ServiceException {
-        try {
-            validator.validate(tag);
-            return tagDAO.add(tag).isPresent()
-                    ? TagClientModelMapper.INSTANCE.tagToTagClientModel(tag)
-                    : null;
+    public TagClientModel add(TagEntity tag) {
+        validator.validate(tag);
+        tagDAO.add(tag);
+        return TagClientModelMapper.INSTANCE
+                .tagToTagClientModel(tagDAO
+                        .findByName(tag.getName()).get());
+    }
+
+    @Override
+    public TagClientModel addIfNotExist(TagEntity tag) {
+        if (tag != null && !tagDAO.findByName(tag.getName()).isPresent()) {
+            return add(tag);
         }
-        catch (ValidatorException e) {
-            throw new ServiceException(e);
-        }
+        return tag != null ? findTagByName(tag.getName()) : null;
     }
 
     @Override
@@ -48,26 +51,30 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagClientModel findTagById(long id) throws ServiceException {
+    public TagClientModel findTagById(long id) {
         Optional<TagEntity> tag = tagDAO.findById(id);
         if (tag.isPresent()) {
             return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
         }
-        throw new ServiceException(TAG_ID_INCORRECT);
+        throw new UnknownTagException(NONEXISTENT_TAG);
     }
 
     @Override
-    public TagClientModel findTagByName(String name) throws ServiceException {
+    public TagClientModel findTagByName(String name) {
         Optional<TagEntity> tag = tagDAO.findByName(name);
         if (tag.isPresent()) {
             return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
         }
-        throw new ServiceException(TAG_NAME_INCORRECT);
+        throw new UnknownTagException(NONEXISTENT_TAG);
     }
 
     @Override
-    public boolean removeTag(TagEntity tag) {
-        return tagDAO.delete(tag);
+    @Transactional
+    public boolean deleteById(long id) {
+        if (tagDAO.findById(id).isPresent()) {
+            return tagDAO.delete(id);
+        }
+        throw new UnknownTagException(NONEXISTENT_TAG);
     }
 
     public void setValidator(TagValidator validator) {

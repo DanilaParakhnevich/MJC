@@ -2,23 +2,23 @@ package com.epam.esm;
 
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
-import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.ServiceException;
 
 import java.util.List;
 
 public interface CertificateService extends Service{
-    CertificateClientModel addCertificate(CertificateEntity certificate);
+    CertificateClientModel add(CertificateEntity certificate);
 
     boolean addTagToCertificate(long certificateId, long tagId);
 
     List<CertificateClientModel> findAll();
 
-    CertificateClientModel findCertificateById(long id) throws ServiceException;
+    CertificateClientModel findCertificateById(long id) ;
 
     List<CertificateClientModel> findByName(String name);
 
-    CertificateClientModel findByTag(TagEntity tag) throws ServiceException;
+    List<CertificateClientModel> findByTagName(String name) ;
 
-    boolean removeAllTagsByCertificateId(long id);
+    CertificateClientModel update (CertificateEntity certificate) ;
+
+    boolean deleteById(long id);
 }

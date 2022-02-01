@@ -14,13 +14,13 @@ public interface CertificateDAO extends DAO {
 
     List<CertificateEntity> findByNamePart(String namePart);
 
-    Optional<CertificateEntity> findByTag(TagEntity tag);
+    List<CertificateEntity> findByTagName(String name);
 
     List<CertificateEntity> findAll();
 
     boolean update (CertificateEntity certificate) throws ParseException;
 
-    boolean delete (CertificateEntity certificate);
+    boolean deleteById (long id);
 
     boolean addTagToCertificate(long certificateId, long tagId);
 

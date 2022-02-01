@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.entity.TagEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +16,5 @@ public interface TagDAO extends DAO {
 
     List<TagEntity> findAll();
 
-    boolean delete (TagEntity tag);
+    boolean delete (long id);
 }

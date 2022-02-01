@@ -2,19 +2,21 @@ package com.epam.esm;
 
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.exception.ServiceException;
-import com.epam.esm.validator.exception.ValidatorException;
+
+import com.epam.esm.validator.exception.UnknownTagException;
 
 import java.util.List;
 
 public interface TagService extends Service{
-    TagClientModel addTag(TagEntity tag) throws ServiceException;
+    TagClientModel add(TagEntity tag);
+
+    TagClientModel addIfNotExist(TagEntity tag);
 
     List<TagClientModel> findAll();
 
-    TagClientModel findTagById(long id) throws ServiceException;
+    TagClientModel findTagById(long id);
 
-    TagClientModel findTagByName(String name) throws ServiceException;
+    TagClientModel findTagByName(String name);
 
-    boolean removeTag(TagEntity tag);
+    boolean deleteById(long id) throws UnknownTagException;
 }

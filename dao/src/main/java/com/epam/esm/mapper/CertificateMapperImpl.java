@@ -7,29 +7,32 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Component
 @Scope("singleton")
 public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
-    private static final String TIME_ZONE = "UTC";
-    private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm'Z'";
-
     @Override
     public CertificateEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-        TimeZone tz = TimeZone.getTimeZone(TIME_ZONE);
-        DateFormat df = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-        df.setTimeZone(tz);
-
         CertificateEntity certificate = new CertificateEntity();
         certificate.setId(rs.getLong("id"));
+        certificate.setName(rs.getString("name"));
         certificate.setDescription(rs.getString("description"));
         certificate.setPrice(rs.getDouble("price"));
         certificate.setDuration(rs.getLong("duration"));
-        certificate.setCreateDate(rs.getString("create_date"));
-        certificate.setLastUpdateDate(rs.getString("last_update_date"));
+        certificate.setCreateDate(dateToLocalDateTime(rs.getDate("create_date")));
+        certificate.setLastUpdateDate(dateToLocalDateTime(rs.getDate("last_update_date")));
         return certificate;
     }
+
+    private LocalDateTime dateToLocalDateTime(Date date) {
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
 }
+
