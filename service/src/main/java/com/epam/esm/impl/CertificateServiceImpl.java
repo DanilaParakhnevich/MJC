@@ -7,6 +7,7 @@ import com.epam.esm.TagService;
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.handler.CertificateHandler;
 import com.epam.esm.mapper.CertificateClientModelMapper;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.DuplicateCertificateException;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -63,21 +65,22 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<CertificateClientModel> findAll() {
-        return certificateDAO.findAll()
+    public List<CertificateClientModel> findAll(Map<String, String> parameters) {
+        return sort(certificateDAO.findAll()
                 .stream()
                 .map(a -> {
                     a.setTags(tagDAO.findByCertificateId(a.getId()));
                     return CertificateClientModelMapper.INSTANCE
                             .certificateToCertificateClientModel(a);
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList()), parameters);
     }
 
     @Override
     public CertificateClientModel findCertificateById(long id) {
         Optional<CertificateEntity> certificate = certificateDAO.findById(id);
         if (certificate.isPresent()) {
-            certificate.get().setTags(tagDAO.findByCertificateId(certificate.get().getId()));
+            certificate.get().setTags(tagDAO
+                    .findByCertificateId(certificate.get().getId()));
             return CertificateClientModelMapper.INSTANCE
                     .certificateToCertificateClientModel(certificate.get());
         }
@@ -145,8 +148,16 @@ public class CertificateServiceImpl implements CertificateService {
 
     private void duplicateValidation(CertificateEntity certificate) {
         List<CertificateEntity> certificates = certificateDAO.findAll();
-        if (certificates.stream().anyMatch(a -> a.getName().equals(certificate.getName()))) {
+        if (certificates.stream()
+                .anyMatch(a -> a.getName().equals(certificate.getName()))) {
             throw new DuplicateCertificateException(DUPLICATE);
         }
+    }
+
+    private List<CertificateClientModel> sort(List<CertificateClientModel> certificates, Map<String, String> parameters) {
+        if (parameters != null) {
+            return CertificateHandler.sortByParameters(certificates, parameters);
+        }
+        return certificates;
     }
 }

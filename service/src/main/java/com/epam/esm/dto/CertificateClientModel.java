@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class CertificateClientModel implements ClientModel{
+public class CertificateClientModel implements ClientModel {
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm'Z'";
     private long id;
     private String name;

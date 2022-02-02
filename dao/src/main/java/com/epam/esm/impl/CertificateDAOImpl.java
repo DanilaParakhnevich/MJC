@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -41,6 +42,8 @@ public class CertificateDAOImpl implements CertificateDAO {
 
     @Override
     public Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException {
+        certificate.setCreateDate(LocalDateTime.now());
+        certificate.setLastUpdateDate(LocalDateTime.now());
         return Optional.ofNullable(jdbcTemplate.update(ADD_CERTIFICATE,
                 certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(),
@@ -74,6 +77,7 @@ public class CertificateDAOImpl implements CertificateDAO {
 
     @Override
     public boolean update(CertificateEntity certificate) throws ParseException {
+        certificate.setLastUpdateDate(LocalDateTime.now());
         return jdbcTemplate.update(UPDATE_CERTIFICATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
                 certificate.getDuration(), certificate.getCreateDate(),

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("singleton")
-public class TagValidator implements Validator<TagEntity>{
+public class TagValidator implements Validator<TagEntity> {
     private static final String INVALID_DATA = "invalid.tag";
     private static final String DUPLICATE = "duplicate.tag";
 

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 public interface TagClientModelMapper {
 
     TagClientModelMapper INSTANCE = Mappers.getMapper(TagClientModelMapper.class);
-    @Mappings({
+    @Mappings( {
             @Mapping(source = "id",target = "id"),
             @Mapping(source = "name",target = "name"),
-    })
+    } )
     TagClientModel tagToTagClientModel(TagEntity tag);
 }

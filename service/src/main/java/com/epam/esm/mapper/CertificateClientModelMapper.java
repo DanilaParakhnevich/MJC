@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface CertificateClientModelMapper {
     CertificateClientModelMapper INSTANCE = Mappers.getMapper(CertificateClientModelMapper.class);
-    @Mappings({
+    @Mappings( {
             @Mapping(source = "id",target = "id"),
             @Mapping(source = "name",target = "name"),
             @Mapping(source = "description",target = "description"),
@@ -19,6 +19,6 @@ public interface CertificateClientModelMapper {
             @Mapping(source = "createDate",target = "createDate"),
             @Mapping(source = "lastUpdateDate",target = "lastUpdateDate"),
             @Mapping(source = "tags", target = "tags")
-    })
+    } )
     CertificateClientModel certificateToCertificateClientModel(CertificateEntity certificate);
 }

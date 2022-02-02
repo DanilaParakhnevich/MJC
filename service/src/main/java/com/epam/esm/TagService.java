@@ -7,7 +7,7 @@ import com.epam.esm.validator.exception.UnknownTagException;
 
 import java.util.List;
 
-public interface TagService extends Service{
+public interface TagService extends Service {
     TagClientModel add(TagEntity tag);
 
     TagClientModel addIfNotExist(TagEntity tag);

@@ -5,7 +5,6 @@ import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +35,9 @@ public class TagDAOImpl implements TagDAO {
 
     @Override
     public Optional<TagEntity> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate
-                .queryForObject(FIND_BY_ID, new Object[]{id}, mapper));
+        List<TagEntity> tags = jdbcTemplate
+                .query(FIND_BY_ID, mapper, id);
+        return tags.isEmpty() ? Optional.empty() : Optional.ofNullable(tags.get(0));
     }
 
     @Override
@@ -47,12 +47,9 @@ public class TagDAOImpl implements TagDAO {
 
     @Override
     public Optional<TagEntity> findByName(String name) {
-        try {
-            return Optional.ofNullable(jdbcTemplate
-                    .queryForObject(FIND_BY_NAME, new Object[]{name}, mapper));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        List<TagEntity> tags = jdbcTemplate
+                .query(FIND_BY_NAME, mapper, name);
+        return tags.isEmpty() ? Optional.empty() : Optional.ofNullable(tags.get(0));
     }
 
     @Override

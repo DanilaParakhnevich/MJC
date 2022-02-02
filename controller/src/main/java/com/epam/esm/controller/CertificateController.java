@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/certificates")
@@ -25,8 +25,9 @@ public class CertificateController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public List<CertificateClientModel> findAll(){
-        return certificateService.findAll();
+    public List<CertificateClientModel> findAll
+            (@RequestParam(required = false) Map<String, String> parameters){
+        return certificateService.findAll(parameters);
     }
 
     @GetMapping("/id/{id}")
@@ -51,9 +52,10 @@ public class CertificateController {
     @ResponseStatus(OK)
     public CertificateClientModel update(@RequestBody CertificateEntity certificate) {
         return certificateService.update(certificate);
-    }// TODO: 2/1/2022 date
+    }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
     public boolean delete(@PathVariable long id) {
         return certificateService.deleteById(id);
     }
