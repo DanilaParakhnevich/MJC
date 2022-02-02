@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Scope("singleton")
 public class CertificateServiceImpl implements CertificateService {
     private static final String INVALID_DATE_FORMAT = "invalid.date.format";
-    private static final String UNKNOWN = "unknown.certificate";
+    private static final String UNKNOWN = "nonexistent.certificate";
     private static final String DUPLICATE = "duplicate.certificate";
     @Autowired
     private CertificateDAO certificateDAO;
@@ -84,7 +84,7 @@ public class CertificateServiceImpl implements CertificateService {
             return CertificateClientModelMapper.INSTANCE
                     .certificateToCertificateClientModel(certificate.get());
         }
-        throw new UnknownCertificateException(UNKNOWN);
+        throw new UnknownCertificateException(UNKNOWN + "/" + id);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class CertificateServiceImpl implements CertificateService {
             certificateDAO.deleteById(certificate.get().getId());
             return true;
         }
-        throw new UnknownCertificateException(UNKNOWN);
+        throw new UnknownCertificateException(UNKNOWN + "/" + id);
     }
 
     public void setCertificateValidator(CertificateValidator validator) {

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @Scope("singleton")
 public class TagServiceImpl implements TagService {
-    private static final String NONEXISTENT_TAG = "nonexistent.tag";
+    private static final String UNKNOWN = "nonexistent.tag";
     @Autowired
     private TagValidator validator;
     @Autowired
@@ -56,7 +56,7 @@ public class TagServiceImpl implements TagService {
         if (tag.isPresent()) {
             return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
         }
-        throw new UnknownTagException(NONEXISTENT_TAG);
+        throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TagServiceImpl implements TagService {
         if (tag.isPresent()) {
             return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
         }
-        throw new UnknownTagException(NONEXISTENT_TAG);
+        throw new UnknownTagException(UNKNOWN + "/name=" + name);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TagServiceImpl implements TagService {
         if (tagDAO.findById(id).isPresent()) {
             return tagDAO.delete(id);
         }
-        throw new UnknownTagException(NONEXISTENT_TAG);
+        throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
 
     public void setValidator(TagValidator validator) {
