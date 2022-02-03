@@ -5,13 +5,11 @@ import com.epam.esm.mapper.TagClientModelMapper;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.UnknownTagException;
-import config.TestConfig;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,14 +19,11 @@ import java.util.stream.Collectors;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagServiceTest {
-    AnnotationConfigApplicationContext context
-            = new AnnotationConfigApplicationContext(TestConfig.class);
     TagValidator validator;
     TagServiceImpl tagService;
     TagEntity tag;
     TagEntity addedTag;
 
-    List<TagEntity> tags;
     TagEntity firstTag;
     TagEntity secondTag;
 
@@ -40,7 +35,6 @@ class TagServiceTest {
         MockitoAnnotations.initMocks(this);
         tagService = new TagServiceImpl();
         validator = new TagValidator();
-        tagDAO.setJdbcTemplate((JdbcTemplate) context.getBean("testJdbcTemplate"));
         validator.setTagDAO(tagDAO);
         tagService.setValidator(validator);
         tagService.setTagDAO(tagDAO);
@@ -53,7 +47,6 @@ class TagServiceTest {
 
         firstTag = new TagEntity(3, "a");
         secondTag = new TagEntity(4, "b");
-        tags = Arrays.asList(firstTag, secondTag);
     }
     @Test
     void addTest() {
@@ -87,6 +80,7 @@ class TagServiceTest {
 
     @Test
     void findAllTest() {
+        List<TagEntity> tags = Arrays.asList(firstTag, secondTag);
         Mockito.when(tagDAO.findAll())
                 .thenReturn(tags);
         Assertions.assertEquals(tagService.findAll(),
@@ -128,7 +122,7 @@ class TagServiceTest {
     void deleteByIdTest() {
         Mockito.when(tagDAO.findById(5)).thenReturn(Optional.of(addedTag));
         Mockito.when(tagDAO.delete(5)).thenReturn(true);
-        Assertions.assertEquals(tagService.deleteById(5), true);
+        Assertions.assertTrue(tagService.deleteById(5));
     }
 
     @Test

@@ -25,10 +25,10 @@ public class TagValidator implements Validator<TagEntity> {
             throw new InvalidTagDataException(INVALID_DATA + "/tag=null");
         } else if (tag.getName() == null) {
             throw new BadNameException(BAD_NAME + "/name=null");
-        } else if (tagDAO.findByName(tag.getName()).isPresent()) {
-            throw new DuplicateTagException(DUPLICATE);
         } else if (tag.getName().length() == 0){
             throw new BadNameException(BAD_NAME + "/name's length=0");
+        } else if (tagDAO.findByName(tag.getName()).isPresent()) {
+            throw new DuplicateTagException(DUPLICATE);
         }
     }
 

@@ -5,13 +5,10 @@ import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.CertificateClientModelMapper;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.*;
-import config.TestConfig;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,8 +19,6 @@ import java.util.Optional;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateServiceTest {
-    AnnotationConfigApplicationContext context
-            = new AnnotationConfigApplicationContext(TestConfig.class);
     CertificateValidator certificateValidator;
     CertificateServiceImpl certificateService;
     CertificateEntity certificate;
@@ -43,7 +38,6 @@ class CertificateServiceTest {
     void init() {
         MockitoAnnotations.initMocks(this);
         certificateValidator = new CertificateValidator();
-        certificateDAO.setJdbcTemplate((JdbcTemplate) context.getBean("testJdbcTemplate"));
         certificateService = new CertificateServiceImpl();
         certificateService.setCertificateDAO(certificateDAO);
         certificateService.setValidator(certificateValidator);
@@ -81,14 +75,14 @@ class CertificateServiceTest {
     }
 
     @Test
-    void addTest1ForThrowing() throws ParseException {
+    void addTest1ForThrowing() {
         certificate.setName("");
         Assertions.assertThrows(BadNameException.class,
                 () -> certificateService.add(certificate));
     }
 
     @Test
-    void addTest2ForThrowing() throws ParseException {
+    void addTest2ForThrowing() {
         certificate.setPrice(0);
         Assertions.assertThrows(BadPriceException.class,
                 () -> certificateService.add(certificate));
@@ -114,7 +108,7 @@ class CertificateServiceTest {
     void addTagToCertificateTest() {
         Mockito.when(certificateDAO.addTagToCertificate(1, 1))
                 .thenReturn(true);
-        Assertions.assertEquals(certificateService.addTagToCertificate(1, 1), true);
+        Assertions.assertTrue(certificateService.addTagToCertificate(1, 1));
     }
 
     @Test
@@ -186,8 +180,7 @@ class CertificateServiceTest {
     void deleteByIdTest() {
         Mockito.when(certificateDAO.findById(addedCertificate.getId()))
                 .thenReturn(Optional.ofNullable(addedCertificate));
-        Assertions.assertEquals(certificateService.deleteById(addedCertificate.getId()),
-                true);
+        Assertions.assertTrue(certificateService.deleteById(addedCertificate.getId()));
     }
 
     @Test
