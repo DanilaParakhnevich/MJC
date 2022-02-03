@@ -38,7 +38,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Autowired
     private TagDAO tagDAO;
     @Autowired
-    TagService tagService;
+    private TagService tagService;
 
     @Override
     @Transactional
@@ -46,18 +46,20 @@ public class CertificateServiceImpl implements CertificateService {
         try {
             validator.validate(certificate);
             duplicateValidation(certificate);
-            CertificateEntity certificateEntity = certificateDAO.add(certificate).get();
-            if (certificate.getTags() != null) {
-                for (TagEntity tag : certificate.getTags()) {
+            CertificateEntity certificateEntity
+                    = findAvailable(certificateDAO.add(certificate).get());
+            if (certificateEntity.getTags() != null) {
+                for (TagEntity tag : certificateEntity.getTags()) {
                     addTagToCertificate(certificateEntity.getId(),
                             tagService.add(tag).getId());
                 }
             }
+            return CertificateClientModelMapper.INSTANCE
+                    .certificateToCertificateClientModel(certificateEntity);
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT, e);
         }
-        return CertificateClientModelMapper.INSTANCE
-                .certificateToCertificateClientModel(certificate);
+
     }
 
     @Override
@@ -153,14 +155,6 @@ public class CertificateServiceImpl implements CertificateService {
         throw new UnknownCertificateException(UNKNOWN + "/" + id);
     }
 
-    public void setCertificateValidator(CertificateValidator validator) {
-        this.validator = validator;
-    }
-
-    public void setCertificateDAO(CertificateDAO certificateDAO) {
-        this.certificateDAO = certificateDAO;
-    }
-
     private void duplicateValidation(CertificateEntity certificate) {
         List<CertificateEntity> certificates = certificateDAO.findAll();
         if (certificates.stream()
@@ -188,5 +182,21 @@ public class CertificateServiceImpl implements CertificateService {
             return CertificateHandler.sortByParameters(certificates, parameters);
         }
         return certificates;
+    }
+
+    public void setValidator(CertificateValidator validator) {
+        this.validator = validator;
+    }
+
+    public void setCertificateDAO(CertificateDAO certificateDAO) {
+        this.certificateDAO = certificateDAO;
+    }
+
+    public void setTagDAO(TagDAO tagDAO) {
+        this.tagDAO = tagDAO;
+    }
+
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
 }

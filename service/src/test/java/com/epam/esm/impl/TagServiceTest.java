@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 class TagServiceTest {
     AnnotationConfigApplicationContext context
             = new AnnotationConfigApplicationContext(TestConfig.class);
-    TagValidator validator = new TagValidator();
-    TagServiceImpl tagService = new TagServiceImpl();
+    TagValidator validator;
+    TagServiceImpl tagService;
     TagEntity tag;
     TagEntity addedTag;
 
@@ -38,6 +38,8 @@ class TagServiceTest {
     @BeforeAll
     void init() {
         MockitoAnnotations.initMocks(this);
+        tagService = new TagServiceImpl();
+        validator = new TagValidator();
         tagDAO.setJdbcTemplate((JdbcTemplate) context.getBean("testJdbcTemplate"));
         validator.setTagDAO(tagDAO);
         tagService.setValidator(validator);
