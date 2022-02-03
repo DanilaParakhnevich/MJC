@@ -125,7 +125,6 @@ public class CertificateServiceImpl implements CertificateService {
             certificateDAO.clearTagsByCertificate(finalCertificate.getId());
             if (finalCertificate.getTags() != null
                     && !finalCertificate.getTags().isEmpty()) {
-                certificateDAO.clearTagsByCertificate(finalCertificate.getId());
                 finalCertificate.getTags().forEach(a ->
                         certificateDAO.addTagToCertificate(finalCertificate.getId()
                                 ,tagService.addIfNotExist(a).getId()));
