@@ -16,6 +16,7 @@ import com.epam.esm.validator.exception.UnknownCertificateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
@@ -84,20 +85,26 @@ public class CertificateServiceImpl implements CertificateService {
             return CertificateClientModelMapper.INSTANCE
                     .certificateToCertificateClientModel(certificate.get());
         }
-        throw new UnknownCertificateException(UNKNOWN + "/" + id);
+        throw new UnknownCertificateException(UNKNOWN + "/id=" + id);
     }
 
     @Override
-    public List<CertificateClientModel> findByName(String name) {
-        return certificateDAO.findByNamePart(name).stream().map(a -> {
+    public List<CertificateClientModel> findByName(String name, Map<String, String> parameters) {
+        List<CertificateEntity> certificates = certificateDAO.findByNamePart(name);
+        if (certificates.isEmpty()) {
+            throw new UnknownCertificateException(UNKNOWN + "/name=" + name);
+        }
+        return sort(certificates.stream().map(a -> {
             a.setTags(tagDAO.findByCertificateId(a.getId()));
             return CertificateClientModelMapper.INSTANCE
                     .certificateToCertificateClientModel(a);
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()), parameters);
     }
 
     @Override
-    public List<CertificateClientModel> findByTagName(String name) {
+    public List<CertificateClientModel> findByTagName(
+            String name,
+            Map<String, String> parameters) {
         return certificateDAO.findByTagName(name).stream().map(a -> {
             a.setTags(tagDAO.findByCertificateId(a.getId()));
             return CertificateClientModelMapper.INSTANCE
@@ -106,25 +113,34 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public CertificateClientModel update(CertificateEntity certificate) {
         try {
             validator.validate(certificate);
-            certificateDAO.update(certificate);
-            certificateDAO.clearTagsByCertificate(certificate.getId());
-            if (certificate.getTags() != null && !certificate.getTags().isEmpty()) {
-                certificateDAO.clearTagsByCertificate(certificate.getId());
-                certificate.getTags().forEach(a ->
-                        certificateDAO.addTagToCertificate(certificate.getId()
+            CertificateEntity finalCertificate = findAvailable(certificate);
+            if (finalCertificate == null) {
+                throw new UnknownCertificateException(UNKNOWN);
+            }
+            certificateDAO.update(finalCertificate);
+            certificateDAO.clearTagsByCertificate(finalCertificate.getId());
+            if (finalCertificate.getTags() != null
+                    && !finalCertificate.getTags().isEmpty()) {
+                certificateDAO.clearTagsByCertificate(finalCertificate.getId());
+                finalCertificate.getTags().forEach(a ->
+                        certificateDAO.addTagToCertificate(finalCertificate.getId()
                                 ,tagService.addIfNotExist(a).getId()));
+                finalCertificate.setTags(
+                        tagDAO.findByCertificateId(finalCertificate.getId()));
             }
             return CertificateClientModelMapper
-                    .INSTANCE.certificateToCertificateClientModel(certificate);
+                    .INSTANCE.certificateToCertificateClientModel(finalCertificate);
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT);
         }
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public boolean deleteById(long id) {
         Optional<CertificateEntity> certificate = certificateDAO.findById(id);
         if (certificate.isPresent()) {
@@ -152,6 +168,20 @@ public class CertificateServiceImpl implements CertificateService {
                 .anyMatch(a -> a.getName().equals(certificate.getName()))) {
             throw new DuplicateCertificateException(DUPLICATE);
         }
+    }
+
+    private CertificateEntity findAvailable (CertificateEntity certificate) {
+        List<CertificateEntity> certificates = certificateDAO.findByNamePart(certificate.getName());
+        if (certificates.isEmpty()) {
+            return null;
+        }
+        CertificateEntity finalCertificate = certificates.stream()
+                .filter(a -> a.getName().equals(certificate.getName()))
+                .collect(Collectors.toList()).get(0);
+        if (certificate.getTags() != null) {
+            finalCertificate.setTags(certificate.getTags());
+        }
+        return finalCertificate;
     }
 
     private List<CertificateClientModel> sort(List<CertificateClientModel> certificates, Map<String, String> parameters) {

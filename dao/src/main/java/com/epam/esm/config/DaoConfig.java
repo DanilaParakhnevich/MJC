@@ -19,7 +19,6 @@ public class DaoConfig {
     @Autowired
     private Environment environment;
 
-
     @Bean
     public DataSource dataSource () {
         HikariConfig config = new HikariConfig();

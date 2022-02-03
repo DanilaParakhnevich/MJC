@@ -38,14 +38,18 @@ public class CertificateController {
 
     @GetMapping("/tag/{name}")
     @ResponseStatus(OK)
-    public List<CertificateClientModel> findByTagName(@PathVariable String name) {
-        return certificateService.findByTagName(name);
+    public List<CertificateClientModel> findByTagName(
+            @PathVariable String name,
+            @RequestParam(required = false) Map<String, String> parameters) {
+        return certificateService.findByTagName(name, parameters);
     }
 
     @GetMapping("/name/{name}")
     @ResponseStatus(OK)
-    public List<CertificateClientModel> findByName(@PathVariable String name) {
-        return certificateService.findByName(name);
+    public List<CertificateClientModel> findByName(
+            @PathVariable String name,
+            @RequestParam(required = false) Map<String, String> parameters) {
+        return certificateService.findByName(name, parameters);
     }
 
     @PutMapping

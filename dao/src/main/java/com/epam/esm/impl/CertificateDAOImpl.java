@@ -76,7 +76,7 @@ public class CertificateDAOImpl implements CertificateDAO {
     }
 
     @Override
-    public boolean update(CertificateEntity certificate) throws ParseException {
+    public boolean update(CertificateEntity certificate) {
         certificate.setLastUpdateDate(LocalDateTime.now());
         return jdbcTemplate.update(UPDATE_CERTIFICATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),

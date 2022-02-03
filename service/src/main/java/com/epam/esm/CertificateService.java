@@ -15,9 +15,9 @@ public interface CertificateService extends Service {
 
     CertificateClientModel findCertificateById(long id) ;
 
-    List<CertificateClientModel> findByName(String name);
+    List<CertificateClientModel> findByName(String name, Map<String, String> parameters);
 
-    List<CertificateClientModel> findByTagName(String name) ;
+    List<CertificateClientModel> findByTagName(String name, Map<String, String> parameters) ;
 
     CertificateClientModel update (CertificateEntity certificate) ;
 

@@ -30,7 +30,7 @@ public class WebExceptionHandler {
     public ResponseEntity<ErrorResponse> handle(InvalidTagDataException e) {
         return ResponseEntity.ok(new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.INVALID_TAG.getCode()),
-                translator.translate(e.getMessage())));
+                getFullMessage(e.getMessage())));
     }
 
     @ExceptionHandler(UnknownTagException.class)
@@ -53,7 +53,7 @@ public class WebExceptionHandler {
     public ResponseEntity<ErrorResponse> handle(InvalidCertificateDataException e) {
         return ResponseEntity.ok(new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.INVALID_CERTIFICATE.getCode()),
-                translator.translate(e.getMessage())));
+                getFullMessage(e.getMessage())));
     }
 
     @ExceptionHandler(UnknownCertificateException.class)
@@ -72,12 +72,52 @@ public class WebExceptionHandler {
                 translator.translate(e.getMessage())));
     }
 
+    @ExceptionHandler(BadNameException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handle(BadNameException e) {
+        return ResponseEntity.ok(new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
+                getFullMessage(e.getMessage())));
+    }
+
+    @ExceptionHandler(BadDurationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handle(BadDurationException e) {
+        return ResponseEntity.ok(new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
+                getFullMessage(e.getMessage())));
+    }
+
+    @ExceptionHandler(BadPriceException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handle(BadPriceException e) {
+        return ResponseEntity.ok(new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
+                getFullMessage(e.getMessage())));
+    }
+
+    @ExceptionHandler(BadDescriptionException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handle(BadDescriptionException e) {
+        return ResponseEntity.ok(new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
+                getFullMessage(e.getMessage())));
+    }
+
     @ExceptionHandler(BadParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle (BadParameterException e) {
         return ResponseEntity.ok(new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
                 translator.translate(e.getMessage())));
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handle (NumberFormatException e) {
+        return ResponseEntity.ok(new ErrorResponse(
+               HttpStatus.BAD_REQUEST.value(),
+                e.getMessage()));
     }
 
     private String getFullMessage(String errorMessage) {
@@ -88,12 +128,7 @@ public class WebExceptionHandler {
 
     private String getAdvanceToMessage(String partOfError) {
         String finalPart = partOfError.split("=")[0];
-        if (finalPart.equals("name")) {
-            finalPart = " (name = ";
-        }
-        else {
-            finalPart = "(id = ";
-        }
+        finalPart = "(" + finalPart + " = ";
         return " " + finalPart + partOfError.split("=")[1] + ")";
     }
 

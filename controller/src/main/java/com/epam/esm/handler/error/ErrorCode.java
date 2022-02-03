@@ -4,6 +4,7 @@ package com.epam.esm.handler.error;
 public enum ErrorCode {
     BAD_PARAM(31),
     INVALID_DATE_FORMAT(32),
+    BAD_VALUE(33),
 
 
 

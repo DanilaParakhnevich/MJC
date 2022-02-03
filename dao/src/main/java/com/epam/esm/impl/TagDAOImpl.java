@@ -30,7 +30,7 @@ public class TagDAOImpl implements TagDAO {
     @Override
     public Optional<TagEntity> add(TagEntity tag) {
         return Optional.ofNullable(jdbcTemplate.update(ADD_TAG, tag.getName()) == 1
-                        ? tag : null);
+                        ? findByName(tag.getName()).get() : null);
     }
 
     @Override
