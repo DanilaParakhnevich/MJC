@@ -58,8 +58,8 @@ local.properties
 # Logs
 *.log
 
-build
+build/
 
-.gradle
+.gradle/
 
-out
+out/
