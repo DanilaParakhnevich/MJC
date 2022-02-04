@@ -123,16 +123,7 @@ public class CertificateServiceImpl implements CertificateService {
             if (finalCertificate == null) {
                 throw new UnknownCertificateException(UNKNOWN);
             }
-            certificateDAO.update(finalCertificate);
-            certificateDAO.clearTagsByCertificate(finalCertificate.getId());
-            if (finalCertificate.getTags() != null
-                    && !finalCertificate.getTags().isEmpty()) {
-                finalCertificate.getTags().forEach(a ->
-                        certificateDAO.addTagToCertificate(finalCertificate.getId()
-                                ,tagService.addIfNotExist(a).getId()));
-                finalCertificate.setTags(
-                        tagDAO.findByCertificateId(finalCertificate.getId()));
-            }
+            updateTags(finalCertificate);
             return CertificateClientModelMapper
                     .INSTANCE.certificateToCertificateClientModel(finalCertificate);
         } catch (ParseException e) {
@@ -182,6 +173,19 @@ public class CertificateServiceImpl implements CertificateService {
             return CertificateHandler.sortByParameters(certificates, parameters);
         }
         return certificates;
+    }
+
+    private void updateTags(CertificateEntity certificate) throws ParseException {
+        certificateDAO.update(certificate);
+        certificateDAO.clearTagsByCertificate(certificate.getId());
+        if (certificate.getTags() != null
+                && !certificate.getTags().isEmpty()) {
+            certificate.getTags().forEach(a ->
+                    certificateDAO.addTagToCertificate(certificate.getId()
+                            ,tagService.addIfNotExist(a).getId()));
+            certificate.setTags(
+                    tagDAO.findByCertificateId(certificate.getId()));
+        }
     }
 
     public void setValidator(CertificateValidator validator) {

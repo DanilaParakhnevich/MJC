@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateHandlerTest {
+    private static final String PARAM = "param";
+    private static final String DIRECTION = "direction";
     private CertificateClientModel firstTestCertificate;
     private CertificateClientModel secondTestCertificate;
     private CertificateClientModel thirdTestCertificate;
@@ -35,29 +37,29 @@ class CertificateHandlerTest {
 
     @Test
     void sortByDirection() {
-        parameters.put("direction", "DESC");
+        parameters.put(DIRECTION, "DESC");
         Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(thirdTestCertificate, secondTestCertificate, firstTestCertificate));
     }
 
     @Test
     void sortByName() {
-        parameters.put("param1", "by-name");
+        parameters.put(PARAM, "by-name");
         Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
     @Test
     void sortByCreateDate() {
-        parameters.put("param2", "by-create-date");
+        parameters.put(PARAM, "by-create-date");
         Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
     @Test
     void sortByCreateDateAndByDirection() {
-        parameters.put("direction", "DESC");
-        parameters.put("param2", "by-create-date");
+        parameters.put(DIRECTION, "DESC");
+        parameters.put(PARAM, "by-create-date");
         Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(secondTestCertificate, thirdTestCertificate, firstTestCertificate));
     }

@@ -13,7 +13,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return new Class[]{
                 ControllerConfig.class,
                 DaoConfig.class,
-                ServiceConfig.class
         };
     }
 

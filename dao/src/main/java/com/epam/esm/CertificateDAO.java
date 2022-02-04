@@ -1,8 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.entity.CertificateEntity;
-import com.epam.esm.entity.TagEntity;
-
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
