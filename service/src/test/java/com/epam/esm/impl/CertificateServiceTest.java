@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,14 +52,14 @@ class CertificateServiceTest {
         certificate = new CertificateEntity();
         certificate.setName("a");
         certificate.setDescription("a");
-        certificate.setPrice(5);
+        certificate.setPrice(BigDecimal.valueOf(5));
         certificate.setDuration(30);
 
         addedCertificate = new CertificateEntity();
         addedCertificate.setId(1);
         addedCertificate.setName("a");
         addedCertificate.setDescription("a");
-        addedCertificate.setPrice(5);
+        addedCertificate.setPrice(BigDecimal.valueOf(5));
         addedCertificate.setDuration(30);
 
         tags = Arrays.asList(new TagEntity(1, "a"), new TagEntity(2, "a"));
@@ -83,7 +84,7 @@ class CertificateServiceTest {
 
     @Test
     void addTest2ForThrowing() {
-        certificate.setPrice(0);
+        certificate.setPrice(new BigDecimal(0));
         Assertions.assertThrows(BadPriceException.class,
                 () -> certificateService.add(certificate));
     }

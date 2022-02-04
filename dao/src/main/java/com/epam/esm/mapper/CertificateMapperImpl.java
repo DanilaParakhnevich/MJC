@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -21,7 +22,7 @@ public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
         certificate.setId(rs.getLong("id"));
         certificate.setName(rs.getString("name"));
         certificate.setDescription(rs.getString("description"));
-        certificate.setPrice(rs.getDouble("price"));
+        certificate.setPrice(BigDecimal.valueOf(rs.getDouble("price")));
         certificate.setDuration(rs.getLong("duration"));
         certificate.setCreateDate(dateToLocalDateTime(rs.getDate("create_date")));
         certificate.setLastUpdateDate(dateToLocalDateTime(rs.getDate("last_update_date")));

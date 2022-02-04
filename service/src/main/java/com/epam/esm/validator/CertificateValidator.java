@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @Scope("singleton")
 public class CertificateValidator implements Validator<CertificateEntity> {
@@ -34,7 +36,7 @@ public class CertificateValidator implements Validator<CertificateEntity> {
             throw new BadDescriptionException(BAD_DESCRIPTION + "/description's length=0");
         }else if (certificate.getDuration() <= 0) {
             throw new BadDurationException(BAD_DURATION + "/duration=" + certificate.getDuration());
-        } else if (certificate.getPrice() <= 0) {
+        } else if (certificate.getPrice().compareTo(new BigDecimal(0)) <= 0) {
             throw new BadPriceException(BAD_PRICE + "/price=" + certificate.getPrice());
         }
     }

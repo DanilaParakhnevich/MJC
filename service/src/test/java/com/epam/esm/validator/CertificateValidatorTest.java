@@ -7,6 +7,8 @@ import com.epam.esm.validator.exception.BadNameException;
 import com.epam.esm.validator.exception.BadPriceException;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateValidatorTest {
@@ -22,7 +24,7 @@ class CertificateValidatorTest {
     @BeforeEach
     void configuration() {
         certificate.setName("a");
-        certificate.setPrice(1);
+        certificate.setPrice(new BigDecimal(0));
         certificate.setDuration(1);
         certificate.setDescription("a");
     }
@@ -50,7 +52,7 @@ class CertificateValidatorTest {
 
     @Test
     void validateTest4() {
-        certificate.setPrice(0);
+        certificate.setPrice(new BigDecimal(0));
         Assertions.assertThrows(BadPriceException.class,
                 () -> validator.validate(certificate));
     }

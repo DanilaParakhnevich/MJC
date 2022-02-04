@@ -18,7 +18,7 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public TagClientModel addCertificate(@RequestBody TagEntity tag) {
+    public TagClientModel add(@RequestBody TagEntity tag) {
         return tagService.add(tag);
     }
 

@@ -4,6 +4,7 @@ import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,13 +24,13 @@ class CertificateHandlerTest {
     void init() {
         parameters = new HashMap<>();
         firstTestCertificate = new CertificateClientModel(1, "A", "A",
-                30, (short) 30, LocalDateTime.of(2021, 1, 10, 13, 5, 7),
+                new BigDecimal(30), (short) 30, LocalDateTime.of(2021, 1, 10, 13, 5, 7),
                 LocalDateTime.of(2021, 1, 10, 13, 5, 7), new ArrayList<>());
         secondTestCertificate = new CertificateClientModel(2, "C", "A",
-                70, (short) 30, LocalDateTime.of(2022, 2, 15, 11, 6, 23),
+                new BigDecimal(70), (short) 30, LocalDateTime.of(2022, 2, 15, 11, 6, 23),
                 LocalDateTime.of(2022, 2, 15, 11, 6, 23), new ArrayList<>());
         thirdTestCertificate = new CertificateClientModel(3, "B", "A",
-                100, (short) 60, LocalDateTime.of(2021, 12, 30, 5, 37, 48),
+                new BigDecimal(100), (short) 60, LocalDateTime.of(2021, 12, 30, 5, 37, 48),
                 LocalDateTime.of(2021, 12, 30, 5, 37, 48), new ArrayList<>());
         certificates = Arrays.asList(firstTestCertificate, secondTestCertificate, thirdTestCertificate);
     }

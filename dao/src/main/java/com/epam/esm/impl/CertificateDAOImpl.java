@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.config.DaoConfig;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDAO;
 import com.epam.esm.mapper.CertificateMapperImpl;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
