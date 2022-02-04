@@ -58,7 +58,7 @@ public class CertificateController {
         return certificateService.update(certificate);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     @ResponseStatus(NO_CONTENT)
     public boolean delete(@PathVariable long id) {
         return certificateService.deleteById(id);
