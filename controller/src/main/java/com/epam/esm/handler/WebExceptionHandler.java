@@ -5,9 +5,11 @@ import com.epam.esm.handler.error.ErrorResponse;
 import com.epam.esm.handler.exception.BadParameterException;
 import com.epam.esm.handler.translator.Translator;
 import com.epam.esm.validator.exception.*;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -119,6 +121,19 @@ public class WebExceptionHandler {
                HttpStatus.BAD_REQUEST.value(),
                 e.getMessage()));
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex)
+    {
+        JsonMappingException jme = (JsonMappingException) ex.getCause();
+        return ResponseEntity.ok(new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
+                translator.translate("bad.request.value") +
+                        " ( field = " +
+                        translator.translate("field." + jme.getPath().get(0).getFieldName()) +
+                        ")"));
+    }
+
 
     private String getFullMessage(String errorMessage) {
         return translator.translate(errorMessage.split("/")[0]) +

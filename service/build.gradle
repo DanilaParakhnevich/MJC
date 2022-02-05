@@ -16,8 +16,6 @@ dependencies {
     implementation project(':dao')
 
     //for testing
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.mockito:mockito-all:1.10.19'
     testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure:2.6.3'
 }
