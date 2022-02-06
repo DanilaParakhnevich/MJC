@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Certificate handler.
+ */
 public class CertificateHandler {
     private static final String DIRECTION = "direction";
     private static final String BAD_PARAMETER = "bad.param";
@@ -19,6 +22,14 @@ public class CertificateHandler {
 
     private CertificateHandler(){}
 
+    /**
+     * Sort by parameters list.
+     * exist parameters are : direction and param
+     *
+     * @param certificates the certificates
+     * @param parameters   the parameters
+     * @return the list
+     */
     public static List<CertificateClientModel> sortByParameters (List<CertificateClientModel> certificates, Map<String, String> parameters) {
         for (Map.Entry<String, String> parameter : parameters.entrySet()) {
             if (!parameter.getKey().equals(DIRECTION)) {

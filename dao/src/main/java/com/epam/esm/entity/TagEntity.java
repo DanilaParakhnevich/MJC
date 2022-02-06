@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * The type Tag entity.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

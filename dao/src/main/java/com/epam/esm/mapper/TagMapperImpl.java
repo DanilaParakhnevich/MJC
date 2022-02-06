@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Mapper for TagEntity.
+ * @see com.epam.esm.entity.TagEntity
+ */
 @Component
 @Scope("singleton")
 public class TagMapperImpl implements RowMapper<TagEntity> {

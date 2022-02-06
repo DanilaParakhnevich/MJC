@@ -1,6 +1,5 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.config.DaoConfig;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDAO;
 import com.epam.esm.mapper.CertificateMapperImpl;
@@ -8,13 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * DAO for CertificateEntity.
+ * @see com.epam.esm.entity.CertificateEntity
+ */
 @Component
 @Scope("singleton")
 public class CertificateDAOImpl implements CertificateDAO {
@@ -106,10 +107,20 @@ public class CertificateDAOImpl implements CertificateDAO {
         return jdbcTemplate.queryForObject(FIND_LAST_ADDED_CERTIFICATE, mapper);
     }
 
+    /**
+     * Sets mapper.
+     *
+     * @param mapper the mapper
+     */
     public void setMapper(CertificateMapperImpl mapper) {
         this.mapper = mapper;
     }
 
+    /**
+     * Sets jdbc template.
+     *
+     * @param jdbcTemplate the jdbc template
+     */
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

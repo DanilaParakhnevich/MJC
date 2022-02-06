@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Certificate validator.
+ */
 @Component
 @Scope("singleton")
 public class CertificateValidator implements Validator<CertificateEntity> {
@@ -19,6 +22,9 @@ public class CertificateValidator implements Validator<CertificateEntity> {
     private static final String BAD_PRICE = "bad.value.price";
 
 
+    /**
+     * The Certificate dao.
+     */
     @Autowired
     CertificateDAO certificateDAO;
 

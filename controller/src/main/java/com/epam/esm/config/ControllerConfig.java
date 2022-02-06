@@ -9,15 +9,28 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Spring config class for controller layer
+ */
 @Configuration
 @ComponentScan("com.epam.esm")
 @EnableWebMvc
 public class ControllerConfig implements WebMvcConfigurer {
+    /**
+     * Locale resolver locale resolver.
+     *
+     * @return the locale resolver
+     */
     @Bean
     public LocaleResolver localeResolver() {
         return new WebLocaleResolver();
     }
 
+    /**
+     * Message source resource bundle message source.
+     *
+     * @return the resource bundle message source
+     */
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource resourceBundleMessageSource

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Tag client model.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -11,18 +11,36 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
+/**
+ * The type Certificate controller.
+ */
 @RestController
 @RequestMapping("/certificates")
 public class CertificateController {
+    /**
+     * The Certificate service.
+     */
     @Autowired
     CertificateService certificateService;
 
+    /**
+     * Add certificate certificate client model.
+     *
+     * @param certificate the certificate
+     * @return the certificate client model
+     */
     @PostMapping
     @ResponseStatus(CREATED)
     public CertificateClientModel addCertificate(@RequestBody CertificateEntity certificate) {
         return certificateService.add(certificate);
     }
 
+    /**
+     * Find all list.
+     *
+     * @param parameters the parameters
+     * @return the list
+     */
     @GetMapping
     @ResponseStatus(OK)
     public List<CertificateClientModel> findAll
@@ -30,12 +48,25 @@ public class CertificateController {
         return certificateService.findAll(parameters);
     }
 
+    /**
+     * Find by id certificate client model.
+     *
+     * @param id the id
+     * @return the certificate client model
+     */
     @GetMapping("/id/{id}")
     @ResponseStatus(OK)
     public CertificateClientModel findById(@PathVariable long id) {
         return certificateService.findCertificateById(id);
     }
 
+    /**
+     * Find by tag name list.
+     *
+     * @param name       the name
+     * @param parameters the parameters
+     * @return the list
+     */
     @GetMapping("/tag/{name}")
     @ResponseStatus(OK)
     public List<CertificateClientModel> findByTagName(
@@ -44,6 +75,13 @@ public class CertificateController {
         return certificateService.findByTagName(name, parameters);
     }
 
+    /**
+     * Find by name list.
+     *
+     * @param name       the name
+     * @param parameters the parameters
+     * @return the list
+     */
     @GetMapping("/name/{name}")
     @ResponseStatus(OK)
     public List<CertificateClientModel> findByName(
@@ -52,18 +90,35 @@ public class CertificateController {
         return certificateService.findByName(name, parameters);
     }
 
+    /**
+     * Update certificate client model.
+     *
+     * @param certificate the certificate
+     * @return the certificate client model
+     */
     @PutMapping
     @ResponseStatus(OK)
     public CertificateClientModel update(@RequestBody CertificateEntity certificate) {
         return certificateService.update(certificate);
     }
 
+    /**
+     * Delete boolean.
+     *
+     * @param id the id
+     * @return the boolean
+     */
     @DeleteMapping("/id/{id}")
     @ResponseStatus(NO_CONTENT)
     public boolean delete(@PathVariable long id) {
         return certificateService.deleteById(id);
     }
 
+    /**
+     * Sets certificate service.
+     *
+     * @param certificateService the certificate service
+     */
     public void setCertificateService(CertificateService certificateService) {
         this.certificateService = certificateService;
     }

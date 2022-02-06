@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The type Certificate entity.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,11 +26,21 @@ public class CertificateEntity implements Entity{
     private LocalDateTime lastUpdateDate;
     private List<TagEntity> tags;
 
+    /**
+     * Gets create date.
+     *
+     * @return the create date
+     */
     @JsonFormat(pattern = DATE_FORMAT_PATTERN)
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
+    /**
+     * Gets last update date.
+     *
+     * @return the last update date
+     */
     @JsonFormat(pattern = DATE_FORMAT_PATTERN)
     public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;

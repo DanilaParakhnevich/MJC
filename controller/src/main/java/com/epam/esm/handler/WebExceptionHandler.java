@@ -14,11 +14,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * The type Web exception handler.
+ */
 @RestControllerAdvice
 public class WebExceptionHandler {
     @Autowired
     private Translator translator;
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(DuplicateTagException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle(DuplicateTagException e) {
@@ -27,6 +36,12 @@ public class WebExceptionHandler {
                 translator.translate(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(InvalidTagDataException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle(InvalidTagDataException e) {
@@ -35,6 +50,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(UnknownTagException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(UnknownTagException e) {
@@ -43,6 +64,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(DuplicateCertificateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle(DuplicateCertificateException e) {
@@ -50,6 +77,12 @@ public class WebExceptionHandler {
                 translator.translate(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(InvalidCertificateDataException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle(InvalidCertificateDataException e) {
@@ -58,6 +91,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(UnknownCertificateException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(UnknownCertificateException e) {
@@ -66,6 +105,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(InvalidDateFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle(InvalidDateFormatException e) {
@@ -74,6 +119,12 @@ public class WebExceptionHandler {
                 translator.translate(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(BadNameException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(BadNameException e) {
@@ -82,6 +133,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(BadDurationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(BadDurationException e) {
@@ -90,6 +147,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(BadPriceException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(BadPriceException e) {
@@ -98,6 +161,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(BadDescriptionException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handle(BadDescriptionException e) {
@@ -106,6 +175,12 @@ public class WebExceptionHandler {
                 getFullMessage(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(BadParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle (BadParameterException e) {
@@ -114,6 +189,12 @@ public class WebExceptionHandler {
                 translator.translate(e.getMessage())));
     }
 
+    /**
+     * Handle response entity.
+     *
+     * @param e the e
+     * @return the response entity
+     */
     @ExceptionHandler(NumberFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handle (NumberFormatException e) {
@@ -122,6 +203,12 @@ public class WebExceptionHandler {
                 e.getMessage()));
     }
 
+    /**
+     * Handle http message not readable exception response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex)
     {
@@ -151,6 +238,11 @@ public class WebExceptionHandler {
         return Long.parseLong(String.valueOf(first) + String.valueOf(second));
     }
 
+    /**
+     * Sets translator.
+     *
+     * @param translator the translator
+     */
     public void setTranslator(Translator translator) {
         this.translator = translator;
     }

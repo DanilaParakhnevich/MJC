@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * The type Web locale resolver.
+ */
 public class WebLocaleResolver implements LocaleResolver {
     private static final List<Locale> LOCALES = Arrays.asList(Locale.US, new Locale("ru"));
 

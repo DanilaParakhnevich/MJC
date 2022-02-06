@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The type Certificate service.
+ */
 @Service
 @Scope("singleton")
 public class CertificateServiceImpl implements CertificateService {
@@ -188,18 +191,38 @@ public class CertificateServiceImpl implements CertificateService {
         }
     }
 
+    /**
+     * Sets validator.
+     *
+     * @param validator the validator
+     */
     public void setValidator(CertificateValidator validator) {
         this.validator = validator;
     }
 
+    /**
+     * Sets certificate dao.
+     *
+     * @param certificateDAO the certificate dao
+     */
     public void setCertificateDAO(CertificateDAO certificateDAO) {
         this.certificateDAO = certificateDAO;
     }
 
+    /**
+     * Sets tag dao.
+     *
+     * @param tagDAO the tag dao
+     */
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }
 
+    /**
+     * Sets tag service.
+     *
+     * @param tagService the tag service
+     */
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }

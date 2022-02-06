@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Tag validator.
+ */
 @Component
 @Scope("singleton")
 public class TagValidator implements Validator<TagEntity> {
@@ -16,6 +19,9 @@ public class TagValidator implements Validator<TagEntity> {
     private static final String DUPLICATE = "duplicate.tag";
     private static final String BAD_NAME = "bad.value.name";
 
+    /**
+     * The Tag dao.
+     */
     @Autowired
     TagDAO tagDAO;
 
@@ -32,6 +38,11 @@ public class TagValidator implements Validator<TagEntity> {
         }
     }
 
+    /**
+     * Sets tag dao.
+     *
+     * @param tagDAO the tag dao
+     */
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }

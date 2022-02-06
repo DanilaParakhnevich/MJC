@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The type Tag service.
+ */
 @Service
 @Scope("singleton")
 public class TagServiceImpl implements TagService {
@@ -77,10 +80,20 @@ public class TagServiceImpl implements TagService {
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
 
+    /**
+     * Sets validator.
+     *
+     * @param validator the validator
+     */
     public void setValidator(TagValidator validator) {
         this.validator = validator;
     }
 
+    /**
+     * Sets tag dao.
+     *
+     * @param tagDAO the tag dao
+     */
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }

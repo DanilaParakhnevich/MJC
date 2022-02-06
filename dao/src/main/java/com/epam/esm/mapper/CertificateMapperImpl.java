@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * Mapper for CertificateEntity.
+ * @see com.epam.esm.entity.CertificateEntity
+ */
 @Component
 @Scope("singleton")
 public class CertificateMapperImpl implements RowMapper<CertificateEntity> {

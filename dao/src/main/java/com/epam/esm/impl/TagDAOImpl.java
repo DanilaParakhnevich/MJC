@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * DAO for TagEntity.
+ * @see com.epam.esm.entity.TagEntity
+ */
 @Component
 @Scope("singleton")
 public class TagDAOImpl implements TagDAO {
@@ -62,10 +66,20 @@ public class TagDAOImpl implements TagDAO {
         return jdbcTemplate.update(DELETE_TAG, id) == 1;
     }
 
+    /**
+     * Sets mapper.
+     *
+     * @param mapper the mapper
+     */
     public void setMapper(TagMapperImpl mapper) {
         this.mapper = mapper;
     }
 
+    /**
+     * Sets jdbc template.
+     *
+     * @param jdbcTemplate the jdbc template
+     */
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
