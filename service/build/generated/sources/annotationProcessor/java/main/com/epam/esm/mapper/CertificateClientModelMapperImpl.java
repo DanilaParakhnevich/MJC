@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-02-04T14:08:19+0300",
+    date = "2022-02-06T23:50:23+0300",
     comments = "version: 1.4.2.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.1.jar, environment: Java 1.8.0_301 (Oracle Corporation)"
 )
 public class CertificateClientModelMapperImpl implements CertificateClientModelMapper {

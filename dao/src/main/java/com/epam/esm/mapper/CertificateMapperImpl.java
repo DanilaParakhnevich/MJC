@@ -8,10 +8,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 
 /**
  * Mapper for CertificateEntity.
@@ -28,15 +25,15 @@ public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
         certificate.setDescription(rs.getString("description"));
         certificate.setPrice(BigDecimal.valueOf(rs.getDouble("price")));
         certificate.setDuration(rs.getLong("duration"));
-        certificate.setCreateDate(dateToLocalDateTime(rs.getDate("create_date")));
-        certificate.setLastUpdateDate(dateToLocalDateTime(rs.getDate("last_update_date")));
-        return certificate;
-    }
-
-    private LocalDateTime dateToLocalDateTime(Date date) {
-        return Instant.ofEpochMilli(date.getTime())
+        certificate.setCreateDate(rs.getTimestamp("create_date")
+                .toLocalDateTime()
                 .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+                .toLocalDateTime());
+        certificate.setLastUpdateDate(rs.getTimestamp("last_update_date")
+                .toLocalDateTime()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
+        return certificate;
     }
 
 }
