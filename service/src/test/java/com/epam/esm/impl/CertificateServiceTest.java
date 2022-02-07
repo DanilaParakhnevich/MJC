@@ -29,10 +29,10 @@ class CertificateServiceTest {
     List<TagEntity> tags;
 
     @Mock
-    CertificateDAOImpl certificateDAO;
+    CertificateDaoImpl certificateDAO;
 
     @Mock
-    TagDAOImpl tagDAO;
+    TagDaoImpl tagDAO;
 
     @Mock
     TagServiceImpl tagService;

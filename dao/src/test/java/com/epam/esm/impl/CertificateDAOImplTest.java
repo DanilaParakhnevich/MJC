@@ -3,7 +3,6 @@ package com.epam.esm.impl;
 import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,8 +15,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateDAOImplTest {
     @Autowired
-    CertificateDAOImpl certificateDAO;
+    CertificateDaoImpl certificateDAO;
     private CertificateEntity testCertificate;
     private CertificateEntity firstTestCertificate;
     private CertificateEntity secondTestCertificate;

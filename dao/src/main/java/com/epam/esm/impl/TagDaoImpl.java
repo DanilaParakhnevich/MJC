@@ -1,12 +1,12 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.TagDAO;
+import com.epam.esm.TagDao;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
  * @see com.epam.esm.entity.TagEntity
  */
 @Component
-public class TagDAOImpl implements TagDAO {
+public class TagDaoImpl extends TagDao {
     private static final String ADD_TAG = "insert into tag (name) values (?)";
     private static final String FIND_BY_ID = "select * from tag where id = ?";
     private static final String FIND_BY_CERTIFICATE_ID = "select tag.id, tag.name from tag" +
@@ -23,11 +23,11 @@ public class TagDAOImpl implements TagDAO {
             " where certificate_by_tag.id_certificate = ?";
     private static final String FIND_BY_NAME = "select * from tag where name = ?";
     private static final String FIND_ALL = "select * from tag";
-    private static final String DELETE_TAG = "delete from tag where id = ?";
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private TagMapperImpl mapper;
+
+    @PostConstruct
+    private void initMethod() {
+        super.setTableName("tag");
+    }
 
     @Override
     public Optional<TagEntity> add(TagEntity tag) {
@@ -59,26 +59,14 @@ public class TagDAOImpl implements TagDAO {
         return jdbcTemplate.query(FIND_ALL, mapper);
     }
 
-    @Override
-    public boolean delete(long id) {
-        return jdbcTemplate.update(DELETE_TAG, id) == 1;
-    }
-
     /**
      * Sets mapper.
      *
      * @param mapper the mapper
      */
+    @Autowired
     public void setMapper(TagMapperImpl mapper) {
         this.mapper = mapper;
     }
-
-    /**
-     * Sets jdbc template.
-     *
-     * @param jdbcTemplate the jdbc template
-     */
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 }
+

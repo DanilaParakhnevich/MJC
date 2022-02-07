@@ -1,6 +1,6 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.TagDAO;
+import com.epam.esm.TagDao;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.validator.exception.BadNameException;
 import com.epam.esm.validator.exception.DuplicateTagException;
@@ -20,7 +20,7 @@ public class TagValidator implements Validator<TagEntity> {
     /**
      * The Tag dao.
      */
-    TagDAO tagDAO;
+    TagDao tagDAO;
 
     @Override
     public void validate(TagEntity tag) {
@@ -41,7 +41,7 @@ public class TagValidator implements Validator<TagEntity> {
      * @param tagDAO the tag dao
      */
     @Autowired
-    public void setTagDAO(TagDAO tagDAO) {
+    public void setTagDAO(TagDao tagDAO) {
         this.tagDAO = tagDAO;
     }
 }

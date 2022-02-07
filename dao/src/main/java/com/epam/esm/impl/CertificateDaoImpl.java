@@ -1,12 +1,12 @@
 package com.epam.esm.impl;
 
 import com.epam.esm.entity.CertificateEntity;
-import com.epam.esm.CertificateDAO;
+import com.epam.esm.CertificateDao;
 import com.epam.esm.mapper.CertificateMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,31 +16,27 @@ import java.util.*;
  * @see com.epam.esm.entity.CertificateEntity
  */
 @Component
-public class CertificateDAOImpl implements CertificateDAO {
+public class CertificateDaoImpl extends CertificateDao {
     private static final String ADD_CERTIFICATE = "insert into gift_certificate " +
             "(name, description, price, duration, create_date, last_update_date)" +
             " values (?, ?, ?, ?, ?, ?)";
     private static final String ADD_TAG_TO_CERTIFICATE = "insert into certificate_by_tag (id_certificate, id_tag)" +
             " values (?, ?)";
-    private static final String FIND_BY_ID = "select * from gift_certificate where id = ?";
     private static final String FIND_BY_NAME = "select * from gift_certificate where name like CONCAT('%', ?, '%')";
     private static final String FIND_BY_TAG = "select * from gift_certificate" +
             " join certificate_by_tag on gift_certificate.id = certificate_by_tag.id_certificate" +
             " join tag on certificate_by_tag.id_tag = tag.id where tag.name = ?";
-    private static final String FIND_ALL = "select * from gift_certificate";
     private static final String UPDATE_CERTIFICATE = "update gift_certificate set name = ?, description = ?, " +
             "price = ?, duration = ?, create_date = ?, last_update_date = ? where id = ?";
-    private static final String DELETE_CERTIFICATE = "delete from gift_certificate where id = ?";
     private static final String DELETE_TAGS_BY_CERTIFICATE = "delete from certificate_by_tag" +
             " where id_certificate = ?";
     private static final String FIND_LAST_ADDED_CERTIFICATE = "select * from gift_certificate" +
             " where id = (select MAX(id) from gift_certificate)";
 
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private CertificateMapperImpl mapper;
+    @PostConstruct
+    private void initMethod() {
+        super.setTableName("gift_certificate");
+    }
 
     @Override
     public Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException {
@@ -54,13 +50,7 @@ public class CertificateDAOImpl implements CertificateDAO {
     }
 
 
-    @Override
-    public Optional<CertificateEntity> findById(long id) {
-        List<CertificateEntity> certificates = jdbcTemplate
-                .query(FIND_BY_ID, mapper, id);
-        return certificates.isEmpty() ? Optional.empty()
-                : Optional.ofNullable(certificates.get(0));
-    }
+
 
     @Override
     public List<CertificateEntity> findByNamePart(String name) {
@@ -73,22 +63,12 @@ public class CertificateDAOImpl implements CertificateDAO {
     }
 
     @Override
-    public List<CertificateEntity> findAll() {
-        return jdbcTemplate.query(FIND_ALL, mapper);
-    }
-
-    @Override
     public boolean update(CertificateEntity certificate) {
         certificate.setLastUpdateDate(LocalDateTime.now());
         return jdbcTemplate.update(UPDATE_CERTIFICATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
                 certificate.getDuration(), certificate.getCreateDate(),
                 certificate.getLastUpdateDate(), certificate.getId()) >= 1;
-    }
-
-    @Override
-    public boolean deleteById(long id) {
-        return jdbcTemplate.update(DELETE_CERTIFICATE, id) == 1;
     }
 
     @Override
@@ -110,16 +90,8 @@ public class CertificateDAOImpl implements CertificateDAO {
      *
      * @param mapper the mapper
      */
+    @Autowired
     public void setMapper(CertificateMapperImpl mapper) {
         this.mapper = mapper;
-    }
-
-    /**
-     * Sets jdbc template.
-     *
-     * @param jdbcTemplate the jdbc template
-     */
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 }

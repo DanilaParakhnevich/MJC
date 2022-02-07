@@ -2,7 +2,7 @@ package com.epam.esm.impl;
 
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.TagDAO;
+import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.mapper.TagClientModelMapper;
 import com.epam.esm.validator.TagValidator;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
     private TagValidator validator;
-    private TagDAO tagDAO;
+    private TagDao tagDAO;
 
 
     @Override
@@ -92,7 +92,7 @@ public class TagServiceImpl implements TagService {
      * @param tagDAO the tag dao
      */
     @Autowired
-    public void setTagDAO(TagDAO tagDAO) {
+    public void setTagDAO(TagDao tagDAO) {
         this.tagDAO = tagDAO;
     }
 }

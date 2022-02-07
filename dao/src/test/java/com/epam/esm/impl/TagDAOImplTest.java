@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagDAOImplTest {
     @Autowired
-    TagDAOImpl tagDAO;
+    TagDaoImpl tagDAO;
     private TagEntity firstTestTag;
     private TagEntity secondTestTag;
     private TagEntity thirdTestTag;

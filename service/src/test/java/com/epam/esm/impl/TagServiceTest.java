@@ -7,7 +7,6 @@ import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 
@@ -31,7 +30,7 @@ class TagServiceTest {
     TagEntity secondTag;
 
     @Mock
-    TagDAOImpl tagDAO;
+    TagDaoImpl tagDAO;
 
     @BeforeAll
     void init() {

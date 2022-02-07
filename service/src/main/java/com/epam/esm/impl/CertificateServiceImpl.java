@@ -1,8 +1,8 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.CertificateDAO;
+import com.epam.esm.CertificateDao;
 import com.epam.esm.CertificateService;
-import com.epam.esm.TagDAO;
+import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
@@ -32,9 +32,9 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String INVALID_DATE_FORMAT = "invalid.date.format";
     private static final String UNKNOWN = "nonexistent.certificate";
     private static final String DUPLICATE = "duplicate.certificate";
-    private CertificateDAO certificateDAO;
+    private CertificateDao certificateDAO;
     private CertificateValidator validator;
-    private TagDAO tagDAO;
+    private TagDao tagDAO;
     private TagService tagService;
 
     @Override
@@ -136,7 +136,7 @@ public class CertificateServiceImpl implements CertificateService {
                 certificate.get().getTags().forEach(a ->
                         tagService.deleteById(a.getId()));
             }
-            certificateDAO.deleteById(certificate.get().getId());
+            certificateDAO.delete(certificate.get().getId());
             return true;
         }
         throw new UnknownCertificateException(UNKNOWN + "/" + id);
@@ -204,7 +204,7 @@ public class CertificateServiceImpl implements CertificateService {
      * @param certificateDAO the certificate dao
      */
     @Autowired
-    public void setCertificateDAO(CertificateDAO certificateDAO) {
+    public void setCertificateDAO(CertificateDao certificateDAO) {
         this.certificateDAO = certificateDAO;
     }
 
@@ -214,7 +214,7 @@ public class CertificateServiceImpl implements CertificateService {
      * @param tagDAO the tag dao
      */
     @Autowired
-    public void setTagDAO(TagDAO tagDAO) {
+    public void setTagDAO(TagDao tagDAO) {
         this.tagDAO = tagDAO;
     }
 

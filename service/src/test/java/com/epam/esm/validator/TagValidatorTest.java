@@ -1,12 +1,11 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.TagDAO;
+import com.epam.esm.TagDao;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.validator.exception.BadNameException;
 import com.epam.esm.validator.exception.DuplicateTagException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
@@ -21,7 +20,7 @@ class TagValidatorTest {
     TagEntity tag;
 
     @Mock
-    TagDAO tagDAO;
+    TagDao tagDAO;
 
 
     @BeforeAll
