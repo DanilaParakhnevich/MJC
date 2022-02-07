@@ -3,6 +3,7 @@ gradle-app.setting
 .idea
 *.iws
 *.iml
+
 *.iprs
 logs/
 out/
