@@ -4,7 +4,6 @@ import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDAO;
 import com.epam.esm.mapper.CertificateMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import java.util.*;
  * @see com.epam.esm.entity.CertificateEntity
  */
 @Component
-@Scope("singleton")
 public class CertificateDAOImpl implements CertificateDAO {
     private static final String ADD_CERTIFICATE = "insert into gift_certificate " +
             "(name, description, price, duration, create_date, last_update_date)" +

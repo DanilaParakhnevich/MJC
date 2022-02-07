@@ -7,7 +7,6 @@ import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.*;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
@@ -16,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -67,39 +69,39 @@ class CertificateServiceTest {
 
     @Test
     void addTest() throws ParseException {
-        Mockito.when(certificateDAO.add(certificate))
+        when(certificateDAO.add(certificate))
                 .thenReturn(Optional.ofNullable(addedCertificate));
-        Mockito.when(certificateDAO.findByNamePart(certificate.getName()))
+        when(certificateDAO.findByNamePart(certificate.getName()))
                 .thenReturn(Arrays.asList(addedCertificate));
-        Assertions.assertEquals(certificateService.add(certificate),
+        assertEquals(certificateService.add(certificate),
                 CertificateClientModelMapper.INSTANCE.certificateToCertificateClientModel(addedCertificate));
     }
 
     @Test
     void addTest1ForThrowing() {
         certificate.setName("");
-        Assertions.assertThrows(BadNameException.class,
+        assertThrows(BadNameException.class,
                 () -> certificateService.add(certificate));
     }
 
     @Test
     void addTest2ForThrowing() {
         certificate.setPrice(new BigDecimal(0));
-        Assertions.assertThrows(BadPriceException.class,
+        assertThrows(BadPriceException.class,
                 () -> certificateService.add(certificate));
     }
 
     @Test
     void addTest3ForThrowing() {
         certificate.setDuration(0);
-        Assertions.assertThrows(BadDurationException.class,
+        assertThrows(BadDurationException.class,
                 () -> certificateService.add(certificate));
     }
 
     @Test
     void addTest4ForThrowing() {
         certificate.setDescription("");
-        Assertions.assertThrows(BadDescriptionException.class,
+        assertThrows(BadDescriptionException.class,
                 () -> certificateService.add(certificate));
     }
 
@@ -107,43 +109,43 @@ class CertificateServiceTest {
 
     @Test
     void addTagToCertificateTest() {
-        Mockito.when(certificateDAO.addTagToCertificate(1, 1))
+        when(certificateDAO.addTagToCertificate(1, 1))
                 .thenReturn(true);
-        Assertions.assertTrue(certificateService.addTagToCertificate(1, 1));
+        assertTrue(certificateService.addTagToCertificate(1, 1));
     }
 
     @Test
     void findAllTest() {
         addedCertificate.setTags(tags);
-        Mockito.when(certificateDAO.findAll())
+        when(certificateDAO.findAll())
                 .thenReturn(Arrays.asList(addedCertificate));
-        Assertions.assertEquals(certificateService.findAll(null),
+        assertEquals(certificateService.findAll(null),
                 Arrays.asList(CertificateClientModelMapper.INSTANCE
                         .certificateToCertificateClientModel(addedCertificate)));
     }
 
     @Test
     void findCertificateByIdTest() {
-        Mockito.when(certificateDAO.findById(1))
+        when(certificateDAO.findById(1))
                 .thenReturn(Optional.ofNullable(addedCertificate));
-        Assertions.assertEquals(certificateService.findCertificateById(1),
+        assertEquals(certificateService.findCertificateById(1),
                 CertificateClientModelMapper.INSTANCE
                         .certificateToCertificateClientModel(addedCertificate));
     }
 
     @Test
     void findCertificateByIdTestForThrowing() {
-        Mockito.when(certificateDAO.findById(1))
+        when(certificateDAO.findById(1))
                 .thenReturn(Optional.empty());
-        Assertions.assertThrows(UnknownCertificateException.class,
+        assertThrows(UnknownCertificateException.class,
                 () -> certificateService.findCertificateById(1));
     }
 
     @Test
     void findByNameTest() {
-        Mockito.when(certificateDAO.findByNamePart("a"))
+        when(certificateDAO.findByNamePart("a"))
                 .thenReturn(Arrays.asList(addedCertificate));
-        Assertions.assertEquals(certificateService.findByName("a", null),
+        assertEquals(certificateService.findByName("a", null),
                 Arrays.asList(CertificateClientModelMapper.INSTANCE
                         .certificateToCertificateClientModel(addedCertificate)));
     }
@@ -151,44 +153,44 @@ class CertificateServiceTest {
     @Test
     void findByTagNameTest() {
         addedCertificate.setTags(tags);
-        Mockito.when(certificateDAO.findByTagName("a"))
+        when(certificateDAO.findByTagName("a"))
                 .thenReturn(Arrays.asList(addedCertificate));
-        Assertions.assertEquals(certificateService.findByTagName("a", null),
+        assertEquals(certificateService.findByTagName("a", null),
                 Arrays.asList(CertificateClientModelMapper.INSTANCE
                         .certificateToCertificateClientModel(addedCertificate)));
     }
 
     @Test
     void updateTest() {
-        Mockito.when(certificateDAO.findByNamePart(addedCertificate.getName()))
+        when(certificateDAO.findByNamePart(addedCertificate.getName()))
                 .thenReturn(Arrays.asList(addedCertificate));
-        Mockito.when(certificateDAO.update(addedCertificate))
+        when(certificateDAO.update(addedCertificate))
                 .thenReturn(true);
-        Assertions.assertEquals(certificateService.update(addedCertificate),
+        assertEquals(certificateService.update(addedCertificate),
                 CertificateClientModelMapper.INSTANCE
                         .certificateToCertificateClientModel(addedCertificate));
     }
 
     @Test
     void updateTestForThrowing() {
-        Mockito.when(certificateDAO.findByNamePart(addedCertificate.getName()))
+        when(certificateDAO.findByNamePart(addedCertificate.getName()))
                 .thenReturn(new ArrayList<>());
-        Assertions.assertThrows(UnknownCertificateException.class,
+        assertThrows(UnknownCertificateException.class,
                 () -> certificateService.update(addedCertificate));
     }
 
     @Test
     void deleteByIdTest() {
-        Mockito.when(certificateDAO.findById(addedCertificate.getId()))
+        when(certificateDAO.findById(addedCertificate.getId()))
                 .thenReturn(Optional.ofNullable(addedCertificate));
-        Assertions.assertTrue(certificateService.deleteById(addedCertificate.getId()));
+        assertTrue(certificateService.deleteById(addedCertificate.getId()));
     }
 
     @Test
     void deleteByIdForThrowing() {
-        Mockito.when(certificateDAO.findById(addedCertificate.getId()))
+        when(certificateDAO.findById(addedCertificate.getId()))
                 .thenReturn(Optional.empty());
-        Assertions.assertThrows(UnknownCertificateException.class,
+        assertThrows(UnknownCertificateException.class,
                 () -> certificateService.deleteById(addedCertificate.getId()));
     }
 }

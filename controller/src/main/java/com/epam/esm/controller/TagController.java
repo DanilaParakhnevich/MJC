@@ -4,7 +4,14 @@ import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
@@ -16,7 +23,6 @@ import static org.springframework.http.HttpStatus.*;
 @RestController()
 @RequestMapping("/tags")
 public class TagController {
-    @Autowired
     private TagService tagService;
 
     /**
@@ -71,6 +77,7 @@ public class TagController {
      *
      * @param tagService the tag service
      */
+    @Autowired
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }

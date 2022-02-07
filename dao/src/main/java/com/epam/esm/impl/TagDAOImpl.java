@@ -4,7 +4,6 @@ import com.epam.esm.TagDAO;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ import java.util.Optional;
  * @see com.epam.esm.entity.TagEntity
  */
 @Component
-@Scope("singleton")
 public class TagDAOImpl implements TagDAO {
     private static final String ADD_TAG = "insert into tag (name) values (?)";
     private static final String FIND_BY_ID = "select * from tag where id = ?";

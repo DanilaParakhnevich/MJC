@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,6 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,7 +53,7 @@ class TagControllerTest {
 
     @Test
     void findAll() throws Exception {
-        Mockito.when(tagService.findAll())
+        when(tagService.findAll())
                 .thenReturn(Arrays
                         .asList(TagClientModelMapper.INSTANCE.tagToTagClientModel(tagEntity)));
         mockMvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON))
@@ -65,7 +65,7 @@ class TagControllerTest {
 
     @Test
     void findById() throws Exception {
-        Mockito.when(tagService.findTagById(1))
+        when(tagService.findTagById(1))
                 .thenReturn(TagClientModelMapper.INSTANCE.tagToTagClientModel(tagEntity));
         mockMvc.perform(get("/tags/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -76,7 +76,7 @@ class TagControllerTest {
 
     @Test
     void deleteTag() throws Exception {
-        Mockito.when(tagService.deleteById(1))
+        when(tagService.deleteById(1))
                 .thenReturn(true);
         mockMvc.perform(delete("/tags/1"))
                 .andExpect(content().string("true"));

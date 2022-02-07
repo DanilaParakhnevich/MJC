@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class})
@@ -40,29 +43,29 @@ class TagDAOImplTest {
 
     @Test
     void findById() {
-        Assertions.assertEquals(tagDAO.findById(2), Optional.of(secondTestTag));
+        assertEquals(tagDAO.findById(2), Optional.of(secondTestTag));
     }
 
     @Test
     void findByCertificateId() {
         tagList = Arrays.asList(secondTestTag);
-        Assertions.assertEquals(tagDAO.findByCertificateId(1), tagList);
+        assertEquals(tagDAO.findByCertificateId(1), tagList);
     }
 
     @Test
     void findByName() {
-        Assertions.assertEquals(tagDAO.findByName("jumping"), Optional.of(thirdTestTag));
+        assertEquals(tagDAO.findByName("jumping"), Optional.of(thirdTestTag));
     }
 
     @Test
     void findAll() {
         tagList =  Arrays.asList(thirdTestTag, secondTestTag, fourthTestTag, fifthTestTag);
-        Assertions.assertEquals(tagDAO.findAll(), tagList);
+        assertEquals(tagDAO.findAll(), tagList);
     }
 
     @Test
     void addAndAddTest() {
-        Assertions.assertEquals(tagDAO.add(firstTestTag), Optional.of(firstTestTag));
-        Assertions.assertTrue(tagDAO.delete(5));
+        assertEquals(tagDAO.add(firstTestTag), Optional.of(firstTestTag));
+        assertTrue(tagDAO.delete(5));
     }
 }

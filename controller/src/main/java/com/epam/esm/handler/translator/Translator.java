@@ -1,7 +1,6 @@
 package com.epam.esm.handler.translator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,6 @@ import java.util.Locale;
  * The type Translator.
  */
 @Component
-@Scope(scopeName = "singleton")
 public class Translator {
     /**
      * The Message source.

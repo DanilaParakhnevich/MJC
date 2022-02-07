@@ -1,7 +1,6 @@
 package com.epam.esm.mapper;
 
 import com.epam.esm.entity.CertificateEntity;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import java.time.ZoneId;
  * @see com.epam.esm.entity.CertificateEntity
  */
 @Component
-@Scope("singleton")
 public class CertificateMapperImpl implements RowMapper<CertificateEntity> {
     @Override
     public CertificateEntity mapRow(ResultSet rs, int rowNum) throws SQLException {

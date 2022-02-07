@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -132,7 +133,7 @@ class CertificateControllerTest {
 
     @Test
     void delete() throws Exception {
-        Mockito.when(certificateService.deleteById(1))
+        when(certificateService.deleteById(1))
                 .thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/certificates/id/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())

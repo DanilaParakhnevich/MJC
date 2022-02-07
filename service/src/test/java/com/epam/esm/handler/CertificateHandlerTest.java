@@ -39,21 +39,21 @@ class CertificateHandlerTest {
     @Test
     void sortByDirection() {
         parameters.put(DIRECTION, "DESC");
-        Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(thirdTestCertificate, secondTestCertificate, firstTestCertificate));
     }
 
     @Test
     void sortByName() {
         parameters.put(PARAM, "by-name");
-        Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
     @Test
     void sortByCreateDate() {
         parameters.put(PARAM, "by-create-date");
-        Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
@@ -61,7 +61,7 @@ class CertificateHandlerTest {
     void sortByCreateDateAndByDirection() {
         parameters.put(DIRECTION, "DESC");
         parameters.put(PARAM, "by-create-date");
-        Assertions.assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
                 Arrays.asList(secondTestCertificate, thirdTestCertificate, firstTestCertificate));
     }
 }

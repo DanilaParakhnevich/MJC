@@ -14,7 +14,6 @@ import com.epam.esm.validator.exception.DuplicateCertificateException;
 import com.epam.esm.validator.exception.InvalidDateFormatException;
 import com.epam.esm.validator.exception.UnknownCertificateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +28,13 @@ import java.util.stream.Collectors;
  * The type Certificate service.
  */
 @Service
-@Scope("singleton")
 public class CertificateServiceImpl implements CertificateService {
     private static final String INVALID_DATE_FORMAT = "invalid.date.format";
     private static final String UNKNOWN = "nonexistent.certificate";
     private static final String DUPLICATE = "duplicate.certificate";
-    @Autowired
     private CertificateDAO certificateDAO;
-    @Autowired
     private CertificateValidator validator;
-    @Autowired
     private TagDAO tagDAO;
-    @Autowired
     private TagService tagService;
 
     @Override
@@ -51,14 +45,13 @@ public class CertificateServiceImpl implements CertificateService {
             duplicateValidation(certificate);
             CertificateEntity certificateEntity
                     = findAvailable(certificateDAO.add(certificate).get());
-            if (certificateEntity.getTags() != null) {
-                for (TagEntity tag : certificateEntity.getTags()) {
+            if (certificate.getTags() != null) {
+                for (TagEntity tag : certificate.getTags()) {
                     addTagToCertificate(certificateEntity.getId(),
-                            tagService.add(tag).getId());
+                            tagService.addIfNotExist(tag).getId());
                 }
             }
-            return CertificateClientModelMapper.INSTANCE
-                    .certificateToCertificateClientModel(certificateEntity);
+            return findCertificateById(certificateEntity.getId());
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT, e);
         }
@@ -183,6 +176,10 @@ public class CertificateServiceImpl implements CertificateService {
         certificateDAO.clearTagsByCertificate(certificate.getId());
         if (certificate.getTags() != null
                 && !certificate.getTags().isEmpty()) {
+            certificate.setTags(certificate.getTags()
+                    .stream()
+                    .distinct()
+                    .collect(Collectors.toList()));
             certificate.getTags().forEach(a ->
                     certificateDAO.addTagToCertificate(certificate.getId()
                             ,tagService.addIfNotExist(a).getId()));
@@ -196,6 +193,7 @@ public class CertificateServiceImpl implements CertificateService {
      *
      * @param validator the validator
      */
+    @Autowired
     public void setValidator(CertificateValidator validator) {
         this.validator = validator;
     }
@@ -205,6 +203,7 @@ public class CertificateServiceImpl implements CertificateService {
      *
      * @param certificateDAO the certificate dao
      */
+    @Autowired
     public void setCertificateDAO(CertificateDAO certificateDAO) {
         this.certificateDAO = certificateDAO;
     }
@@ -214,6 +213,7 @@ public class CertificateServiceImpl implements CertificateService {
      *
      * @param tagDAO the tag dao
      */
+    @Autowired
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }
@@ -223,6 +223,7 @@ public class CertificateServiceImpl implements CertificateService {
      *
      * @param tagService the tag service
      */
+    @Autowired
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }

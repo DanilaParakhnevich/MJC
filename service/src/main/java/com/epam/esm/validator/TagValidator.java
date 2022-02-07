@@ -6,14 +6,12 @@ import com.epam.esm.validator.exception.BadNameException;
 import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.InvalidTagDataException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  * The type Tag validator.
  */
 @Component
-@Scope("singleton")
 public class TagValidator implements Validator<TagEntity> {
     private static final String INVALID_DATA = "invalid.tag";
     private static final String DUPLICATE = "duplicate.tag";
@@ -22,7 +20,6 @@ public class TagValidator implements Validator<TagEntity> {
     /**
      * The Tag dao.
      */
-    @Autowired
     TagDAO tagDAO;
 
     @Override
@@ -43,6 +40,7 @@ public class TagValidator implements Validator<TagEntity> {
      *
      * @param tagDAO the tag dao
      */
+    @Autowired
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }

@@ -13,10 +13,11 @@ import java.util.Locale;
  */
 public class WebLocaleResolver implements LocaleResolver {
     private static final List<Locale> LOCALES = Arrays.asList(Locale.US, new Locale("ru"));
+    private String headerLang;
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
-        String headerLang = request.getHeader("lang");
+        headerLang = request.getHeader("lang");
 
         if (headerLang == null) {
             return Locale.US;

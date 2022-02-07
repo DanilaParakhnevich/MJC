@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class WebExceptionHandler {
-    @Autowired
     private Translator translator;
 
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(DuplicateTagException.class)
@@ -39,7 +38,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(InvalidTagDataException.class)
@@ -53,7 +52,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(UnknownTagException.class)
@@ -67,7 +66,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(DuplicateCertificateException.class)
@@ -80,7 +79,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(InvalidCertificateDataException.class)
@@ -94,7 +93,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(UnknownCertificateException.class)
@@ -108,7 +107,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(InvalidDateFormatException.class)
@@ -122,7 +121,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadNameException.class)
@@ -136,7 +135,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadDurationException.class)
@@ -150,7 +149,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadPriceException.class)
@@ -164,7 +163,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadDescriptionException.class)
@@ -178,7 +177,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadParameterException.class)
@@ -192,7 +191,7 @@ public class WebExceptionHandler {
     /**
      * Handle response entity.
      *
-     * @param e the e
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(NumberFormatException.class)
@@ -206,7 +205,7 @@ public class WebExceptionHandler {
     /**
      * Handle http message not readable exception response entity.
      *
-     * @param ex the ex
+     * @param ex the exception
      * @return the response entity
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -243,6 +242,7 @@ public class WebExceptionHandler {
      *
      * @param translator the translator
      */
+    @Autowired
     public void setTranslator(Translator translator) {
         this.translator = translator;
     }

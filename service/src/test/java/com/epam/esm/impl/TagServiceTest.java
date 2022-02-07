@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagServiceTest {
@@ -50,40 +53,40 @@ class TagServiceTest {
     }
     @Test
     void addTest() {
-        Mockito.when(tagDAO.findByName("s"))
+        when(tagDAO.findByName("s"))
                 .thenReturn(Optional.empty())
                 .thenReturn(Optional.of(addedTag));
-        Mockito.when(tagDAO.add(tag))
+        when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
-        Assertions.assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
                 tagService.add(tag));
     }
 
     @Test
     void addTestForThrowing() {
-        Mockito.when(tagDAO.findByName("s"))
+        when(tagDAO.findByName("s"))
                 .thenReturn(Optional.of(addedTag));
-        Mockito.when(tagDAO.add(tag))
+        when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
-        Assertions.assertThrows(DuplicateTagException.class, () -> tagService.add(tag));
+        assertThrows(DuplicateTagException.class, () -> tagService.add(tag));
     }
 
     @Test
     void addIfNotExistTest() {
-        Mockito.when(tagDAO.findByName("s"))
+        when(tagDAO.findByName("s"))
                 .thenReturn(Optional.of(addedTag));
-        Mockito.when(tagDAO.add(tag)).
+        when(tagDAO.add(tag)).
                 thenReturn(Optional.of(addedTag));
-        Assertions.assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
                 tagService.addIfNotExist(tag));
     }
 
     @Test
     void findAllTest() {
         List<TagEntity> tags = Arrays.asList(firstTag, secondTag);
-        Mockito.when(tagDAO.findAll())
+        when(tagDAO.findAll())
                 .thenReturn(tags);
-        Assertions.assertEquals(tagService.findAll(),
+        assertEquals(tagService.findAll(),
                 tags.stream()
                         .map(TagClientModelMapper.INSTANCE::tagToTagClientModel)
                         .collect(Collectors.toList()));
@@ -91,43 +94,43 @@ class TagServiceTest {
 
     @Test
     void findTagByIdTest() {
-        Mockito.when(tagDAO.findById(5))
+        when(tagDAO.findById(5))
                 .thenReturn(Optional.ofNullable(addedTag));
-        Assertions.assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
                 tagService.findTagById(5));
     }
 
     @Test
     void findTagByIdTestForThrowing() {
-        Mockito.when(tagDAO.findById(5))
+        when(tagDAO.findById(5))
                 .thenReturn(Optional.empty());
-        Assertions.assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
+        assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
     }
 
     @Test
     void findTagByNameTest() {
-        Mockito.when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
-        Assertions.assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
+        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
                 tagService.findTagByName("s"));
     }
 
     @Test
     void findTagByNameTestForThrowing() {
-        Mockito.when(tagDAO.findByName("s")).thenReturn(Optional.empty());
-        Assertions.assertThrows(UnknownTagException.class,
+        when(tagDAO.findByName("s")).thenReturn(Optional.empty());
+        assertThrows(UnknownTagException.class,
                 () -> tagService.findTagByName("s"));
     }
 
     @Test
     void deleteByIdTest() {
-        Mockito.when(tagDAO.findById(5)).thenReturn(Optional.of(addedTag));
-        Mockito.when(tagDAO.delete(5)).thenReturn(true);
-        Assertions.assertTrue(tagService.deleteById(5));
+        when(tagDAO.findById(5)).thenReturn(Optional.of(addedTag));
+        when(tagDAO.delete(5)).thenReturn(true);
+        assertTrue(tagService.deleteById(5));
     }
 
     @Test
     void deleteByIdTestForThrowing() {
-        Mockito.when(tagDAO.findById(5)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
+        when(tagDAO.findById(5)).thenReturn(Optional.empty());
+        assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
     }
 }

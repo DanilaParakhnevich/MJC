@@ -9,6 +9,8 @@ import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateValidatorTest {
@@ -32,28 +34,28 @@ class CertificateValidatorTest {
     @Test
     void validateTest1() {
         certificate.setName("");
-        Assertions.assertThrows(BadNameException.class,
+        assertThrows(BadNameException.class,
                 () -> validator.validate(certificate));
     }
 
     @Test
     void validateTest2() {
         certificate.setDescription("");
-        Assertions.assertThrows(BadDescriptionException.class,
+        assertThrows(BadDescriptionException.class,
                 () -> validator.validate(certificate));
     }
 
     @Test
     void validateTest3() {
         certificate.setDuration(0);
-        Assertions.assertThrows(BadDurationException.class,
+        assertThrows(BadDurationException.class,
                 () -> validator.validate(certificate));
     }
 
     @Test
     void validateTest4() {
         certificate.setPrice(new BigDecimal(0));
-        Assertions.assertThrows(BadPriceException.class,
+        assertThrows(BadPriceException.class,
                 () -> validator.validate(certificate));
     }
 }

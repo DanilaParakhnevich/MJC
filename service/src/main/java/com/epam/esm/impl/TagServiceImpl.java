@@ -8,7 +8,6 @@ import com.epam.esm.mapper.TagClientModelMapper;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +19,9 @@ import java.util.stream.Collectors;
  * The type Tag service.
  */
 @Service
-@Scope("singleton")
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
-    @Autowired
     private TagValidator validator;
-    @Autowired
     private TagDAO tagDAO;
 
 
@@ -85,6 +81,7 @@ public class TagServiceImpl implements TagService {
      *
      * @param validator the validator
      */
+    @Autowired
     public void setValidator(TagValidator validator) {
         this.validator = validator;
     }
@@ -94,6 +91,7 @@ public class TagServiceImpl implements TagService {
      *
      * @param tagDAO the tag dao
      */
+    @Autowired
     public void setTagDAO(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
     }

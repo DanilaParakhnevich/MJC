@@ -1,10 +1,7 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.CertificateDAO;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.validator.exception.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,7 +10,6 @@ import java.math.BigDecimal;
  * The type Certificate validator.
  */
 @Component
-@Scope("singleton")
 public class CertificateValidator implements Validator<CertificateEntity> {
     private static final String INVALID_DATA = "invalid.certificate";
     private static final String BAD_NAME = "bad.value.name";
@@ -21,12 +17,6 @@ public class CertificateValidator implements Validator<CertificateEntity> {
     private static final String BAD_DURATION = "bad.value.duration";
     private static final String BAD_PRICE = "bad.value.price";
 
-
-    /**
-     * The Certificate dao.
-     */
-    @Autowired
-    CertificateDAO certificateDAO;
 
     @Override
     public void validate(CertificateEntity certificate) throws ValidatorException {

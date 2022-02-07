@@ -2,7 +2,6 @@ package com.epam.esm.mapper;
 
 
 import com.epam.esm.entity.TagEntity;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ import java.sql.SQLException;
  * @see com.epam.esm.entity.TagEntity
  */
 @Component
-@Scope("singleton")
 public class TagMapperImpl implements RowMapper<TagEntity> {
     @Override
     public TagEntity mapRow(ResultSet rs, int rowNum) throws SQLException {

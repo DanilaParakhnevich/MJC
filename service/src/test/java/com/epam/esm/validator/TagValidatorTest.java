@@ -11,6 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagValidatorTest {
@@ -36,22 +39,22 @@ class TagValidatorTest {
     @Test
     void validateTest1() {
         tag.setName(null);
-        Assertions.assertThrows(BadNameException.class,
+        assertThrows(BadNameException.class,
                 () -> validator.validate(tag));
     }
 
     @Test
     void validateTest2() {
         tag.setName("");
-        Assertions.assertThrows(BadNameException.class,
+        assertThrows(BadNameException.class,
                 () -> validator.validate(tag));
     }
 
     @Test
     void validateTest3() {
-        Mockito.when(tagDAO.findByName(tag.getName()))
+        when(tagDAO.findByName(tag.getName()))
                 .thenReturn(Optional.of(tag));
-        Assertions.assertThrows(DuplicateTagException.class,
+        assertThrows(DuplicateTagException.class,
                 () -> validator.validate(tag));
     }
 }

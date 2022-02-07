@@ -53,35 +53,35 @@ class CertificateDAOImplTest {
         CertificateEntity certificate = certificateDAO.add(testCertificate).get();
         testCertificate.setLastUpdateDate(certificate.getLastUpdateDate());
         testCertificate.setCreateDate(certificate.getCreateDate());
-        Assertions.assertEquals(certificate, testCertificate);
+        assertEquals(certificate, testCertificate);
     }
 
     @Test
     void findById() {
         testCertificate.setId(1);
-        Assertions.assertEquals(testCertificate, certificateDAO.findById(1).get());
+        assertEquals(testCertificate, certificateDAO.findById(1).get());
     }
 
     @Test
     void findByNamePart() {
-        Assertions.assertEquals(firstTestCertificate, certificateDAO.findByNamePart("swimming").get(0));
+        assertEquals(firstTestCertificate, certificateDAO.findByNamePart("swimming").get(0));
     }
 
     @Test
     void findByTagName() {
         testCertificate.setId(1);
-        Assertions.assertEquals(testCertificate, certificateDAO.findByTagName("fun").get(0));
+        assertEquals(testCertificate, certificateDAO.findByTagName("fun").get(0));
     }
 
     @Test
     void findAll() {
         testCertificate.setId(1);
-        Assertions.assertEquals(certificateDAO.findAll(), Arrays.asList(testCertificate, firstTestCertificate, secondTestCertificate));
+        assertEquals(certificateDAO.findAll(), Arrays.asList(testCertificate, firstTestCertificate, secondTestCertificate));
     }
 
     @Test
     void update() {
-        Assertions.assertTrue(certificateDAO.update(firstTestCertificate));
+        assertTrue(certificateDAO.update(firstTestCertificate));
     }
 
     @Test
@@ -92,6 +92,6 @@ class CertificateDAOImplTest {
 
     @Test
     void addTagToCertificate() {
-        Assertions.assertTrue(certificateDAO.addTagToCertificate(1, 1));
+        assertTrue(certificateDAO.addTagToCertificate(1, 1));
     }
 }
