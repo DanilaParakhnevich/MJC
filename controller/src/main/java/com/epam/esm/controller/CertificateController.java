@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateClientModel;
-import com.epam.esm.entity.CertificateEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +42,7 @@ public class CertificateController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public CertificateClientModel addCertificate(@RequestBody CertificateEntity certificate) {
+    public CertificateClientModel addCertificate(@RequestBody CertificateClientModel certificate) {
         return certificateService.add(certificate);
     }
 
@@ -110,7 +109,7 @@ public class CertificateController {
      */
     @PutMapping
     @ResponseStatus(OK)
-    public CertificateClientModel update(@RequestBody CertificateEntity certificate) {
+    public CertificateClientModel update(@RequestBody CertificateClientModel certificate) {
         return certificateService.update(certificate);
     }
 

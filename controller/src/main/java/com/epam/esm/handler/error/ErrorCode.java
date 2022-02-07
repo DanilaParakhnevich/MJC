@@ -18,11 +18,6 @@ public enum ErrorCode {
      */
     BAD_VALUE(33),
 
-
-    /**
-     * Invalid tag error code.
-     */
-    INVALID_TAG(11),
     /**
      * Duplicate tag error code.
      */
@@ -32,10 +27,6 @@ public enum ErrorCode {
      */
     NONEXISTENT_TAG(13),
 
-    /**
-     * Invalid certificate error code.
-     */
-    INVALID_CERTIFICATE(21),
     /**
      * Duplicate certificate error code.
      */

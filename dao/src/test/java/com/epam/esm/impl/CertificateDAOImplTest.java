@@ -1,6 +1,5 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import org.junit.jupiter.api.BeforeEach;

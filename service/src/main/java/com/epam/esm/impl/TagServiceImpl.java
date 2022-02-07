@@ -4,7 +4,7 @@ import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
-import com.epam.esm.mapper.TagClientModelMapper;
+import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,21 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
     private TagValidator validator;
+    private TagModelMapper mapper;
     private TagDao tagDAO;
 
 
     @Override
-    public TagClientModel add(TagEntity tag) {
+    public TagClientModel add(TagClientModel tag) {
         validator.validate(tag);
-        tagDAO.add(tag);
-        return TagClientModelMapper.INSTANCE
+        tagDAO.add(mapper.tagClientModelToTag(tag));
+        return mapper
                 .tagToTagClientModel(tagDAO
                         .findByName(tag.getName()).get());
     }
 
     @Override
-    public TagClientModel addIfNotExist(TagEntity tag) {
+    public TagClientModel addIfNotExist(TagClientModel tag) {
         if (tag != null && !tagDAO.findByName(tag.getName()).isPresent()) {
             return add(tag);
         }
@@ -45,7 +46,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagClientModel> findAll() {
         return tagDAO.findAll().stream()
-                .map(TagClientModelMapper.INSTANCE::tagToTagClientModel)
+                .map(mapper::tagToTagClientModel)
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +54,7 @@ public class TagServiceImpl implements TagService {
     public TagClientModel findTagById(long id) {
         Optional<TagEntity> tag = tagDAO.findById(id);
         if (tag.isPresent()) {
-            return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
+            return mapper.tagToTagClientModel(tag.get());
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
@@ -62,7 +63,7 @@ public class TagServiceImpl implements TagService {
     public TagClientModel findTagByName(String name) {
         Optional<TagEntity> tag = tagDAO.findByName(name);
         if (tag.isPresent()) {
-            return TagClientModelMapper.INSTANCE.tagToTagClientModel(tag.get());
+            return mapper.tagToTagClientModel(tag.get());
         }
         throw new UnknownTagException(UNKNOWN + "/name=" + name);
     }
@@ -94,5 +95,15 @@ public class TagServiceImpl implements TagService {
     @Autowired
     public void setTagDAO(TagDao tagDAO) {
         this.tagDAO = tagDAO;
+    }
+
+    /**
+     * Sets mapper.
+     *
+     * @param mapper the tag dao
+     */
+    @Autowired
+    public void setMapper(TagModelMapper mapper) {
+        this.mapper = mapper;
     }
 }

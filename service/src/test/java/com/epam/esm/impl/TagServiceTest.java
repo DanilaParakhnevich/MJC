@@ -1,13 +1,14 @@
 package com.epam.esm.impl;
 
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.mapper.TagClientModelMapper;
+import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.Arrays;
@@ -31,6 +32,9 @@ class TagServiceTest {
 
     @Mock
     TagDaoImpl tagDAO;
+
+    @Autowired
+    TagModelMapper mapper;
 
     @BeforeAll
     void init() {
@@ -131,5 +135,9 @@ class TagServiceTest {
     void deleteByIdTestForThrowing() {
         when(tagDAO.findById(5)).thenReturn(Optional.empty());
         assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
+    }
+
+    public void setMapper (TagModelMapper mapper) {
+        this.mapper = mapper;
     }
 }

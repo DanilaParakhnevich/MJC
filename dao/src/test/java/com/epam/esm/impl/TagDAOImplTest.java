@@ -1,7 +1,6 @@
 package com.epam.esm.impl;
 
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.config.TestConfig;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

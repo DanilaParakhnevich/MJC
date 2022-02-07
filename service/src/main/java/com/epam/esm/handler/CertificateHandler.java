@@ -2,6 +2,7 @@ package com.epam.esm.handler;
 
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.handler.exception.BadParameterException;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * The type Certificate handler.
  */
+@Component
 public class CertificateHandler {
     private static final String DIRECTION = "direction";
     private static final String BAD_PARAMETER = "bad.param";
@@ -30,7 +32,7 @@ public class CertificateHandler {
      * @param parameters   the parameters
      * @return the list
      */
-    public static List<CertificateClientModel> sortByParameters (List<CertificateClientModel> certificates, Map<String, String> parameters) {
+    public List<CertificateClientModel> sortByParameters (List<CertificateClientModel> certificates, Map<String, String> parameters) {
         for (Map.Entry<String, String> parameter : parameters.entrySet()) {
             if (!parameter.getKey().equals(DIRECTION)) {
                 certificates = certificates.stream()
@@ -45,11 +47,11 @@ public class CertificateHandler {
         return certificates;
     }
 
-    private static void reverse (List<CertificateClientModel> certificates) {
+    private void reverse (List<CertificateClientModel> certificates) {
         Collections.reverse(certificates);
     }
 
-    private static Comparator<CertificateClientModel> handleParameter (Map.Entry<String, String> parameter) {
+    private Comparator<CertificateClientModel> handleParameter (Map.Entry<String, String> parameter) {
         if (parameter.getKey().equals("param")) {
             switch (parameter.getValue()) {
                 case "by-name":

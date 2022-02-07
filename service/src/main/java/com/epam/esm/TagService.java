@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.TagClientModel;
-import com.epam.esm.entity.TagEntity;
 
 import com.epam.esm.validator.exception.UnknownTagException;
 
@@ -10,14 +9,14 @@ import java.util.List;
 /**
  * The interface Tag service.
  */
-public interface TagService extends Service {
+public interface TagService {
     /**
      * Add tag client model.
      *
      * @param tag the tag
      * @return the tag client model
      */
-    TagClientModel add(TagEntity tag);
+    TagClientModel add(TagClientModel tag);
 
     /**
      * Add if not exist tag client model.
@@ -25,7 +24,7 @@ public interface TagService extends Service {
      * @param tag the tag
      * @return the tag client model
      */
-    TagClientModel addIfNotExist(TagEntity tag);
+    TagClientModel addIfNotExist(TagClientModel tag);
 
     /**
      * Find all list.

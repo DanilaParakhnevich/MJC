@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
-import com.epam.esm.entity.TagEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +32,7 @@ public class TagController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public TagClientModel add(@RequestBody TagEntity tag) {
+    public TagClientModel add(@RequestBody TagClientModel tag) {
         return tagService.add(tag);
     }
 

@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.TagEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class CertificateClientModel implements ClientModel {
     private long duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private List<TagEntity> tags;
+    private List<TagClientModel> tags;
 
     /**
      * Gets create date.

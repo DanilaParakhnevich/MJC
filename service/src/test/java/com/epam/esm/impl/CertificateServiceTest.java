@@ -2,12 +2,13 @@ package com.epam.esm.impl;
 
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.mapper.CertificateClientModelMapper;
+import com.epam.esm.mapper.CertificateModelMapper;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.*;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -36,6 +37,9 @@ class CertificateServiceTest {
 
     @Mock
     TagServiceImpl tagService;
+
+    @Autowired
+    CertificateModelMapper mapper;
 
     @BeforeAll
     void init() {
@@ -74,7 +78,7 @@ class CertificateServiceTest {
         when(certificateDAO.findByNamePart(certificate.getName()))
                 .thenReturn(Arrays.asList(addedCertificate));
         assertEquals(certificateService.add(certificate),
-                CertificateClientModelMapper.INSTANCE.certificateToCertificateClientModel(addedCertificate));
+                mapper.certificateToCertificateClientModel(addedCertificate));
     }
 
     @Test
@@ -192,5 +196,9 @@ class CertificateServiceTest {
                 .thenReturn(Optional.empty());
         assertThrows(UnknownCertificateException.class,
                 () -> certificateService.deleteById(addedCertificate.getId()));
+    }
+
+    public void setMapper(CertificateModelMapper mapper) {
+        this.mapper = mapper;
     }
 }

@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.CertificateClientModel;
-import com.epam.esm.entity.CertificateEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -9,14 +8,14 @@ import java.util.Map;
 /**
  * The interface Certificate service.
  */
-public interface CertificateService extends Service {
+public interface CertificateService {
     /**
      * Add certificate client model.
      *
      * @param certificate the certificate
      * @return the certificate client model
      */
-    CertificateClientModel add(CertificateEntity certificate);
+    CertificateClientModel add(CertificateClientModel certificate);
 
     /**
      * Add tag to certificate boolean.
@@ -67,7 +66,7 @@ public interface CertificateService extends Service {
      * @param certificate the certificate
      * @return the certificate client model
      */
-    CertificateClientModel update (CertificateEntity certificate) ;
+    CertificateClientModel update (CertificateClientModel certificate) ;
 
     /**
      * Delete by id boolean.
