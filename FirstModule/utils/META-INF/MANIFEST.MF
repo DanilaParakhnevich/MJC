@@ -1,5 +1,0 @@
-Name: utils
-Manifest-Version: 1.3.5
-Specification-Version: 1.3.5
-Implementation-Version: 1.3.5
-Signature-Version: 1.3.5
