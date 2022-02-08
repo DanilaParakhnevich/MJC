@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.TagEntity;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,8 +48,8 @@ class TagDAOImplTest {
 
     @Test
     void findByCertificateId() {
-        tagList = Arrays.asList(secondTestTag);
-        assertEquals(tagDAO.findByCertificateId(1), tagList);
+        tagList = Arrays.asList(fourthTestTag, fifthTestTag, secondTestTag);
+        assertEquals(tagDAO.findByCertificateId(2), tagList);
     }
 
     @Test

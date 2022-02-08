@@ -40,7 +40,7 @@ class TagServiceTest {
         MockitoAnnotations.initMocks(this);
         tagService = new TagServiceImpl();
         validator = new TagValidator();
-        validator.setTagDAO(tagDAO);
+        validator.setTagDao(tagDAO);
         tagService.setValidator(validator);
         tagService.setTagDAO(tagDAO);
     }

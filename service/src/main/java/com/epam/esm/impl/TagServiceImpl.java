@@ -23,21 +23,21 @@ public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
     private TagValidator validator;
     private TagModelMapper mapper;
-    private TagDao tagDAO;
+    private TagDao tagDao;
 
 
     @Override
     public TagClientModel add(TagClientModel tag) {
         validator.validate(tag);
-        tagDAO.add(mapper.tagClientModelToTag(tag));
+        tagDao.add(mapper.tagClientModelToTag(tag));
         return mapper
-                .tagToTagClientModel(tagDAO
+                .tagToTagClientModel(tagDao
                         .findByName(tag.getName()).get());
     }
 
     @Override
     public TagClientModel addIfNotExist(TagClientModel tag) {
-        if (tag != null && !tagDAO.findByName(tag.getName()).isPresent()) {
+        if (tag != null && !tagDao.findByName(tag.getName()).isPresent()) {
             return add(tag);
         }
         return tag != null ? findTagByName(tag.getName()) : null;
@@ -45,14 +45,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagClientModel> findAll() {
-        return tagDAO.findAll().stream()
+        return tagDao.findAll().stream()
                 .map(mapper::tagToTagClientModel)
                 .collect(Collectors.toList());
     }
 
     @Override
     public TagClientModel findTagById(long id) {
-        Optional<TagEntity> tag = tagDAO.findById(id);
+        Optional<TagEntity> tag = tagDao.findById(id);
         if (tag.isPresent()) {
             return mapper.tagToTagClientModel(tag.get());
         }
@@ -61,7 +61,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagClientModel findTagByName(String name) {
-        Optional<TagEntity> tag = tagDAO.findByName(name);
+        Optional<TagEntity> tag = tagDao.findByName(name);
         if (tag.isPresent()) {
             return mapper.tagToTagClientModel(tag.get());
         }
@@ -71,8 +71,8 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        if (tagDAO.findById(id).isPresent()) {
-            return tagDAO.delete(id);
+        if (tagDao.findById(id).isPresent()) {
+            return tagDao.delete(id);
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
@@ -94,7 +94,7 @@ public class TagServiceImpl implements TagService {
      */
     @Autowired
     public void setTagDAO(TagDao tagDAO) {
-        this.tagDAO = tagDAO;
+        this.tagDao = tagDAO;
     }
 
     /**

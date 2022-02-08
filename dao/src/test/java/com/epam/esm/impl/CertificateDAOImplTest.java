@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,18 +30,15 @@ class CertificateDAOImplTest {
 
     @BeforeEach
     void setUp() {
-        TagEntity firstTestTag = new TagEntity(0, "Jumps");
-        TagEntity secondTestTag = new TagEntity(0, "Entertainment");
-
         testCertificate = new CertificateEntity(4, "jumping", "jumping",
-                new BigDecimal("10.0"), 10, LocalDateTime.parse("2022-03-15T00:00"),
-                LocalDateTime.parse("2022-03-15T00:00"), null);
+                new BigDecimal("10.0"), 10, LocalDateTime.parse("2022-03-15T03:00"),
+                LocalDateTime.parse("2022-03-15T03:00"), null);
         firstTestCertificate = new CertificateEntity(2, "swimming", "swimming",
-                new BigDecimal("33.0"), 35, LocalDateTime.parse("2022-03-15T00:00"),
-                LocalDateTime.parse("2022-03-15T00:00"), null);
+                new BigDecimal("33.0"), 35, LocalDateTime.parse("2022-03-15T03:00"),
+                LocalDateTime.parse("2022-03-15T03:00"), null);
         secondTestCertificate = new CertificateEntity(3, "basketball", "basketball",
-                new BigDecimal("23.0"), 35, LocalDateTime.parse("2022-03-15T00:00"),
-                LocalDateTime.parse("2022-03-15T00:00"), null);
+                new BigDecimal("23.0"), 35, LocalDateTime.parse("2022-03-15T03:00"),
+                LocalDateTime.parse("2022-03-15T03:00"), null);
     }
 
 
@@ -65,8 +63,7 @@ class CertificateDAOImplTest {
 
     @Test
     void findByTagName() {
-        testCertificate.setId(1);
-        assertEquals(testCertificate, certificateDAO.findByTagName("fun").get(0));
+        assertEquals(firstTestCertificate, certificateDAO.findByTagName("clear").get(0));
     }
 
     @Test
@@ -82,7 +79,7 @@ class CertificateDAOImplTest {
 
     @Test
     void deleteById() {
-        certificateDAO.deleteById(1);
+        certificateDAO.delete(1);
         assertEquals(certificateDAO.findAll(), Arrays.asList(firstTestCertificate, secondTestCertificate));
     }
 

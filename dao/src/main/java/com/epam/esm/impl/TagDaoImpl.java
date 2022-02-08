@@ -6,7 +6,6 @@ import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +23,8 @@ public class TagDaoImpl extends TagDao {
     private static final String FIND_BY_NAME = "select * from tag where name = ?";
     private static final String FIND_ALL = "select * from tag";
 
-    @PostConstruct
-    private void initMethod() {
-        super.setTableName("tag");
+    public TagDaoImpl() {
+        setTableName("tag");
     }
 
     @Override

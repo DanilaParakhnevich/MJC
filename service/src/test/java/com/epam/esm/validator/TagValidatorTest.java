@@ -29,7 +29,7 @@ class TagValidatorTest {
     void init() {
         MockitoAnnotations.initMocks(this);
         validator = new TagValidator();
-        validator.setTagDAO(tagDAO);
+        validator.setTagDao(tagDAO);
         mapper = new TagModelMapperImpl();
     }
 

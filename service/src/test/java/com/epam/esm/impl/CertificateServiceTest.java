@@ -1,9 +1,9 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.config.TestConfig;
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.handler.CertificateHandler;
 import com.epam.esm.mapper.CertificateModelMapper;
 import com.epam.esm.mapper.CertificateModelMapperImpl;
 import com.epam.esm.validator.CertificateValidator;
@@ -11,12 +11,8 @@ import com.epam.esm.validator.exception.*;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +21,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = TestConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateServiceTest {
     CertificateValidator certificateValidator;
@@ -33,8 +28,9 @@ class CertificateServiceTest {
     CertificateEntity certificate;
     CertificateEntity addedCertificate;
     CertificateClientModel certificateClientModel;
+    CertificateHandler handler;
     List<TagEntity> tags;
-    CertificateModelMapper mapper = new CertificateModelMapperImpl();
+    CertificateModelMapper mapper;
     @Mock
     CertificateDaoImpl certificateDAO;
 
@@ -47,13 +43,16 @@ class CertificateServiceTest {
     @BeforeAll
     void init() {
         MockitoAnnotations.initMocks(this);
+        mapper = new CertificateModelMapperImpl();
         certificateValidator = new CertificateValidator();
         certificateService = new CertificateServiceImpl();
-        certificateService.setCertificateDAO(certificateDAO);
+        certificateService.setCertificateDao(certificateDAO);
         certificateService.setValidator(certificateValidator);
-        certificateService.setTagDAO(tagDAO);
+        certificateService.setTagDao(tagDAO);
         tagService.setTagDAO(tagDAO);
         certificateService.setTagService(tagService);
+        handler = new CertificateHandler();
+        certificateService.setHandler(handler);
     }
 
     @BeforeEach
@@ -73,44 +72,6 @@ class CertificateServiceTest {
         certificateService.setMapper(mapper);
         certificateClientModel = mapper.certificateToCertificateClientModel(addedCertificate);
         tags = Arrays.asList(new TagEntity(1, "a"), new TagEntity(2, "a"));
-    }
-
-    @Test
-    void addTest() throws ParseException {
-        when(certificateDAO.add(certificate))
-                .thenReturn(Optional.ofNullable(addedCertificate));
-        when(certificateDAO.findByNamePart(certificate.getName()))
-                .thenReturn(Arrays.asList(addedCertificate));
-        assertEquals(certificateService.add(certificateClientModel),
-                certificateClientModel);
-    }
-
-    @Test
-    void addTest1ForThrowing() {
-        certificate.setName("");
-        assertThrows(ValidatorException.class,
-                () -> certificateService.add(certificateClientModel));
-    }
-
-    @Test
-    void addTest2ForThrowing() {
-        certificate.setPrice(new BigDecimal(0));
-        assertThrows(ValidatorException.class,
-                () -> certificateService.add(certificateClientModel));
-    }
-
-    @Test
-    void addTest3ForThrowing() {
-        certificate.setDuration(0);
-        assertThrows(ValidatorException.class,
-                () -> certificateService.add(certificateClientModel));
-    }
-
-    @Test
-    void addTest4ForThrowing() {
-        certificate.setDescription("");
-        assertThrows(ValidatorException.class,
-                () -> certificateService.add(certificateClientModel));
     }
 
     @Test
@@ -148,6 +109,7 @@ class CertificateServiceTest {
 
     @Test
     void findByNameTest() {
+        certificateClientModel.setTags(new ArrayList<>());
         when(certificateDAO.findByNamePart("a"))
                 .thenReturn(Arrays.asList(addedCertificate));
         assertEquals(certificateService.findByName("a", null),
@@ -156,7 +118,6 @@ class CertificateServiceTest {
 
     @Test
     void findByTagNameTest() {
-        addedCertificate.setTags(tags);
         when(certificateDAO.findByTagName("a"))
                 .thenReturn(Arrays.asList(addedCertificate));
         assertEquals(certificateService.findByTagName("a", null),

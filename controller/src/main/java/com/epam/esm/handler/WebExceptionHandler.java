@@ -2,6 +2,7 @@ package com.epam.esm.handler;
 
 import com.epam.esm.handler.error.ErrorCode;
 import com.epam.esm.handler.error.ErrorResponse;
+import com.epam.esm.handler.exception.BadParameterException;
 import com.epam.esm.handler.translator.Translator;
 import com.epam.esm.validator.exception.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -82,7 +83,7 @@ public class WebExceptionHandler {
      */
     @ExceptionHandler(ValidatorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handle (ValidatorException e) {
+    public ErrorResponse handle(ValidatorException e) {
         return new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
                 getFullMessage(e.getMessage()));
@@ -96,7 +97,7 @@ public class WebExceptionHandler {
      */
     @ExceptionHandler(NumberFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handle (NumberFormatException e) {
+    public ErrorResponse handle(NumberFormatException e) {
         return new ErrorResponse(
                HttpStatus.BAD_REQUEST.value(),
                 e.getMessage());
@@ -109,15 +110,29 @@ public class WebExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex)
+    public ErrorResponse handle(HttpMessageNotReadableException ex)
     {
         JsonMappingException jme = (JsonMappingException) ex.getCause();
         return new ErrorResponse(
-                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
                 translator.translate("bad.request.value") +
                         " (" + translator.translate("field") + " = " +
                         translator.translate("field." + jme.getPath().get(0).getFieldName()) +
                         ")");
+    }
+
+    /**
+     * Handle bad parameter response entity.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
+    @ExceptionHandler(BadParameterException.class)
+    public ErrorResponse handle(BadParameterException ex)
+    {
+        return new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
+                translator.translate(ex.getMessage()));
     }
 
 

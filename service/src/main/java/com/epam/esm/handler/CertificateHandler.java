@@ -54,7 +54,7 @@ public class CertificateHandler {
         Collections.reverse(certificates);
     }
 
-    private Comparator<CertificateClientModel> handleParameter (Map.Entry<String, String> parameter) {
+    private Comparator<CertificateClientModel> handleParameter (Map.Entry<String, String> parameter) throws BadParameterException {
         if (parameter.getKey().equals("param")) {
             switch (parameter.getValue()) {
                 case "by-name":

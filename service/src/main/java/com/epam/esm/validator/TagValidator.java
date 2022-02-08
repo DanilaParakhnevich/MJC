@@ -19,7 +19,7 @@ public class TagValidator implements Validator<TagClientModel> {
     /**
      * The Tag dao.
      */
-    TagDao tagDAO;
+    TagDao tagDao;
 
     @Override
     public void validate(TagClientModel tag) {
@@ -29,7 +29,7 @@ public class TagValidator implements Validator<TagClientModel> {
             throw new ValidatorException(BAD_NAME + "/name=null");
         } else if (tag.getName().length() == 0){
             throw new ValidatorException(BAD_NAME + "/name's length=0");
-        } else if (tagDAO.findByName(tag.getName()).isPresent()) {
+        } else if (tagDao.findByName(tag.getName()).isPresent()) {
             throw new DuplicateTagException(DUPLICATE);
         }
     }
@@ -37,10 +37,10 @@ public class TagValidator implements Validator<TagClientModel> {
     /**
      * Sets tag dao.
      *
-     * @param tagDAO the tag dao
+     * @param tagDao the tag dao
      */
     @Autowired
-    public void setTagDAO(TagDao tagDAO) {
-        this.tagDAO = tagDAO;
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
     }
 }

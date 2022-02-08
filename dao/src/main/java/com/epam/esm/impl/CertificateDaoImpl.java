@@ -6,7 +6,6 @@ import com.epam.esm.mapper.CertificateMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -33,9 +32,8 @@ public class CertificateDaoImpl extends CertificateDao {
     private static final String FIND_LAST_ADDED_CERTIFICATE = "select * from gift_certificate" +
             " where id = (select MAX(id) from gift_certificate)";
 
-    @PostConstruct
-    private void initMethod() {
-        super.setTableName("gift_certificate");
+    public CertificateDaoImpl() {
+        setTableName("gift_certificate");
     }
 
     @Override
