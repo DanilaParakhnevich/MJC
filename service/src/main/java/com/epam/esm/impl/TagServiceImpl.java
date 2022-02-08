@@ -40,7 +40,7 @@ public class TagServiceImpl implements TagService {
         if (tag != null && !tagDao.findByName(tag.getName()).isPresent()) {
             return add(tag);
         }
-        return tag != null ? findTagByName(tag.getName()) : null;
+        return tag != null ? findByName(tag.getName()) : null;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagClientModel findTagById(long id) {
+    public TagClientModel findById(long id) {
         Optional<TagEntity> tag = tagDao.findById(id);
         if (tag.isPresent()) {
             return mapper.tagToTagClientModel(tag.get());
@@ -60,7 +60,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagClientModel findTagByName(String name) {
+    public TagClientModel findByName(String name) {
         Optional<TagEntity> tag = tagDao.findByName(name);
         if (tag.isPresent()) {
             return mapper.tagToTagClientModel(tag.get());

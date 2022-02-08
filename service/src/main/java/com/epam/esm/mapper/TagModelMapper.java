@@ -11,9 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring")
 public interface TagModelMapper {
-
-
+    /**
+     * Tag to tag client model.
+     *
+     * @param tag the tag
+     * @return the tag client model
+     */
     TagClientModel tagToTagClientModel(TagEntity tag);
 
+    /**
+     * Tag client model to tag client model.
+     *
+     * @param tag the tag
+     * @return the tag entity
+     */
     TagEntity tagClientModelToTag(TagClientModel tag);
 }

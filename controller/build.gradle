@@ -15,7 +15,6 @@ dependencies {
 
     implementation 'junit:junit:4.13.1'
     implementation project(':service')
-    implementation project(':dao')
     implementation "javax.servlet:javax.servlet-api:4.0.1"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"

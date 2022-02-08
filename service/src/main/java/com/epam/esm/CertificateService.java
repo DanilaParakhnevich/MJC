@@ -40,7 +40,7 @@ public interface CertificateService {
      * @param id the id
      * @return the certificate client model
      */
-    CertificateClientModel findCertificateById(long id) ;
+    CertificateClientModel findById(long id) ;
 
     /**
      * Find by name list.

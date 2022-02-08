@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -81,7 +80,7 @@ class CertificateControllerTest {
 
     @Test
     void findById() throws Exception {
-        Mockito.when(certificateService.findCertificateById(1))
+        Mockito.when(certificateService.findById(1))
                 .thenReturn(certificate);
         mockMvc.perform(get("/certificates/id/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

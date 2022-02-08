@@ -14,7 +14,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * Add optional.
      *
      * @param certificate the certificate
-     * @return the optional
+     * @return the optional of certificate entity
      * @throws ParseException the parse exception
      */
     public abstract Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException;

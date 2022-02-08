@@ -40,7 +40,7 @@ class TagServiceTest {
         MockitoAnnotations.initMocks(this);
         tagService = new TagServiceImpl();
         validator = new TagValidator();
-        validator.setTagDao(tagDAO);
+        validator.setTagService(tagService);
         tagService.setValidator(validator);
         tagService.setTagDAO(tagDAO);
     }
@@ -100,28 +100,28 @@ class TagServiceTest {
         when(tagDAO.findById(5))
                 .thenReturn(Optional.ofNullable(addedTag));
         assertEquals(mapper.tagToTagClientModel(addedTag),
-                tagService.findTagById(5));
+                tagService.findById(5));
     }
 
     @Test
     void findTagByIdTestForThrowing() {
         when(tagDAO.findById(5))
                 .thenReturn(Optional.empty());
-        assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
+        assertThrows(UnknownTagException.class, () -> tagService.findById(5));
     }
 
     @Test
     void findTagByNameTest() {
         when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
         assertEquals(mapper.tagToTagClientModel(addedTag),
-                tagService.findTagByName("s"));
+                tagService.findByName("s"));
     }
 
     @Test
     void findTagByNameTestForThrowing() {
         when(tagDAO.findByName("s")).thenReturn(Optional.empty());
         assertThrows(UnknownTagException.class,
-                () -> tagService.findTagByName("s"));
+                () -> tagService.findByName("s"));
     }
 
     @Test
@@ -134,7 +134,7 @@ class TagServiceTest {
     @Test
     void deleteByIdTestForThrowing() {
         when(tagDAO.findById(5)).thenReturn(Optional.empty());
-        assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
+        assertThrows(UnknownTagException.class, () -> tagService.findById(5));
     }
 
     @Autowired

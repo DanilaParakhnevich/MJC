@@ -35,7 +35,7 @@ public class CertificateController {
     CertificateService certificateService;
 
     /**
-     * Add certificate certificate client model.
+     * Add certificate client model.
      *
      * @param certificate the certificate
      * @return the certificate client model
@@ -68,7 +68,7 @@ public class CertificateController {
     @GetMapping("/id/{id}")
     @ResponseStatus(OK)
     public CertificateClientModel findById(@PathVariable long id) {
-        return certificateService.findCertificateById(id);
+        return certificateService.findById(id);
     }
 
     /**

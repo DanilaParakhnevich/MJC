@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
-import com.epam.esm.entity.TagEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +62,7 @@ class TagControllerTest {
 
     @Test
     void findById() throws Exception {
-        when(tagService.findTagById(1))
+        when(tagService.findById(1))
                 .thenReturn(tag);
         mockMvc.perform(get("/tags/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

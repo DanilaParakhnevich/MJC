@@ -19,10 +19,21 @@ public abstract class Dao<T extends Entity> {
     protected JdbcTemplate jdbcTemplate;
     protected RowMapper<T> mapper;
 
+    /**
+     * Find all method
+     *
+     * @return list of T
+     */
     public List<T> findAll() {
         return jdbcTemplate.query(findAll, mapper);
     }
 
+    /**
+     * Find by id method
+     *
+     * @param id the id
+     * @return the optional of T
+     */
     public Optional<T> findById(long id) {
         List<T> tList = jdbcTemplate
                 .query(findById, mapper, id);
@@ -30,6 +41,12 @@ public abstract class Dao<T extends Entity> {
                 : Optional.ofNullable(tList.get(0));
     }
 
+    /**
+     * Delete method
+     *
+     * @param id the id
+     * @return boolean value
+     */
     public boolean delete(long id) {
         return jdbcTemplate.update(delete, id) == 1;
     }

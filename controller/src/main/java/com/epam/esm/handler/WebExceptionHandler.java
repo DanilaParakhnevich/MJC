@@ -99,8 +99,8 @@ public class WebExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(NumberFormatException e) {
         return new ErrorResponse(
-               HttpStatus.BAD_REQUEST.value(),
-                e.getMessage());
+               concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
+                translateNumberFormatException(e));
     }
 
     /**
@@ -150,6 +150,10 @@ public class WebExceptionHandler {
 
     private long concatenate (long first, long second) {
         return Long.parseLong(String.valueOf(first) + String.valueOf(second));
+    }
+
+    private String translateNumberFormatException(NumberFormatException e) {
+        return translator.translate("bad.link") + " (" + e.getMessage().split("\"")[1] + ")";
     }
 
     /**

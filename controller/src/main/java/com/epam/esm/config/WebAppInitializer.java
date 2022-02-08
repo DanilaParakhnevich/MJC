@@ -15,7 +15,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{
                 ControllerConfig.class,
-                DaoConfig.class,
         };
     }
 

@@ -54,7 +54,7 @@ public class CertificateServiceImpl implements CertificateService {
                             tagService.addIfNotExist(tag).getId());
                 }
             }
-            return findCertificateById(certificateEntity.getId());
+            return findById(certificateEntity.getId());
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT, e);
         }
@@ -77,7 +77,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public CertificateClientModel findCertificateById(long id) {
+    public CertificateClientModel findById(long id) {
         Optional<CertificateEntity> certificate = certificateDao.findById(id);
         if (certificate.isPresent()) {
             certificate.get().setTags(tagDao
@@ -133,7 +133,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public boolean deleteById(long id) {
-        CertificateClientModel certificate = findCertificateById(id);
+        CertificateClientModel certificate = findById(id);
         if (certificate.getTags() != null) {
             certificateDao.clearTagsByCertificate(certificate.getId());
         }

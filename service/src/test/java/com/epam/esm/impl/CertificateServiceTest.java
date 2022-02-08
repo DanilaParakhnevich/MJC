@@ -13,10 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -85,9 +82,9 @@ class CertificateServiceTest {
     void findAllTest() {
         addedCertificate.setTags(tags);
         when(certificateDAO.findAll())
-                .thenReturn(Arrays.asList(addedCertificate));
+                .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findAll(null),
-                Arrays.asList(mapper.certificateToCertificateClientModel(addedCertificate)));
+                Collections.singletonList(mapper.certificateToCertificateClientModel(addedCertificate)));
     }
 
     @Test
@@ -95,7 +92,7 @@ class CertificateServiceTest {
         certificateClientModel.setTags(new ArrayList<>());
         when(certificateDAO.findById(1))
                 .thenReturn(Optional.ofNullable(addedCertificate));
-        assertEquals(certificateService.findCertificateById(1),
+        assertEquals(certificateService.findById(1),
                 certificateClientModel);
     }
 
@@ -104,30 +101,30 @@ class CertificateServiceTest {
         when(certificateDAO.findById(1))
                 .thenReturn(Optional.empty());
         assertThrows(UnknownCertificateException.class,
-                () -> certificateService.findCertificateById(1));
+                () -> certificateService.findById(1));
     }
 
     @Test
     void findByNameTest() {
         certificateClientModel.setTags(new ArrayList<>());
         when(certificateDAO.findByNamePart("a"))
-                .thenReturn(Arrays.asList(addedCertificate));
+                .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByName("a", null),
-                Arrays.asList(certificateClientModel));
+                Collections.singletonList(certificateClientModel));
     }
 
     @Test
     void findByTagNameTest() {
         when(certificateDAO.findByTagName("a"))
-                .thenReturn(Arrays.asList(addedCertificate));
+                .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByTagName("a", null),
-                Arrays.asList(mapper.certificateToCertificateClientModel(addedCertificate)));
+                Collections.singletonList(mapper.certificateToCertificateClientModel(addedCertificate)));
     }
 
     @Test
     void updateTest() {
         when(certificateDAO.findByNamePart(addedCertificate.getName()))
-                .thenReturn(Arrays.asList(addedCertificate));
+                .thenReturn(Collections.singletonList(addedCertificate));
         when(certificateDAO.update(addedCertificate))
                 .thenReturn(true);
         assertEquals(certificateService.update(certificateClientModel),

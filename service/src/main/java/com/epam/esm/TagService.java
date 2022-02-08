@@ -39,7 +39,7 @@ public interface TagService {
      * @param id the id
      * @return the tag client model
      */
-    TagClientModel findTagById(long id);
+    TagClientModel findById(long id);
 
     /**
      * Find tag by name tag client model.
@@ -47,7 +47,7 @@ public interface TagService {
      * @param name the name
      * @return the tag client model
      */
-    TagClientModel findTagByName(String name);
+    TagClientModel findByName(String name);
 
     /**
      * Delete by id boolean.

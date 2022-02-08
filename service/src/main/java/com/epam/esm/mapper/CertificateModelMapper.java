@@ -12,13 +12,19 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public interface CertificateModelMapper {
     /**
-     * Certificate to certificate client model certificate client model.
+     * Certificate to certificate client model.
      *
      * @param certificate the certificate
      * @return the certificate client model
      */
     CertificateClientModel certificateToCertificateClientModel(CertificateEntity certificate);
 
+    /**
+     * Certificate client model to certificate.
+     *
+     * @param certificate the certificate
+     * @return the certificate entity
+     */
     CertificateEntity certificateClientModelToCertificate(CertificateClientModel certificate);
 
 }

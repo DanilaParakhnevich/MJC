@@ -56,7 +56,7 @@ public class TagController {
     @GetMapping("/{id}")
     @ResponseStatus(OK)
     public TagClientModel findById(@PathVariable long id) {
-        return tagService.findTagById(id);
+        return tagService.findById(id);
     }
 
     /**
