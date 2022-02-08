@@ -1,7 +1,6 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.dto.CertificateClientModel;
-import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.validator.exception.*;
 import org.springframework.stereotype.Component;
 

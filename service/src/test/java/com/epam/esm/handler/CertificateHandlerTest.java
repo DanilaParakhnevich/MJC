@@ -3,6 +3,7 @@ package com.epam.esm.handler;
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.entity.CertificateEntity;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ class CertificateHandlerTest {
     private CertificateClientModel secondTestCertificate;
     private CertificateClientModel thirdTestCertificate;
     private List<CertificateClientModel> certificates;
+    private CertificateHandler handler;
 
     Map<String, String> parameters;
     @BeforeEach
@@ -33,27 +35,28 @@ class CertificateHandlerTest {
                 new BigDecimal(100), (short) 60, LocalDateTime.of(2021, 12, 30, 5, 37, 48),
                 LocalDateTime.of(2021, 12, 30, 5, 37, 48), new ArrayList<>());
         certificates = Arrays.asList(firstTestCertificate, secondTestCertificate, thirdTestCertificate);
+        handler = new CertificateHandler();
     }
 
 
     @Test
     void sortByDirection() {
         parameters.put(DIRECTION, "DESC");
-        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(handler.sortByParameters(certificates, parameters),
                 Arrays.asList(thirdTestCertificate, secondTestCertificate, firstTestCertificate));
     }
 
     @Test
     void sortByName() {
         parameters.put(PARAM, "by-name");
-        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(handler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
     @Test
     void sortByCreateDate() {
         parameters.put(PARAM, "by-create-date");
-        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(handler.sortByParameters(certificates, parameters),
                 Arrays.asList(firstTestCertificate, thirdTestCertificate, secondTestCertificate));
     }
 
@@ -61,7 +64,7 @@ class CertificateHandlerTest {
     void sortByCreateDateAndByDirection() {
         parameters.put(DIRECTION, "DESC");
         parameters.put(PARAM, "by-create-date");
-        assertEquals(CertificateHandler.sortByParameters(certificates, parameters),
+        assertEquals(handler.sortByParameters(certificates, parameters),
                 Arrays.asList(secondTestCertificate, thirdTestCertificate, firstTestCertificate));
     }
 }

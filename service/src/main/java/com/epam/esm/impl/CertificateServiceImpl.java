@@ -103,7 +103,11 @@ public class CertificateServiceImpl implements CertificateService {
     public List<CertificateClientModel> findByTagName(
             String name,
             Map<String, String> parameters) {
-        return sort(certificateDAO.findByTagName(name).stream().map(a -> {
+        List<CertificateEntity> certificates = certificateDAO.findByTagName(name);
+        if (certificates.isEmpty()) {
+            throw new UnknownCertificateException(UNKNOWN + "/tag=" + name);
+        }
+        return sort(certificates.stream().map(a -> {
             a.setTags(tagDAO.findByCertificateId(a.getId()));
             return mapper.certificateToCertificateClientModel(a);
         }).collect(Collectors.toList()), parameters);

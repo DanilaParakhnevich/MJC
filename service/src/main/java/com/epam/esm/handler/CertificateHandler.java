@@ -17,12 +17,15 @@ import java.util.stream.Collectors;
 public class CertificateHandler {
     private static final String DIRECTION = "direction";
     private static final String BAD_PARAMETER = "bad.param";
-    private static final Comparator<CertificateClientModel> comparatorByName
-            = Comparator.comparing(CertificateClientModel::getName);
-    private static final Comparator<CertificateClientModel> comparatorByCreateDate
-            = Comparator.comparing(CertificateClientModel::getCreateDate);
+    private final Comparator<CertificateClientModel> comparatorByName;
+    private final Comparator<CertificateClientModel> comparatorByCreateDate;
 
-    private CertificateHandler(){}
+    public CertificateHandler() {
+        comparatorByName
+                = Comparator.comparing(CertificateClientModel::getName);
+        comparatorByCreateDate
+                = Comparator.comparing(CertificateClientModel::getCreateDate);
+    }
 
     /**
      * Sort by parameters list.

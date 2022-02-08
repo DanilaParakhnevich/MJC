@@ -1,8 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.CertificateService;
-import com.epam.esm.entity.CertificateEntity;
-import com.epam.esm.mapper.CertificateClientModelMapper;
+import com.epam.esm.dto.CertificateClientModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
@@ -39,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CertificateControllerTest {
     MockMvc mockMvc;
-    CertificateEntity certificateEntity;
+    CertificateClientModel certificate;
     @Mock
     CertificateService certificateService;
     CertificateController controller;
@@ -56,22 +55,18 @@ class CertificateControllerTest {
     @BeforeEach
     void configuration() {
         time = LocalDateTime.now();
-        certificateEntity = new CertificateEntity();
-        certificateEntity.setId(1);
-        certificateEntity.setDuration(1);
-        certificateEntity.setDescription("1");
-        certificateEntity.setCreateDate(time);
-        certificateEntity.setLastUpdateDate(time);
-        certificateEntity.setPrice(new BigDecimal(1));
-        certificateEntity.setName("1");
+        certificate = new CertificateClientModel();
+        certificate.setId(1);
+        certificate.setDuration(1);
+        certificate.setDescription("1");
+        certificate.setLastUpdateDate(time);
+        certificate.setName("1");
     }
 
     @Test
     void findAll() throws Exception {
         Mockito.when(certificateService.findAll(null))
-                .thenReturn(Arrays
-                        .asList(CertificateClientModelMapper.INSTANCE
-                                .certificateToCertificateClientModel(certificateEntity)));
+                .thenReturn(Collections.singletonList(certificate));
         mockMvc.perform(get("/certificates").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -87,8 +82,7 @@ class CertificateControllerTest {
     @Test
     void findById() throws Exception {
         Mockito.when(certificateService.findCertificateById(1))
-                .thenReturn(CertificateClientModelMapper.INSTANCE
-                                .certificateToCertificateClientModel(certificateEntity));
+                .thenReturn(certificate);
         mockMvc.perform(get("/certificates/id/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -102,11 +96,9 @@ class CertificateControllerTest {
     @Test
     void findByTagName() throws Exception {
         Mockito.when(certificateService.findByTagName("1", null))
-                .thenReturn(Arrays.asList(CertificateClientModelMapper.INSTANCE
-                        .certificateToCertificateClientModel(certificateEntity)));
+                .thenReturn(Collections.singletonList(certificate));
         mockMvc.perform(get("/certificates/tag/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].price", is(1)))
@@ -118,11 +110,9 @@ class CertificateControllerTest {
     @Test
     void findByName() throws Exception {
         Mockito.when(certificateService.findByName("1", null))
-                .thenReturn(Arrays.asList(CertificateClientModelMapper.INSTANCE
-                        .certificateToCertificateClientModel(certificateEntity)));
+                .thenReturn(Collections.singletonList(certificate));
         mockMvc.perform(get("/certificates/name/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].price", is(1)))

@@ -1,8 +1,8 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.TagService;
+import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.mapper.TagClientModelMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagControllerTest {
     MockMvc mockMvc;
-    TagEntity tagEntity;
+    TagClientModel tag;
     @Mock
     TagService tagService;
     TagController controller;
@@ -46,16 +46,14 @@ class TagControllerTest {
 
     @BeforeEach
     void configuration() {
-        tagEntity = new TagEntity();
-        tagEntity.setId(1);
-        tagEntity.setName("1");
+        tag = new TagClientModel(1, "1");
     }
 
     @Test
     void findAll() throws Exception {
         when(tagService.findAll())
                 .thenReturn(Arrays
-                        .asList(TagClientModelMapper.INSTANCE.tagToTagClientModel(tagEntity)));
+                        .asList(tag));
         mockMvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -66,7 +64,7 @@ class TagControllerTest {
     @Test
     void findById() throws Exception {
         when(tagService.findTagById(1))
-                .thenReturn(TagClientModelMapper.INSTANCE.tagToTagClientModel(tagEntity));
+                .thenReturn(tag);
         mockMvc.perform(get("/tags/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))

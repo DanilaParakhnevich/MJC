@@ -33,7 +33,6 @@ class TagServiceTest {
     @Mock
     TagDaoImpl tagDAO;
 
-    @Autowired
     TagModelMapper mapper;
 
     @BeforeAll
@@ -61,8 +60,8 @@ class TagServiceTest {
                 .thenReturn(Optional.of(addedTag));
         when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
-        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
-                tagService.add(tag));
+        assertEquals((mapper.tagToTagClientModel(addedTag)),
+                tagService.add(mapper.tagToTagClientModel(tag)));
     }
 
     @Test
@@ -71,7 +70,8 @@ class TagServiceTest {
                 .thenReturn(Optional.of(addedTag));
         when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
-        assertThrows(DuplicateTagException.class, () -> tagService.add(tag));
+        assertThrows(DuplicateTagException.class, ()
+                -> tagService.add(mapper.tagToTagClientModel(tag)));
     }
 
     @Test
@@ -80,8 +80,8 @@ class TagServiceTest {
                 .thenReturn(Optional.of(addedTag));
         when(tagDAO.add(tag)).
                 thenReturn(Optional.of(addedTag));
-        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
-                tagService.addIfNotExist(tag));
+        assertEquals(mapper.tagToTagClientModel(addedTag),
+                tagService.addIfNotExist(mapper.tagToTagClientModel(tag)));
     }
 
     @Test
@@ -91,7 +91,7 @@ class TagServiceTest {
                 .thenReturn(tags);
         assertEquals(tagService.findAll(),
                 tags.stream()
-                        .map(TagClientModelMapper.INSTANCE::tagToTagClientModel)
+                        .map(mapper::tagToTagClientModel)
                         .collect(Collectors.toList()));
     }
 
@@ -99,7 +99,7 @@ class TagServiceTest {
     void findTagByIdTest() {
         when(tagDAO.findById(5))
                 .thenReturn(Optional.ofNullable(addedTag));
-        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        assertEquals(mapper.tagToTagClientModel(addedTag),
                 tagService.findTagById(5));
     }
 
@@ -113,7 +113,7 @@ class TagServiceTest {
     @Test
     void findTagByNameTest() {
         when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
-        assertEquals(TagClientModelMapper.INSTANCE.tagToTagClientModel(addedTag),
+        assertEquals(mapper.tagToTagClientModel(addedTag),
                 tagService.findTagByName("s"));
     }
 
@@ -137,6 +137,7 @@ class TagServiceTest {
         assertThrows(UnknownTagException.class, () -> tagService.findTagById(5));
     }
 
+    @Autowired
     public void setMapper (TagModelMapper mapper) {
         this.mapper = mapper;
     }

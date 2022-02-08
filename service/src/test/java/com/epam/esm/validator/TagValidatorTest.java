@@ -1,9 +1,10 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.TagDao;
-import com.epam.esm.entity.TagEntity;
-import com.epam.esm.validator.exception.BadNameException;
-import com.epam.esm.validator.exception.DuplicateTagException;
+import com.epam.esm.dto.TagClientModel;
+import com.epam.esm.mapper.TagModelMapper;
+import com.epam.esm.mapper.TagModelMapperImpl;
+import com.epam.esm.validator.exception.ValidatorException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -17,7 +18,8 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagValidatorTest {
     TagValidator validator;
-    TagEntity tag;
+    TagClientModel tag;
+    TagModelMapper mapper;
 
     @Mock
     TagDao tagDAO;
@@ -28,32 +30,34 @@ class TagValidatorTest {
         MockitoAnnotations.initMocks(this);
         validator = new TagValidator();
         validator.setTagDAO(tagDAO);
+        mapper = new TagModelMapperImpl();
     }
 
     @BeforeEach
     void configuration() {
-        tag = new TagEntity(1, "a");
+        tag = new TagClientModel(1, "a");
     }
 
     @Test
     void validateTest1() {
         tag.setName(null);
-        assertThrows(BadNameException.class,
+        assertThrows(ValidatorException.class,
                 () -> validator.validate(tag));
     }
 
     @Test
     void validateTest2() {
         tag.setName("");
-        assertThrows(BadNameException.class,
+        assertThrows(ValidatorException.class,
                 () -> validator.validate(tag));
     }
 
     @Test
     void validateTest3() {
         when(tagDAO.findByName(tag.getName()))
-                .thenReturn(Optional.of(tag));
-        assertThrows(DuplicateTagException.class,
+                .thenReturn(Optional
+                        .of(mapper.tagClientModelToTag(tag)));
+        assertThrows(ValidatorException.class,
                 () -> validator.validate(tag));
     }
 }
