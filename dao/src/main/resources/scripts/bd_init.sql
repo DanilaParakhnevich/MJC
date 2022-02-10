@@ -7,10 +7,10 @@ values ('swimming', 'swimming', 33, 35, '2022-03-15T00:00Z', '2022-03-15T00:00Z'
 insert into gift_certificate (name, description, price, duration, create_date, last_update_date)
 values ('basketball', 'basketball', 23, 35, '2022-03-15T00:00Z', '2022-03-15T00:00Z');
 
-insert into tag (id, name) values (1, 'jumping');
-insert into tag (id, name) values (2, 'fun');
-insert into tag (id, name) values (3, 'sport');
-insert into tag (id, name) values (4, 'clear');
+insert into tag (name) values ('jumping');
+insert into tag (name) values ('fun');
+insert into tag (name) values ('sport');
+insert into tag (name) values ('clear');
 
 insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 3);
 insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 4);

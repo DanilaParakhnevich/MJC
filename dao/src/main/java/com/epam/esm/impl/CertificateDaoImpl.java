@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -29,6 +28,8 @@ public class CertificateDaoImpl extends CertificateDao {
             "price = ?, duration = ?, create_date = ?, last_update_date = ? where id = ?";
     private static final String DELETE_TAGS_BY_CERTIFICATE = "delete from certificate_by_tag" +
             " where id_certificate = ?";
+    private static final String DELETE_TAG_FROM_CERTIFICATE = "delete from certificate_by_tag" +
+            " where id_certificate = ? and id_tag = ?";
     private static final String FIND_LAST_ADDED_CERTIFICATE = "select * from gift_certificate" +
             " where id = (select MAX(id) from gift_certificate)";
 
@@ -38,8 +39,6 @@ public class CertificateDaoImpl extends CertificateDao {
 
     @Override
     public Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException {
-        certificate.setCreateDate(LocalDateTime.now());
-        certificate.setLastUpdateDate(LocalDateTime.now());
         return Optional.ofNullable(jdbcTemplate.update(ADD_CERTIFICATE,
                 certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(),
@@ -62,7 +61,6 @@ public class CertificateDaoImpl extends CertificateDao {
 
     @Override
     public boolean update(CertificateEntity certificate) {
-        certificate.setLastUpdateDate(LocalDateTime.now());
         return jdbcTemplate.update(UPDATE_CERTIFICATE, certificate.getName(),
                 certificate.getDescription(), certificate.getPrice(),
                 certificate.getDuration(), certificate.getCreateDate(),
@@ -72,6 +70,11 @@ public class CertificateDaoImpl extends CertificateDao {
     @Override
     public boolean addTagToCertificate(long certificateId, long tagId) {
         return jdbcTemplate.update(ADD_TAG_TO_CERTIFICATE, certificateId, tagId) == 1;
+    }
+
+    @Override
+    public boolean deleteTagFromCertificate(long certificateId, long tagId) {
+        return jdbcTemplate.update(DELETE_TAG_FROM_CERTIFICATE, certificateId, tagId) == 1;
     }
 
     @Override

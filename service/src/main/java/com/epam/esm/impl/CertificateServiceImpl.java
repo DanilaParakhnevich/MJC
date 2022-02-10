@@ -7,8 +7,10 @@ import com.epam.esm.TagService;
 import com.epam.esm.dto.CertificateClientModel;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.CertificateEntity;
+import com.epam.esm.entity.TagEntity;
 import com.epam.esm.handler.CertificateHandler;
 import com.epam.esm.mapper.CertificateModelMapper;
+import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.DuplicateCertificateException;
 import com.epam.esm.validator.exception.InvalidDateFormatException;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +36,8 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String UNKNOWN = "nonexistent.certificate";
     private static final String DUPLICATE = "duplicate.certificate";
     private CertificateModelMapper mapper;
+    private TagModelMapper tagMapper;
+
     private CertificateDao certificateDao;
     private CertificateValidator validator;
     private CertificateHandler handler;
@@ -45,6 +50,8 @@ public class CertificateServiceImpl implements CertificateService {
         try {
             validator.validate(certificate);
             duplicateValidation(certificate);
+            certificate.setCreateDate(LocalDateTime.now());
+            certificate.setLastUpdateDate(LocalDateTime.now());
             CertificateEntity certificateEntity
                     = findAvailable(certificateDao.add(
                             mapper.certificateClientModelToCertificate(certificate)).get());
@@ -118,13 +125,17 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateClientModel update(CertificateClientModel certificate) {
         try {
             validator.validate(certificate);
-            CertificateEntity finalCertificate =
-                    findAvailable(mapper.certificateClientModelToCertificate(certificate));
-            if (finalCertificate == null) {
+            Optional<CertificateEntity> searchedCertificate = certificateDao.findById(certificate.getId());
+            if (!searchedCertificate.isPresent()) {
                 throw new UnknownCertificateException(UNKNOWN);
             }
-            updateTags(finalCertificate);
-            return mapper.certificateToCertificateClientModel(finalCertificate);
+            CertificateEntity clientModelCopy = mapper.certificateClientModelToCertificate(certificate);
+            clientModelCopy.setLastUpdateDate(LocalDateTime.now());
+            clientModelCopy.setCreateDate(searchedCertificate.get().getCreateDate());
+            certificateDao.update(clientModelCopy);
+            updateTags(clientModelCopy);
+            clientModelCopy.setTags(tagDao.findByCertificateId(clientModelCopy.getId()));
+            return mapper.certificateToCertificateClientModel(clientModelCopy);
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT);
         }
@@ -170,23 +181,21 @@ public class CertificateServiceImpl implements CertificateService {
         return certificates;
     }
 
-    private void updateTags(CertificateEntity certificate) throws ParseException {
-        certificateDao.update(certificate);
-        certificateDao.clearTagsByCertificate(certificate.getId());
-        if (certificate.getTags() != null
-                && !certificate.getTags().isEmpty()) {
-            CertificateClientModel certificateClientModel =
-                    mapper.certificateToCertificateClientModel(certificate);
-            certificateClientModel.setTags(
-                    certificateClientModel.getTags()
+    private void updateTags(CertificateEntity certificate) {
+        List<TagEntity> oldTags = tagDao.findByCertificateId(certificate.getId());
+        for (TagEntity tag : oldTags) {
+            if (certificate.getTags()
                     .stream()
-                    .distinct()
-                    .collect(Collectors.toList()));
-            certificateClientModel.getTags().forEach(a ->
-                    certificateDao.addTagToCertificate(certificate.getId()
-                            ,tagService.addIfNotExist(a).getId()));
-            certificate.setTags(
-                    tagDao.findByCertificateId(certificate.getId()));
+                    .noneMatch(a -> a.getName().equals(tag.getName()))) {
+                certificateDao.deleteTagFromCertificate(certificate.getId(), tag.getId());
+                oldTags.remove(tag);
+            }
+        }
+        for (TagEntity tag : certificate.getTags()) {
+            if (oldTags.stream().noneMatch(a -> a.getName().equals(tag.getName()))) {
+                certificateDao.addTagToCertificate(certificate.getId(),
+                        tagService.addIfNotExist(tagMapper.tagToTagClientModel(tag)).getId());
+            }
         }
     }
 
@@ -233,6 +242,11 @@ public class CertificateServiceImpl implements CertificateService {
     @Autowired
     public void setHandler(CertificateHandler handler) {
         this.handler = handler;
+    }
+
+    @Autowired
+    public void setTagMapper(TagModelMapper tagMapper) {
+        this.tagMapper = tagMapper;
     }
 
     @Autowired

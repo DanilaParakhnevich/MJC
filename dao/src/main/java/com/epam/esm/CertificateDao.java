@@ -54,6 +54,15 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
     public abstract boolean addTagToCertificate(long certificateId, long tagId);
 
     /**
+     * Delete tag from certificate boolean.
+     *
+     * @param certificateId the certificate id
+     * @param tagId         the tag id
+     * @return the boolean
+     */
+    public abstract boolean deleteTagFromCertificate(long certificateId, long tagId);
+
+    /**
      * Clear tags by certificate boolean.
      *
      * @param certificateId the certificate id

@@ -106,13 +106,13 @@ public class WebExceptionHandler {
     /**
      * Handle http message not readable exception response entity.
      *
-     * @param ex the exception
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse handle(HttpMessageNotReadableException ex)
+    public ErrorResponse handle(HttpMessageNotReadableException e)
     {
-        JsonMappingException jme = (JsonMappingException) ex.getCause();
+        JsonMappingException jme = (JsonMappingException) e.getCause();
         return new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
                 translator.translate("bad.request.value") +
@@ -128,11 +128,11 @@ public class WebExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(BadParameterException.class)
-    public ErrorResponse handle(BadParameterException ex)
+    public ErrorResponse handle(BadParameterException e)
     {
         return new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_PARAM.getCode()),
-                translator.translate(ex.getMessage()));
+                translator.translate(e.getMessage()));
     }
 
 

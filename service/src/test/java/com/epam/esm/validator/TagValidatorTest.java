@@ -1,6 +1,7 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.TagDao;
+import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.mapper.TagModelMapperImpl;
@@ -22,14 +23,14 @@ class TagValidatorTest {
     TagModelMapper mapper;
 
     @Mock
-    TagDao tagDAO;
+    TagService tagService;
 
 
     @BeforeAll
     void init() {
         MockitoAnnotations.initMocks(this);
         validator = new TagValidator();
-        validator.setTagDao(tagDAO);
+        validator.setTagService(tagService);
         mapper = new TagModelMapperImpl();
     }
 
@@ -54,9 +55,8 @@ class TagValidatorTest {
 
     @Test
     void validateTest3() {
-        when(tagDAO.findByName(tag.getName()))
-                .thenReturn(Optional
-                        .of(mapper.tagClientModelToTag(tag)));
+        when(tagService.findByName(tag.getName()))
+                .thenReturn(tag);
         assertThrows(ValidatorException.class,
                 () -> validator.validate(tag));
     }
