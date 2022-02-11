@@ -29,9 +29,9 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagClientModel add(TagClientModel tag) {
         validator.validate(tag);
-        tagDao.add(mapper.tagClientModelToTag(tag));
+        tagDao.add(mapper.toEntity(tag));
         return mapper
-                .tagToTagClientModel(tagDao
+                .toClientModel(tagDao
                         .findByName(tag.getName()).get());
     }
 
@@ -46,7 +46,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagClientModel> findAll() {
         return tagDao.findAll().stream()
-                .map(mapper::tagToTagClientModel)
+                .map(mapper::toClientModel)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class TagServiceImpl implements TagService {
     public TagClientModel findById(long id) {
         Optional<TagEntity> tag = tagDao.findById(id);
         if (tag.isPresent()) {
-            return mapper.tagToTagClientModel(tag.get());
+            return mapper.toClientModel(tag.get());
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
     public TagClientModel findByName(String name) {
         Optional<TagEntity> tag = tagDao.findByName(name);
         if (tag.isPresent()) {
-            return mapper.tagToTagClientModel(tag.get());
+            return mapper.toClientModel(tag.get());
         }
         throw new UnknownTagException(UNKNOWN + "/name=" + name);
     }

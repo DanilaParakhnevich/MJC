@@ -8,14 +8,21 @@ import java.util.Optional;
 /**
  * The interface Tag dao.
  */
-public abstract class TagDao extends Dao<TagEntity> {
+public interface TagDao {
     /**
      * Add optional.
      *
      * @param tag the tag
      * @return the optional
      */
-    public abstract Optional<TagEntity> add(TagEntity tag);
+    Optional<TagEntity> add(TagEntity tag);
+
+    /**
+     * Find all method
+     *
+     * @return list of tag entity
+     */
+    List<TagEntity> findAll();
 
     /**
      * Find by certificate id list.
@@ -23,7 +30,15 @@ public abstract class TagDao extends Dao<TagEntity> {
      * @param id the id
      * @return the list
      */
-    public abstract List<TagEntity> findByCertificateId(long id);
+    List<TagEntity> findByCertificateId(long id);
+
+    /**
+     * Find by id method
+     *
+     * @param id the id
+     * @return the optional of tag entity
+     */
+    Optional<TagEntity> findById(long id);
 
     /**
      * Find by name optional.
@@ -31,5 +46,13 @@ public abstract class TagDao extends Dao<TagEntity> {
      * @param name the name
      * @return the optional
      */
-    public abstract Optional<TagEntity> findByName(String name);
+    Optional<TagEntity> findByName(String name);
+
+    /**
+     * Delete method
+     *
+     * @param id the id
+     * @return boolean value
+     */
+    boolean delete(long id);
 }

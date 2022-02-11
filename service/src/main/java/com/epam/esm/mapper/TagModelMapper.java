@@ -17,7 +17,7 @@ public interface TagModelMapper {
      * @param tag the tag
      * @return the tag client model
      */
-    TagClientModel tagToTagClientModel(TagEntity tag);
+    TagClientModel toClientModel(TagEntity tag);
 
     /**
      * Tag client model to tag client model.
@@ -25,5 +25,5 @@ public interface TagModelMapper {
      * @param tag the tag
      * @return the tag entity
      */
-    TagEntity tagClientModelToTag(TagClientModel tag);
+    TagEntity toEntity(TagClientModel tag);
 }

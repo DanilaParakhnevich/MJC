@@ -67,7 +67,7 @@ class CertificateServiceTest {
         addedCertificate.setPrice(BigDecimal.valueOf(5));
         addedCertificate.setDuration(30);
         certificateService.setMapper(mapper);
-        certificateClientModel = mapper.certificateToCertificateClientModel(addedCertificate);
+        certificateClientModel = mapper.toClientModel(addedCertificate);
         tags = Arrays.asList(new TagEntity(1, "a"), new TagEntity(2, "a"));
     }
 
@@ -84,7 +84,7 @@ class CertificateServiceTest {
         when(certificateDAO.findAll())
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findAll(null),
-                Collections.singletonList(mapper.certificateToCertificateClientModel(addedCertificate)));
+                Collections.singletonList(mapper.toClientModel(addedCertificate)));
     }
 
     @Test
@@ -118,7 +118,7 @@ class CertificateServiceTest {
         when(certificateDAO.findByTagName("a"))
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByTagName("a", null),
-                Collections.singletonList(mapper.certificateToCertificateClientModel(addedCertificate)));
+                Collections.singletonList(mapper.toClientModel(addedCertificate)));
     }
 
     @Test
@@ -137,7 +137,7 @@ class CertificateServiceTest {
                 .thenReturn(new ArrayList<>());
         assertThrows(UnknownCertificateException.class,
                 () -> certificateService.update(mapper
-                        .certificateToCertificateClientModel(addedCertificate)));
+                        .toClientModel(addedCertificate)));
     }
 
     @Test

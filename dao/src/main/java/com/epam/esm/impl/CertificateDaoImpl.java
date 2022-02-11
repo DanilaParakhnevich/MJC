@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.Dao;
 import com.epam.esm.entity.CertificateEntity;
 import com.epam.esm.CertificateDao;
 import com.epam.esm.mapper.CertificateMapperImpl;
@@ -14,7 +15,7 @@ import java.util.*;
  * @see com.epam.esm.entity.CertificateEntity
  */
 @Component
-public class CertificateDaoImpl extends CertificateDao {
+public class CertificateDaoImpl extends Dao<CertificateEntity> implements CertificateDao {
     private static final String ADD_CERTIFICATE = "insert into gift_certificate " +
             "(name, description, price, duration, create_date, last_update_date)" +
             " values (?, ?, ?, ?, ?, ?)";

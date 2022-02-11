@@ -17,7 +17,7 @@ public interface CertificateModelMapper {
      * @param certificate the certificate
      * @return the certificate client model
      */
-    CertificateClientModel certificateToCertificateClientModel(CertificateEntity certificate);
+    CertificateClientModel toClientModel(CertificateEntity certificate);
 
     /**
      * Certificate client model to certificate.
@@ -25,6 +25,6 @@ public interface CertificateModelMapper {
      * @param certificate the certificate
      * @return the certificate entity
      */
-    CertificateEntity certificateClientModelToCertificate(CertificateClientModel certificate);
+    CertificateEntity toEntity(CertificateClientModel certificate);
 
 }

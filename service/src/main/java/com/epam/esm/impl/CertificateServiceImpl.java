@@ -54,7 +54,7 @@ public class CertificateServiceImpl implements CertificateService {
             certificate.setLastUpdateDate(LocalDateTime.now());
             CertificateEntity certificateEntity
                     = findAvailable(certificateDao.add(
-                            mapper.certificateClientModelToCertificate(certificate)).get());
+                            mapper.toEntity(certificate)).get());
             if (certificate.getTags() != null) {
                 for (TagClientModel tag : certificate.getTags()) {
                     addTagToCertificate(certificateEntity.getId(),
@@ -79,7 +79,7 @@ public class CertificateServiceImpl implements CertificateService {
                 .stream()
                 .map(a -> {
                     a.setTags(tagDao.findByCertificateId(a.getId()));
-                    return mapper.certificateToCertificateClientModel(a);
+                    return mapper.toClientModel(a);
                 }).collect(Collectors.toList()), parameters);
     }
 
@@ -89,7 +89,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (certificate.isPresent()) {
             certificate.get().setTags(tagDao
                     .findByCertificateId(certificate.get().getId()));
-            return mapper.certificateToCertificateClientModel(certificate.get());
+            return mapper.toClientModel(certificate.get());
         }
         throw new UnknownCertificateException(UNKNOWN + "/id=" + id);
     }
@@ -102,7 +102,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
         return sort(certificates.stream().map(a -> {
             a.setTags(tagDao.findByCertificateId(a.getId()));
-            return mapper.certificateToCertificateClientModel(a);
+            return mapper.toClientModel(a);
         }).collect(Collectors.toList()), parameters);
     }
 
@@ -116,7 +116,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
         return sort(certificates.stream().map(a -> {
             a.setTags(tagDao.findByCertificateId(a.getId()));
-            return mapper.certificateToCertificateClientModel(a);
+            return mapper.toClientModel(a);
         }).collect(Collectors.toList()), parameters);
     }
 
@@ -129,13 +129,13 @@ public class CertificateServiceImpl implements CertificateService {
             if (!searchedCertificate.isPresent()) {
                 throw new UnknownCertificateException(UNKNOWN);
             }
-            CertificateEntity clientModelCopy = mapper.certificateClientModelToCertificate(certificate);
+            CertificateEntity clientModelCopy = mapper.toEntity(certificate);
             clientModelCopy.setLastUpdateDate(LocalDateTime.now());
             clientModelCopy.setCreateDate(searchedCertificate.get().getCreateDate());
             certificateDao.update(clientModelCopy);
             updateTags(clientModelCopy);
             clientModelCopy.setTags(tagDao.findByCertificateId(clientModelCopy.getId()));
-            return mapper.certificateToCertificateClientModel(clientModelCopy);
+            return mapper.toClientModel(clientModelCopy);
         } catch (ParseException e) {
             throw new InvalidDateFormatException(INVALID_DATE_FORMAT);
         }
@@ -194,7 +194,7 @@ public class CertificateServiceImpl implements CertificateService {
         for (TagEntity tag : certificate.getTags()) {
             if (oldTags.stream().noneMatch(a -> a.getName().equals(tag.getName()))) {
                 certificateDao.addTagToCertificate(certificate.getId(),
-                        tagService.addIfNotExist(tagMapper.tagToTagClientModel(tag)).getId());
+                        tagService.addIfNotExist(tagMapper.toClientModel(tag)).getId());
             }
         }
     }

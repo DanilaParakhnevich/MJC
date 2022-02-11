@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.Dao;
 import com.epam.esm.TagDao;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagMapperImpl;
@@ -14,14 +15,12 @@ import java.util.Optional;
  * @see com.epam.esm.entity.TagEntity
  */
 @Component
-public class TagDaoImpl extends TagDao {
+public class TagDaoImpl extends Dao<TagEntity> implements TagDao {
     private static final String ADD_TAG = "insert into tag (name) values (?)";
-    private static final String FIND_BY_ID = "select * from tag where id = ?";
     private static final String FIND_BY_CERTIFICATE_ID = "select tag.id, tag.name from tag" +
             " right join certificate_by_tag on certificate_by_tag.id_tag = tag.id" +
             " where certificate_by_tag.id_certificate = ?";
     private static final String FIND_BY_NAME = "select * from tag where name = ?";
-    private static final String FIND_ALL = "select * from tag";
 
     public TagDaoImpl() {
         setTableName("tag");
@@ -34,13 +33,6 @@ public class TagDaoImpl extends TagDao {
     }
 
     @Override
-    public Optional<TagEntity> findById(long id) {
-        List<TagEntity> tags = jdbcTemplate
-                .query(FIND_BY_ID, mapper, id);
-        return tags.isEmpty() ? Optional.empty() : Optional.ofNullable(tags.get(0));
-    }
-
-    @Override
     public List<TagEntity> findByCertificateId(long id) {
         return jdbcTemplate.query(FIND_BY_CERTIFICATE_ID, mapper, id);
     }
@@ -50,11 +42,6 @@ public class TagDaoImpl extends TagDao {
         List<TagEntity> tags = jdbcTemplate
                 .query(FIND_BY_NAME, mapper, name);
         return tags.isEmpty() ? Optional.empty() : Optional.ofNullable(tags.get(0));
-    }
-
-    @Override
-    public List<TagEntity> findAll() {
-        return jdbcTemplate.query(FIND_ALL, mapper);
     }
 
     /**

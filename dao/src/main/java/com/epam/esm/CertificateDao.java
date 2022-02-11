@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The interface Certificate dao.
+ * The abstract class Certificate dao.
  */
-public abstract class CertificateDao extends Dao<CertificateEntity> {
+public interface CertificateDao {
     /**
      * Add optional.
      *
@@ -17,7 +17,22 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @return the optional of certificate entity
      * @throws ParseException the parse exception
      */
-    public abstract Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException;
+    Optional<CertificateEntity> add(CertificateEntity certificate) throws ParseException;
+
+    /**
+     * Find all method
+     *
+     * @return list of certificate entity
+     */
+    List<CertificateEntity> findAll();
+
+    /**
+     * Find by id method
+     *
+     * @param id the id
+     * @return the optional of certificate entity
+     */
+    Optional<CertificateEntity> findById(long id);
 
     /**
      * Find by name part list.
@@ -25,7 +40,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @param namePart the name part
      * @return the list
      */
-    public abstract List<CertificateEntity> findByNamePart(String namePart);
+    List<CertificateEntity> findByNamePart(String namePart);
 
     /**
      * Find by tag name list.
@@ -33,7 +48,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @param name the name
      * @return the list
      */
-    public abstract List<CertificateEntity> findByTagName(String name);
+    List<CertificateEntity> findByTagName(String name);
 
     /**
      * Update boolean.
@@ -42,7 +57,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @return the boolean
      * @throws ParseException the parse exception
      */
-    public abstract boolean update (CertificateEntity certificate) throws ParseException;
+    boolean update (CertificateEntity certificate) throws ParseException;
 
     /**
      * Add tag to certificate boolean.
@@ -51,7 +66,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @param tagId         the tag id
      * @return the boolean
      */
-    public abstract boolean addTagToCertificate(long certificateId, long tagId);
+    boolean addTagToCertificate(long certificateId, long tagId);
 
     /**
      * Delete tag from certificate boolean.
@@ -60,7 +75,7 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @param tagId         the tag id
      * @return the boolean
      */
-    public abstract boolean deleteTagFromCertificate(long certificateId, long tagId);
+    boolean deleteTagFromCertificate(long certificateId, long tagId);
 
     /**
      * Clear tags by certificate boolean.
@@ -68,5 +83,13 @@ public abstract class CertificateDao extends Dao<CertificateEntity> {
      * @param certificateId the certificate id
      * @return the boolean
      */
-    public abstract boolean clearTagsByCertificate(long certificateId);
+    boolean clearTagsByCertificate(long certificateId);
+
+    /**
+     * Delete method
+     *
+     * @param id the id
+     * @return boolean value
+     */
+    boolean delete(long id);
 }

@@ -60,8 +60,8 @@ class TagServiceTest {
                 .thenReturn(Optional.of(addedTag));
         when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
-        assertEquals((mapper.tagToTagClientModel(addedTag)),
-                tagService.add(mapper.tagToTagClientModel(tag)));
+        assertEquals((mapper.toClientModel(addedTag)),
+                tagService.add(mapper.toClientModel(tag)));
     }
 
     @Test
@@ -71,7 +71,7 @@ class TagServiceTest {
         when(tagDAO.add(tag))
                 .thenReturn(Optional.of(addedTag));
         assertThrows(DuplicateTagException.class, ()
-                -> tagService.add(mapper.tagToTagClientModel(tag)));
+                -> tagService.add(mapper.toClientModel(tag)));
     }
 
     @Test
@@ -80,8 +80,8 @@ class TagServiceTest {
                 .thenReturn(Optional.of(addedTag));
         when(tagDAO.add(tag)).
                 thenReturn(Optional.of(addedTag));
-        assertEquals(mapper.tagToTagClientModel(addedTag),
-                tagService.addIfNotExist(mapper.tagToTagClientModel(tag)));
+        assertEquals(mapper.toClientModel(addedTag),
+                tagService.addIfNotExist(mapper.toClientModel(tag)));
     }
 
     @Test
@@ -91,7 +91,7 @@ class TagServiceTest {
                 .thenReturn(tags);
         assertEquals(tagService.findAll(),
                 tags.stream()
-                        .map(mapper::tagToTagClientModel)
+                        .map(mapper::toClientModel)
                         .collect(Collectors.toList()));
     }
 
@@ -99,7 +99,7 @@ class TagServiceTest {
     void findTagByIdTest() {
         when(tagDAO.findById(5))
                 .thenReturn(Optional.ofNullable(addedTag));
-        assertEquals(mapper.tagToTagClientModel(addedTag),
+        assertEquals(mapper.toClientModel(addedTag),
                 tagService.findById(5));
     }
 
@@ -113,7 +113,7 @@ class TagServiceTest {
     @Test
     void findTagByNameTest() {
         when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
-        assertEquals(mapper.tagToTagClientModel(addedTag),
+        assertEquals(mapper.toClientModel(addedTag),
                 tagService.findByName("s"));
     }
 
