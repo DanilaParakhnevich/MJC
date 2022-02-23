@@ -5,7 +5,6 @@ import com.epam.esm.handler.error.ErrorResponse;
 import com.epam.esm.handler.exception.BadParameterException;
 import com.epam.esm.handler.translator.Translator;
 import com.epam.esm.validator.exception.*;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -70,9 +69,9 @@ public class WebExceptionHandler {
     @ExceptionHandler(UnknownCertificateException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(UnknownCertificateException e) {
-        return new ErrorResponse(
-                concatenate(HttpStatus.NOT_FOUND.value(), ErrorCode.NONEXISTENT_CERTIFICATE.getCode()),
+        ErrorResponse response = new ErrorResponse( concatenate(HttpStatus.NOT_FOUND.value(), ErrorCode.NONEXISTENT_CERTIFICATE.getCode()),
                 getFullMessage(e.getMessage()));
+        return response;
     }
 
     /**
@@ -112,19 +111,29 @@ public class WebExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ErrorResponse handle(HttpMessageNotReadableException e)
     {
-        JsonMappingException jme = (JsonMappingException) e.getCause();
         return new ErrorResponse(
                 concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
-                translator.translate("bad.request.value") +
-                        " (" + translator.translate("field") + " = " +
-                        translator.translate("field." + jme.getPath().get(0).getFieldName()) +
-                        ")");
+                translator.translate(e.getMessage()));
+    }
+
+    /**
+     * Handle tag attached exception response entity.
+     *
+     * @param e the exception
+     * @return the response entity
+     */
+    @ExceptionHandler(TagAttachedException.class)
+    public ErrorResponse handle(TagAttachedException e)
+    {
+        return new ErrorResponse(
+                concatenate(HttpStatus.BAD_REQUEST.value(), ErrorCode.BAD_VALUE.getCode()),
+                translator.translate(e.getMessage()));
     }
 
     /**
      * Handle bad parameter response entity.
      *
-     * @param ex the exception
+     * @param e the exception
      * @return the response entity
      */
     @ExceptionHandler(BadParameterException.class)

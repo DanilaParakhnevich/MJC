@@ -1,11 +1,13 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.CertificateDao;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.validator.TagValidator;
+import com.epam.esm.validator.exception.TagAttachedException;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,10 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
+    private static final String ATTACHED = "attached.tag";
     private TagValidator validator;
     private TagModelMapper mapper;
+    private CertificateDao certificateDao;
     private TagDao tagDao;
 
 
@@ -71,7 +75,10 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        if (tagDao.findById(id).isPresent()) {
+        Optional<TagEntity> tag = tagDao.findById(id);
+        if (tag.isPresent() && !certificateDao.findByTagName(tag.get().getName()).isEmpty()) {
+            throw new TagAttachedException(ATTACHED);
+        } else if (tag.isPresent()) {
             return tagDao.delete(id);
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
@@ -98,9 +105,19 @@ public class TagServiceImpl implements TagService {
     }
 
     /**
+     * Sets certificate dao.
+     *
+     * @param certificateDao the certificate dao
+     */
+    @Autowired
+    public void setCertificateDao(CertificateDao certificateDao) {
+        this.certificateDao = certificateDao;
+    }
+
+    /**
      * Sets mapper.
      *
-     * @param mapper the tag dao
+     * @param mapper the mapper
      */
     @Autowired
     public void setMapper(TagModelMapper mapper) {

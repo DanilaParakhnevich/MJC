@@ -127,7 +127,7 @@ public class CertificateServiceImpl implements CertificateService {
             validator.validate(certificate);
             Optional<CertificateEntity> searchedCertificate = certificateDao.findById(certificate.getId());
             if (!searchedCertificate.isPresent()) {
-                throw new UnknownCertificateException(UNKNOWN);
+                throw new UnknownCertificateException(UNKNOWN + "/id=" + certificate.getId());
             }
             CertificateEntity clientModelCopy = mapper.toEntity(certificate);
             clientModelCopy.setLastUpdateDate(LocalDateTime.now());

@@ -47,9 +47,6 @@ public class CertificateDaoImpl extends Dao<CertificateEntity> implements Certif
                 == 1 ? findLastCertificate() : null);
     }
 
-
-
-
     @Override
     public List<CertificateEntity> findByNamePart(String name) {
         return jdbcTemplate.query(FIND_BY_NAME, mapper, name);
