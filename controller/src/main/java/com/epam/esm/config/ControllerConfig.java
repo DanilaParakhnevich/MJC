@@ -17,16 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class ControllerConfig implements WebMvcConfigurer {
     /**
-     * Locale resolver locale resolver.
-     *
-     * @return the locale resolver
-     */
-    @Bean
-    public LocaleResolver localeResolver() {
-        return new WebLocaleResolver();
-    }
-
-    /**
      * Message source resource bundle message source.
      *
      * @return the resource bundle message source

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagEntity implements Entity{
+public class TagEntity implements Entity {
     private long id;
     private String name;
 }

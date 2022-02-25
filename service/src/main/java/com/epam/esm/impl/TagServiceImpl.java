@@ -7,6 +7,7 @@ import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.mapper.TagModelMapper;
 import com.epam.esm.validator.TagValidator;
+import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.TagAttachedException;
 import com.epam.esm.validator.exception.UnknownTagException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
     private static final String ATTACHED = "attached.tag";
+    private static final String DUPLICATE = "duplicate.tag";
     private TagValidator validator;
     private TagModelMapper mapper;
     private CertificateDao certificateDao;
@@ -78,8 +80,14 @@ public class TagServiceImpl implements TagService {
         Optional<TagEntity> tag = tagDao.findById(id);
         if (tag.isPresent() && !certificateDao.findByTagName(tag.get().getName()).isEmpty()) {
             throw new TagAttachedException(ATTACHED);
-        } else if (tag.isPresent()) {
-            return tagDao.delete(id);
+        }
+        if (tag.isPresent()) {
+            try {
+                findByName(tag.get().getName());
+            } catch (UnknownTagException e) {
+                return tagDao.delete(id);
+            }
+            throw new DuplicateTagException(DUPLICATE);
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }

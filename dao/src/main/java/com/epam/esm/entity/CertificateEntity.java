@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CertificateEntity implements Entity{
+public class CertificateEntity implements Entity {
     private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm'Z'";
     private long id;
     private String name;
