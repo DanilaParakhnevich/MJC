@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id "io.freefair.lombok" version "6.3.0"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    implementation project(':dao')
+
+    //for testing
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure:2.6.3'
+}
+
+test {
+    useJUnitPlatform()
+}
