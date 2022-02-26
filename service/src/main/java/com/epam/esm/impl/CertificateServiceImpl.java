@@ -11,6 +11,7 @@ import com.epam.esm.entity.TagEntity;
 import com.epam.esm.handler.CertificateHandler;
 import com.epam.esm.mapper.CertificateModelMapper;
 import com.epam.esm.mapper.TagModelMapper;
+import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.DuplicateCertificateException;
 import com.epam.esm.validator.exception.InvalidDateFormatException;
@@ -38,6 +39,7 @@ public class CertificateServiceImpl implements CertificateService {
     private CertificateModelMapper mapper;
     private TagModelMapper tagMapper;
 
+    private CertificateRepository certificateRepository;
     private CertificateDao certificateDao;
     private CertificateValidator validator;
     private CertificateHandler handler;
@@ -75,20 +77,16 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateClientModel> findAll(Map<String, String> parameters) {
-        return sort(certificateDao.findAll()
+        return sort(certificateRepository.findAll()
                 .stream()
-                .map(a -> {
-                    a.setTags(tagDao.findByCertificateId(a.getId()));
-                    return mapper.toClientModel(a);
-                }).collect(Collectors.toList()), parameters);
+                .map(a -> mapper.toClientModel(a))
+                .collect(Collectors.toList()), parameters);
     }
 
     @Override
     public CertificateClientModel findById(long id) {
-        Optional<CertificateEntity> certificate = certificateDao.findById(id);
+        Optional<CertificateEntity> certificate = certificateRepository.findById(id);
         if (certificate.isPresent()) {
-            certificate.get().setTags(tagDao
-                    .findByCertificateId(certificate.get().getId()));
             return mapper.toClientModel(certificate.get());
         }
         throw new UnknownCertificateException(UNKNOWN + "/id=" + id);
@@ -96,14 +94,12 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateClientModel> findByName(String name, Map<String, String> parameters) {
-        List<CertificateEntity> certificates = certificateDao.findByNamePart(name);
+        List<CertificateEntity> certificates = certificateRepository.findByNameContainingIgnoreCase(name);
         if (certificates.isEmpty()) {
             throw new UnknownCertificateException(UNKNOWN + "/name=" + name);
         }
-        return sort(certificates.stream().map(a -> {
-            a.setTags(tagDao.findByCertificateId(a.getId()));
-            return mapper.toClientModel(a);
-        }).collect(Collectors.toList()), parameters);
+        return sort(certificates.stream().map(a -> mapper.toClientModel(a))
+                .collect(Collectors.toList()), parameters);
     }
 
     @Override
@@ -125,7 +121,7 @@ public class CertificateServiceImpl implements CertificateService {
     public CertificateClientModel update(CertificateClientModel certificate) {
         try {
             validator.validate(certificate);
-            Optional<CertificateEntity> searchedCertificate = certificateDao.findById(certificate.getId());
+            Optional<CertificateEntity> searchedCertificate = certificateRepository.findById(certificate.getId());
             if (!searchedCertificate.isPresent()) {
                 throw new UnknownCertificateException(UNKNOWN + "/id=" + certificate.getId());
             }
@@ -252,5 +248,10 @@ public class CertificateServiceImpl implements CertificateService {
     @Autowired
     public void setMapper(CertificateModelMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Autowired
+    public void setCertificateRepository(CertificateRepository certificateRepository) {
+        this.certificateRepository = certificateRepository;
     }
 }

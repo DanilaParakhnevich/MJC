@@ -2,11 +2,16 @@ package com.epam.esm.impl;
 
 import com.epam.esm.Dao;
 import com.epam.esm.TagDao;
+import com.epam.esm.config.DaoConfig;
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +26,7 @@ public class TagDaoImpl extends Dao<TagEntity> implements TagDao {
             " right join certificate_by_tag on certificate_by_tag.id_tag = tag.id" +
             " where certificate_by_tag.id_certificate = ?";
     private static final String FIND_BY_NAME = "select * from tag where name = ?";
+    private EntityManager entityManager;
 
     public TagDaoImpl() {
         setTableName("tag");

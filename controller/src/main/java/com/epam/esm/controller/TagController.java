@@ -63,12 +63,11 @@ public class TagController {
      * Delete tag boolean.
      *
      * @param id the id
-     * @return the boolean
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public boolean deleteTag(@PathVariable long id) {
-        return tagService.deleteById(id);
+    public void deleteTag(@PathVariable long id) {
+        tagService.deleteById(id);
     }
 
     /**

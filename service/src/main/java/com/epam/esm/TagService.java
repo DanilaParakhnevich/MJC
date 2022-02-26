@@ -56,5 +56,5 @@ public interface TagService {
      * @return the boolean
      * @throws UnknownTagException the unknown tag exception
      */
-    boolean deleteById(long id) throws UnknownTagException;
+    void deleteById(long id) throws UnknownTagException;
 }

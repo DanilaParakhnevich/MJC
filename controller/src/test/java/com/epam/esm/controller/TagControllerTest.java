@@ -74,7 +74,7 @@ class TagControllerTest {
     @Test
     void deleteTag() throws Exception {
         when(tagService.deleteById(1))
-                .thenReturn(true);
+                .thenThrow(Exception.class);
         mockMvc.perform(delete("/tags/1"))
                 .andExpect(content().string("true"));
     }

@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 
-import com.epam.esm.entity.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +11,7 @@ import java.util.Optional;
 /**
  * The interface Dao.
  */
-public abstract class Dao<T extends Entity> {
+public abstract class Dao<T> {
     private String findAll = "select * from &";
     private String findById = "select * from & where id = ?";
     private String delete = "delete from & where id = ?";
