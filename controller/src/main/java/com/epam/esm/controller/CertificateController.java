@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.CertificateService;
 import com.epam.esm.dto.CertificateClientModel;
-import com.epam.esm.handler.exception.BadParameterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +52,7 @@ public class CertificateController {
     @GetMapping
     @ResponseStatus(OK)
     public List<CertificateClientModel> findAll
-    (@RequestParam(required = false) Map<String, String> parameters) {
+    (@RequestParam Map<String, String> parameters) {
         return certificateService.findAll(parameters);
     }
 
@@ -66,24 +64,8 @@ public class CertificateController {
      */
     @GetMapping("/search")
     @ResponseStatus(OK)
-    public List<CertificateClientModel> search(@RequestParam(required = false) Map<String, String> parameters) {
-        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
-            if (isRequiredParameter(parameter.getKey())) {
-                parameters.remove(parameter.getKey());
-                switch (parameter.getKey()) {
-                    case "name":
-                        return certificateService
-                                .findByName(parameter.getValue(), parameters);
-                    case "id":
-                        return Collections.singletonList(certificateService
-                                .findById(Integer.parseInt(parameter.getValue())));
-                    default:
-                        return certificateService.findByTagName(parameter.getValue(),
-                                parameters);
-                }
-            }
-        }
-        throw new BadParameterException("bad.param");
+    public List<CertificateClientModel> search(@RequestParam Map<String, String> parameters) {
+        return certificateService.findAllByParameter(parameters);
     }
 
     /**
@@ -118,11 +100,5 @@ public class CertificateController {
     @Autowired
     public void setCertificateService(CertificateService certificateService) {
         this.certificateService = certificateService;
-    }
-
-    private boolean isRequiredParameter(String parameter) {
-        return parameter.equals("name") ||
-                parameter.equals("tag") ||
-                parameter.equals("id");
     }
 }

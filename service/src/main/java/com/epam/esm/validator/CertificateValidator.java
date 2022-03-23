@@ -17,7 +17,6 @@ public class CertificateValidator implements Validator<CertificateClientModel> {
     private static final String BAD_DURATION = "bad.value.duration";
     private static final String BAD_PRICE = "bad.value.price";
 
-
     @Override
     public void validate(CertificateClientModel certificate) throws ValidatorException {
         if (certificate == null) {

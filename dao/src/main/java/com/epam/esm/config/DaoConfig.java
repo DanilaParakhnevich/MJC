@@ -1,9 +1,6 @@
 package com.epam.esm.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -42,17 +39,6 @@ public class DaoConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(factoryBean.getObject());
         return transactionManager;
-    }
-
-    /**
-     * Jdbc template for prod profile.
-     *
-     * @param dataSource the data source
-     * @return the jdbc template
-     */
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
     }
 
     private Properties getHibernateProperties() {

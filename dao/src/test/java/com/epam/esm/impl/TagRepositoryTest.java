@@ -2,9 +2,11 @@ package com.epam.esm.impl;
 
 import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.TagEntity;
+import com.epam.esm.dao.TagDao;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -19,9 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TagDAOImplTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class TagRepositoryTest {
     @Autowired
-    TagDaoImpl tagDAO;
+    private TagDao tagRepository;
     private TagEntity firstTestTag;
     private TagEntity secondTestTag;
     private TagEntity thirdTestTag;
@@ -43,29 +46,33 @@ class TagDAOImplTest {
 
     @Test
     void findById() {
-        assertEquals(tagDAO.findById(2), Optional.of(secondTestTag));
+        assertEquals(tagRepository.findById(2L), Optional.of(secondTestTag));
     }
 
     @Test
     void findByCertificateId() {
         tagList = Arrays.asList(fourthTestTag, fifthTestTag, secondTestTag);
-        assertEquals(tagDAO.findByCertificateId(2), tagList);
+        assertEquals(tagRepository.findById(2L), tagList);
     }
 
     @Test
     void findByName() {
-        assertEquals(tagDAO.findByName("jumping"), Optional.of(thirdTestTag));
+        assertEquals(tagRepository.findByName("jumping"), Optional.of(thirdTestTag));
     }
 
     @Test
     void findAll() {
         tagList =  Arrays.asList(thirdTestTag, secondTestTag, fourthTestTag, fifthTestTag);
-        assertEquals(tagDAO.findAll(), tagList);
+        assertEquals(tagRepository.findAll(), tagList);
     }
 
     @Test
     void addAndAddTest() {
-        assertEquals(tagDAO.add(firstTestTag), Optional.of(firstTestTag));
-        assertTrue(tagDAO.delete(5));
+        assertEquals(tagRepository.save(firstTestTag), Optional.of(firstTestTag));
+    }
+
+    @Autowired
+    public void setTagRepository(TagDao tagRepository) {
+        this.tagRepository = tagRepository;
     }
 }

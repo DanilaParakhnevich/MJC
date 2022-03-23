@@ -2,6 +2,7 @@ package com.epam.esm.impl;
 
 import com.epam.esm.entity.TagEntity;
 import com.epam.esm.mapper.TagModelMapper;
+import com.epam.esm.dao.TagDao;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.DuplicateTagException;
 import com.epam.esm.validator.exception.UnknownTagException;
@@ -31,7 +32,7 @@ class TagServiceTest {
     TagEntity secondTag;
 
     @Mock
-    TagDaoImpl tagDAO;
+    TagDao tagRepository;
 
     TagModelMapper mapper;
 
@@ -40,10 +41,10 @@ class TagServiceTest {
         MockitoAnnotations.initMocks(this);
         tagService = new TagServiceImpl();
         validator = new TagValidator();
-        validator.setTagService(tagService);
         tagService.setValidator(validator);
-        tagService.setTagDAO(tagDAO);
+        tagService.setTagDao(tagRepository);
     }
+
 
     @BeforeEach
     void configuration() {
@@ -55,31 +56,31 @@ class TagServiceTest {
     }
     @Test
     void addTest() {
-        when(tagDAO.findByName("s"))
+        when(tagRepository.findByName("s"))
                 .thenReturn(Optional.empty())
                 .thenReturn(Optional.of(addedTag));
-        when(tagDAO.add(tag))
-                .thenReturn(Optional.of(addedTag));
+        when(tagRepository.save(tag))
+                .thenReturn(addedTag);
         assertEquals((mapper.toClientModel(addedTag)),
                 tagService.add(mapper.toClientModel(tag)));
     }
 
     @Test
     void addTestForThrowing() {
-        when(tagDAO.findByName("s"))
+        when(tagRepository.findByName("s"))
                 .thenReturn(Optional.of(addedTag));
-        when(tagDAO.add(tag))
-                .thenReturn(Optional.of(addedTag));
+        when(tagRepository.save(tag))
+                .thenReturn(addedTag);
         assertThrows(DuplicateTagException.class, ()
                 -> tagService.add(mapper.toClientModel(tag)));
     }
 
     @Test
     void addIfNotExistTest() {
-        when(tagDAO.findByName("s"))
+        when(tagRepository.findByName("s"))
                 .thenReturn(Optional.of(addedTag));
-        when(tagDAO.add(tag)).
-                thenReturn(Optional.of(addedTag));
+        when(tagRepository.save(tag)).
+                thenReturn(addedTag);
         assertEquals(mapper.toClientModel(addedTag),
                 tagService.addIfNotExist(mapper.toClientModel(tag)));
     }
@@ -87,9 +88,9 @@ class TagServiceTest {
     @Test
     void findAllTest() {
         List<TagEntity> tags = Arrays.asList(firstTag, secondTag);
-        when(tagDAO.findAll())
+        when(tagRepository.findAll())
                 .thenReturn(tags);
-        assertEquals(tagService.findAll(),
+        assertEquals(tagService.readAll(),
                 tags.stream()
                         .map(mapper::toClientModel)
                         .collect(Collectors.toList()));
@@ -97,44 +98,37 @@ class TagServiceTest {
 
     @Test
     void findTagByIdTest() {
-        when(tagDAO.findById(5))
+        when(tagRepository.findById(5L))
                 .thenReturn(Optional.ofNullable(addedTag));
         assertEquals(mapper.toClientModel(addedTag),
-                tagService.findById(5));
+                tagService.readById(5));
     }
 
     @Test
     void findTagByIdTestForThrowing() {
-        when(tagDAO.findById(5))
+        when(tagRepository.findById(5L))
                 .thenReturn(Optional.empty());
-        assertThrows(UnknownTagException.class, () -> tagService.findById(5));
+        assertThrows(UnknownTagException.class, () -> tagService.readById(5));
     }
 
     @Test
     void findTagByNameTest() {
-        when(tagDAO.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
+        when(tagRepository.findByName("s")).thenReturn(Optional.ofNullable(addedTag));
         assertEquals(mapper.toClientModel(addedTag),
-                tagService.findByName("s"));
+                tagService.readByName("s"));
     }
 
     @Test
     void findTagByNameTestForThrowing() {
-        when(tagDAO.findByName("s")).thenReturn(Optional.empty());
+        when(tagRepository.findByName("s")).thenReturn(Optional.empty());
         assertThrows(UnknownTagException.class,
-                () -> tagService.findByName("s"));
-    }
-
-    @Test
-    void deleteByIdTest() {
-        when(tagDAO.findById(5)).thenReturn(Optional.of(addedTag));
-        when(tagDAO.delete(5)).thenReturn(true);
-        assertTrue(tagService.deleteById(5));
+                () -> tagService.readByName("s"));
     }
 
     @Test
     void deleteByIdTestForThrowing() {
-        when(tagDAO.findById(5)).thenReturn(Optional.empty());
-        assertThrows(UnknownTagException.class, () -> tagService.findById(5));
+        when(tagRepository.findById(5L)).thenReturn(Optional.empty());
+        assertThrows(UnknownTagException.class, () -> tagService.readById(5));
     }
 
     @Autowired

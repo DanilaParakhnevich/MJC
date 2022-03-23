@@ -1,9 +1,6 @@
 drop table certificate_by_tag;
-drop table gift_certificate;
 drop table tag;
-
-create sequence public.hibernate_sequence;
-
+drop table gift_certificate;
 create table if not exists gift_certificate (id bigserial primary key,
                                name varchar (50),
                                description varchar (250),

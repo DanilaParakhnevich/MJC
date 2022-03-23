@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.epam.esm.handler.RequestParameter.DIRECTION;
+import static com.epam.esm.handler.RequestParameter.PARAM;
+
 /**
  * The type Certificate handler.
  */
 @Component
 public class CertificateHandler {
-    private static final String DIRECTION = "direction";
     private static final String BAD_PARAMETER = "bad.param";
     private final Comparator<CertificateClientModel> comparatorByName;
     private final Comparator<CertificateClientModel> comparatorByCreateDate;
@@ -55,7 +57,7 @@ public class CertificateHandler {
     }
 
     private Comparator<CertificateClientModel> handleParameter (Map.Entry<String, String> parameter) throws BadParameterException {
-        if (parameter.getKey().equals("param")) {
+        if (parameter.getKey().equals(PARAM)) {
             switch (parameter.getValue()) {
                 case "by-name":
                     return comparatorByName;

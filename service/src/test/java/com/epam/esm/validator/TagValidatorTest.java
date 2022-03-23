@@ -1,6 +1,5 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.mapper.TagModelMapper;
@@ -9,8 +8,6 @@ import com.epam.esm.validator.exception.ValidatorException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -30,7 +27,6 @@ class TagValidatorTest {
     void init() {
         MockitoAnnotations.initMocks(this);
         validator = new TagValidator();
-        validator.setTagService(tagService);
         mapper = new TagModelMapperImpl();
     }
 
@@ -55,7 +51,7 @@ class TagValidatorTest {
 
     @Test
     void validateTest3() {
-        when(tagService.findByName(tag.getName()))
+        when(tagService.readByName(tag.getName()))
                 .thenReturn(tag);
         assertThrows(ValidatorException.class,
                 () -> validator.validate(tag));

@@ -17,10 +17,6 @@ insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 4);
 insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (3, 3);
 insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 2);
 
-select c.id as id, c.name as name, c.description as description, c.price as price,
-            c.duration as duration, c.create_date as create_date, c.last_update_date as last_update_date, t.id as tag_id,
-            t.name as tag_name from gift_certificate c left join certificate_by_tag
-            on c.id = certificate_by_tag.id_certificate left join tag t on certificate_by_tag.id_tag = t.id
-            order by c.id limit 10 offset 0
-
-
+select * from CERTIFICATE_BY_TAG;
+select * from TAG;
+select * from GIFT_CERTIFICATE;
