@@ -8,4 +8,6 @@ public class RequestParameter {
     public static final String ID = "id";
     public static final String TAG = "tag";
     public static final String DIRECTION = "direction";
+    public static final String NICKNAME = "nickname";
+    public static final String MAIL = "mail";
 }

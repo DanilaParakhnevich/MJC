@@ -12,10 +12,24 @@ insert into tag (name) values ('fun');
 insert into tag (name) values ('sport');
 insert into tag (name) values ('clear');
 
-insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 3);
-insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 4);
-insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (3, 3);
-insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)  values (2, 2);
+insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)
+values (2, 3);
+insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)
+values (2, 4);
+insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)
+values (3, 3);
+insert into CERTIFICATE_BY_TAG (ID_CERTIFICATE, ID_TAG)
+values (2, 2);
+
+insert into "user" (mail, nickname, password, balance)
+values ('123@mail.ru', '123', '123', 100);
+insert into "user" (mail, nickname, password, balance)
+values ('321@mail.ru', '321', '321', 15.3);
+insert into "user" (mail, nickname, password, balance)
+values ('log@mail.ru', 'logger', 'logger22', 32.4);
+insert into "user" (mail, nickname, password, balance)
+values ('locdog@mail.ru', 'loci', 'locdog', 5.3);
+
 
 select c.id as id, c.name as name, c.description as description, c.price as price,
             c.duration as duration, c.create_date as create_date, c.last_update_date as last_update_date, t.id as tag_id,
