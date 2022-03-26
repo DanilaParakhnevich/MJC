@@ -39,7 +39,7 @@ public class CertificateController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public CertificateClientModel addCertificate(@RequestBody CertificateClientModel certificate) {
+    public CertificateClientModel create(@RequestBody CertificateClientModel certificate) {
         return certificateService.add(certificate);
     }
 

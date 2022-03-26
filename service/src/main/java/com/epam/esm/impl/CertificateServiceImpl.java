@@ -10,6 +10,7 @@ import com.epam.esm.handler.exception.BadParameterException;
 import com.epam.esm.mapper.CertificateModelMapper;
 import com.epam.esm.dao.CertificateDao;
 import com.epam.esm.validator.CertificateValidator;
+import com.epam.esm.validator.PaginationParametersValidator;
 import com.epam.esm.validator.exception.DuplicateCertificateException;
 import com.epam.esm.validator.exception.UnknownCertificateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class CertificateServiceImpl implements CertificateService {
     private CertificateModelMapper mapper;
     private CertificateDao certificateDao;
     private CertificateValidator validator;
+    private PaginationParametersValidator paginationParametersValidator;
     private CertificateHandler handler;
     private TagService tagService;
 
@@ -64,12 +66,12 @@ public class CertificateServiceImpl implements CertificateService {
         duplicateValidation(certificate);
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
-        certificateDao.save(
+        certificateDao.create(
                 mapper.toEntity(certificate));
         certificate.setId(getIdByCertificateName(certificate));
         for (TagClientModel tag : certificate.getTags()) {
             tagService.addIfNotExist(tag);
-            certificateDao.saveLink(tagService.readByName(tag.getName()).getId(),
+            certificateDao.createLink(tagService.readByName(tag.getName()).getId(),
                     certificate.getId());
         }
         certificate.setTags(certificate.getTags()
@@ -81,7 +83,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateClientModel> findAll(Map<String, String> parameters) {
-        checkForPaginationParameters(parameters);
+        paginationParametersValidator.validate(parameters);
         List<CertificateClientModel>  certificates = certificateDao.findAll(Long.parseLong(parameters.remove(PAGE)),
                     Long.parseLong(parameters.remove(PAGE_SIZE)))
                 .stream().map(a -> mapper.toClientModel(a))
@@ -101,7 +103,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateClientModel> findByName(String name, Map<String, String> parameters) {
-        checkForPaginationParameters(parameters);
+        paginationParametersValidator.validate(parameters);
         List<CertificateClientModel> certificates = certificateDao.findAllByNameContainingIgnoreCase(name,
                 Long.parseLong(parameters.remove(PAGE)),
                 Long.parseLong( parameters.remove(PAGE_SIZE)))
@@ -117,7 +119,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<CertificateClientModel> findByTagName(String name, Map<String, String> parameters) {
         tagService.readByName(name);
-        checkForPaginationParameters(parameters);
+        paginationParametersValidator.validate(parameters);
         List<CertificateClientModel> certificates = certificateDao.findAllByTags(name,
                 Long.parseLong(parameters.remove(PAGE)),
                 Long.parseLong( parameters.remove(PAGE_SIZE)))
@@ -187,7 +189,7 @@ public class CertificateServiceImpl implements CertificateService {
             if (existCertificate.getTags()
                     .stream()
                     .noneMatch(a -> a.getName().equals(tag.getName()))) {
-                certificateDao.saveLink(tagService.addIfNotExist(tag).getId(),
+                certificateDao.createLink(tagService.addIfNotExist(tag).getId(),
                         certificate.getId());
             }
         }
@@ -203,12 +205,6 @@ public class CertificateServiceImpl implements CertificateService {
             return certificateEntity.get().getId();
         }
         throw new UnknownCertificateException(UNKNOWN + "/name=" + certificate.getName());
-    }
-
-    private void checkForPaginationParameters(Map<String, String> parameters) {
-        if (!parameters.containsKey(PAGE) || !parameters.containsKey(PAGE_SIZE)) {
-            throw new BadParameterException(BAD_PARAM);
-        }
     }
 
     private void feelWithTags(List<CertificateClientModel> certificates) {
@@ -238,6 +234,11 @@ public class CertificateServiceImpl implements CertificateService {
     @Autowired
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
+    }
+
+    @Autowired
+    public void setPaginationParametersValidator(PaginationParametersValidator paginationParametersValidator) {
+        this.paginationParametersValidator = paginationParametersValidator;
     }
 
     @Autowired

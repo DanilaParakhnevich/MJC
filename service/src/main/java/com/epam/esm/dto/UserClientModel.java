@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.CertificateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +16,5 @@ public class UserClientModel implements ClientModel {
     private String mail;
     private String password;
     private BigDecimal balance;
+    private List<OrderClientModel> orders;
 }

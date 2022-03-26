@@ -10,4 +10,5 @@ public class RequestParameter {
     public static final String DIRECTION = "direction";
     public static final String NICKNAME = "nickname";
     public static final String MAIL = "mail";
+    public static final String USER_ID = "user_id";
 }

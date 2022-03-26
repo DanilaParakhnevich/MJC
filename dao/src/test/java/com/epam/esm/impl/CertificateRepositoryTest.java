@@ -43,7 +43,7 @@ class CertificateRepositoryTest {
 
     @Test
     void add() throws ParseException {
-        CertificateEntity certificate = certificateRepository.save(testCertificate);
+        CertificateEntity certificate = certificateRepository.create(testCertificate);
         testCertificate.setLastUpdateDate(certificate.getLastUpdateDate());
         testCertificate.setCreateDate(certificate.getCreateDate());
         assertEquals(certificate, testCertificate);
@@ -73,7 +73,7 @@ class CertificateRepositoryTest {
 
     @Test
     void update() {
-        assertTrue(certificateRepository.save(firstTestCertificate) == firstTestCertificate);
+        assertTrue(certificateRepository.create(firstTestCertificate) == firstTestCertificate);
     }
 
     @Test

@@ -17,13 +17,13 @@ public interface CertificateDao {
 
     Optional<CertificateEntity> findById(@Param("id") long id);
 
-    void save(CertificateEntity certificate);
+    void create(CertificateEntity certificate);
 
     void update(CertificateEntity certificate);
 
     void delete(CertificateEntity certificate);
 
-    void saveLink(long certificateId, long tagId);
+    void createLink(long certificateId, long tagId);
 
     void deleteLink(long certificateId, long tagId);
 }

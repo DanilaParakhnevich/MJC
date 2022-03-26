@@ -120,7 +120,7 @@ class CertificateServiceTest {
     void updateTest() {
         when(certificateRepository.findAllByNameContainingIgnoreCase(addedCertificate.getName()))
                 .thenReturn(Collections.singletonList(addedCertificate));
-        when(certificateRepository.save(addedCertificate))
+        when(certificateRepository.create(addedCertificate))
                 .thenReturn(addedCertificate);
         assertEquals(certificateService.update(certificateClientModel),
                         certificateClientModel);

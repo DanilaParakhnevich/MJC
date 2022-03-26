@@ -89,7 +89,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
 
     @Override
-    public void save(CertificateEntity certificate) {
+    public void create(CertificateEntity certificate) {
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(certificate.getCreateDate());
         jdbcTemplate.update(CREATE_CERTIFICATE, certificate.getName(),
@@ -113,7 +113,7 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     @Override
-    public void saveLink(long tagId, long certificateId) {
+    public void createLink(long tagId, long certificateId) {
         jdbcTemplate.update(CREATE_LINK_WITH_TAG, tagId, certificateId);
     }
 

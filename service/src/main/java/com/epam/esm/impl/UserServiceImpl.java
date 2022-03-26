@@ -1,5 +1,6 @@
 package com.epam.esm.impl;
 
+import com.epam.esm.OrderService;
 import com.epam.esm.UserService;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.UserClientModel;
@@ -10,10 +11,7 @@ import com.epam.esm.validator.exception.UnknownUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.handler.RequestParameter.*;
@@ -22,8 +20,9 @@ import static com.epam.esm.handler.RequestParameter.*;
 public class UserServiceImpl implements UserService {
     private static final String NONEXISTENT_USER = "nonexistent.user";
     private static final String BAD_PARAM = "bad.param";
-    UserDao userDao;
-    UserModelMapper userMapper;
+    private UserDao userDao;
+    private OrderService orderService;
+    private UserModelMapper userMapper;
 
     @Override
     public List<UserClientModel> readByParameters(Map<String, String> parameters) {
@@ -46,18 +45,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserClientModel> readAll(Map<String, String> parameters) {
         checkPaginationParameters(parameters);
-        return userDao.readAll(Long.parseLong(parameters.remove(PAGE)),
-                        Long.parseLong(parameters.remove(PAGE_SIZE)))
-                .stream()
-                .map(a -> userMapper.toClientModel(a))
-                .collect(Collectors.toList());
+        return feelWithOrders(userDao.readAll(Long.parseLong(parameters.remove(PAGE)),
+                Long.parseLong(parameters.remove(PAGE_SIZE))));
     }
 
     @Override
     public UserClientModel readById(long id) {
         Optional<UserEntity> user = userDao.readById(id);
         if (user.isPresent()) {
-            return userMapper.toClientModel(user.get());
+            return feelWithOrders(Collections.singletonList(user.get())).get(0);
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/id=" + id);
     }
@@ -66,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public UserClientModel readByNickname(String nickname) {
         Optional<UserEntity> user = userDao.readByNickname(nickname);
         if (user.isPresent()) {
-            return userMapper.toClientModel(user.get());
+            return feelWithOrders(Collections.singletonList(user.get())).get(0);
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/nickname=" + nickname);
     }
@@ -75,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public UserClientModel readByMail(String mail) {
         Optional<UserEntity> user = userDao.readByMail(mail);
         if (user.isPresent()) {
-            return userMapper.toClientModel(user.get());
+            return feelWithOrders(Collections.singletonList(user.get())).get(0);
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/mail=" + mail);
     }
@@ -89,6 +85,20 @@ public class UserServiceImpl implements UserService {
     private boolean isRequiredParameter(String parameter) {
         return parameter.equals(ID) || parameter.equals(MAIL)
                 || parameter.equals(NICKNAME);
+    }
+
+    private List<UserClientModel> feelWithOrders(List<UserEntity> users) {
+        List<UserClientModel> resultList = users.stream().map(a -> userMapper.toClientModel(a)).collect(Collectors.toList());
+        resultList.forEach(a -> a.setOrders(orderService.readByUserId(a.getId(), new HashMap<String, String>() {{
+            put("page", "1");
+            put("page_size", "100000");
+        }})));
+        return resultList;
+    }
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @Autowired

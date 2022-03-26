@@ -1,3 +1,4 @@
+drop table "order";
 drop table certificate_by_tag;
 drop table tag;
 drop table gift_certificate;
@@ -23,4 +24,12 @@ create table if not exists "user" (id bigserial primary key,
     nickname varchar(24),
     password varchar(72),
     balance numeric
-)
+);
+
+
+create table if not exists "order" (id bigserial primary key,
+    id_user bigint references "user"(id),
+    id_certificate bigint references "gift_certificate"(id),
+    price numeric,
+    purchase_date timestamp
+);

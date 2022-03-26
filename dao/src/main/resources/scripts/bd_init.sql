@@ -30,11 +30,17 @@ values ('log@mail.ru', 'logger', 'logger22', 32.4);
 insert into "user" (mail, nickname, password, balance)
 values ('locdog@mail.ru', 'loci', 'locdog', 5.3);
 
+insert into "order" (id_user, id_certificate, price, purchase_date)
+values (1, 1, 20.3, '2022-03-12T02:00Z');
+insert into "order" (id_user, id_certificate, price, purchase_date)
+values (3, 2, 20.6, '2022-03-12T02:00Z');
+insert into "order" (id_user, id_certificate, price, purchase_date)
+values (2, 1, 20.5, '2022-03-12T02:00Z');
 
-select c.id as id, c.name as name, c.description as description, c.price as price,
-            c.duration as duration, c.create_date as create_date, c.last_update_date as last_update_date, t.id as tag_id,
-            t.name as tag_name from gift_certificate c left join certificate_by_tag
-            on c.id = certificate_by_tag.id_certificate left join tag t on certificate_by_tag.id_tag = t.id
-            order by c.id limit 10 offset 0
 
+select o.id as o_id,  o.price as o_price, o.purchase_date as o_purchase_date,
+            c.id as id, c.price as price, c.name as name, c.description as description, c.create_date as create_date,
+            c.last_update_date as last_update_date, c.duration as duration from "order" o
+            join "user" u on o.id_user = u.id join gift_certificate c on o.id_certificate = c.id
+            where o.id = (select max(o.id) from "order" o) and u.id = 1
 
