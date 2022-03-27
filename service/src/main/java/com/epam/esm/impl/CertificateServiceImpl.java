@@ -88,7 +88,6 @@ public class CertificateServiceImpl implements CertificateService {
                     Long.parseLong(parameters.remove(PAGE_SIZE)))
                 .stream().map(a -> mapper.toClientModel(a))
                 .collect(Collectors.toList());
-        feelWithTags(certificates);
         return sort(certificates, parameters);
     }
 
@@ -112,7 +111,6 @@ public class CertificateServiceImpl implements CertificateService {
         if (certificates.isEmpty()) {
             throw new UnknownCertificateException(UNKNOWN + "/name=" + name);
         }
-        feelWithTags(certificates);
         return sort(certificates, parameters);
     }
 
@@ -128,7 +126,6 @@ public class CertificateServiceImpl implements CertificateService {
         if (certificates.isEmpty()) {
             throw new UnknownCertificateException(UNKNOWN + "/tag=" + name);
         }
-        feelWithTags(certificates);
         return sort(certificates, parameters);
     }
 
@@ -151,8 +148,7 @@ public class CertificateServiceImpl implements CertificateService {
         for (TagClientModel tag : certificate.getTags()) {
             certificateDao.deleteLink(tag.getId(), certificate.getId());
         }
-        certificate.setTags(Collections.emptyList());
-        certificateDao.delete(mapper.toEntity(certificate));
+        certificateDao.delete(id);
         return true;
     }
 
@@ -205,10 +201,6 @@ public class CertificateServiceImpl implements CertificateService {
             return certificateEntity.get().getId();
         }
         throw new UnknownCertificateException(UNKNOWN + "/name=" + certificate.getName());
-    }
-
-    private void feelWithTags(List<CertificateClientModel> certificates) {
-        certificates.forEach(a -> a.setTags(tagService.readByCertificateId(a.getId())));
     }
 
     /**

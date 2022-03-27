@@ -42,14 +42,14 @@ public class OrderServiceImpl implements OrderService {
         paginationParametersValidator.validate(parameters);
         List<OrderEntity> orders = orderDao.readAll(Long.parseLong(parameters.remove(PAGE)),
                 Long.parseLong(parameters.remove(PAGE_SIZE)));
-        return feelWithTagsAndCollect(orders);
+        return collect(orders);
     }
 
     @Override
     public OrderClientModel readById(long id) {
         Optional<OrderEntity> order = orderDao.readById(id);
         if (order.isPresent()) {
-            return feelWithTagsAndCollect(Collections.singletonList(order.get())).get(0);
+            return collect(Collections.singletonList(order.get())).get(0);
         }
         throw new UnknownOrderException("unknown.order/id=" + id);
     }
@@ -60,22 +60,24 @@ public class OrderServiceImpl implements OrderService {
         List<OrderEntity> orders = orderDao.readByUserId(userId,
                 Long.parseLong(parameters.remove(PAGE)),
                 Long.parseLong(parameters.remove(PAGE_SIZE)));
-        return feelWithTagsAndCollect(orders);
+        return collect(orders);
     }
 
     @Override
     public OrderClientModel create(OrderClientModel order, long userId) {
         order.setPurchaseDate(LocalDateTime.now());
-        orderDao.create(orderModelMapper.toEntity(order), userId);
+        OrderEntity orderEntity = orderModelMapper.toEntity(order);
+        orderEntity.setUserId(userId);
+        orderDao.create(orderEntity);
         Optional<OrderEntity> resultOrder = orderDao.readLastByUserId(userId);
         if (resultOrder.isPresent()) {
-            return feelWithTagsAndCollect(Collections.singletonList(resultOrder.get())).get(0);
+            resultOrder.get().setUserId(userId);
+            return collect(Collections.singletonList(resultOrder.get())).get(0);
         }
         throw new UnknownOrderException("unknown.order/user_id=" + userId);
     }
 
-    private List<OrderClientModel> feelWithTagsAndCollect (List<OrderEntity> orders) {
-        orders.forEach(a -> a.getCertificate().setTags(tagDao.readByCertificateId(a.getCertificate().getId())));
+    private List<OrderClientModel> collect(List<OrderEntity> orders) {
         return orders.stream()
                 .map(a -> orderModelMapper.toClientModel(a))
                 .collect(Collectors.toList());

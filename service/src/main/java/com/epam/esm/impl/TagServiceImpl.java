@@ -54,14 +54,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagClientModel> readByCertificateId(long id) {
-        return tagDao.readByCertificateId(id)
-                .stream()
-                .map(a -> mapper.toClientModel(a))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<TagClientModel> readAll(Map<String, String> parameters) {
         if (!parameters.containsKey(PAGE) || !parameters.containsKey(PAGE_SIZE)) {
             throw new BadParameterException("bad.param");

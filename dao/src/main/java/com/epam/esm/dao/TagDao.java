@@ -11,8 +11,6 @@ public interface TagDao {
 
     List<TagEntity> readAll(long page, long pageSize);
 
-    List<TagEntity> readByCertificateId (long id);
-
     Optional<TagEntity> readByName(String name);
 
     Optional<TagEntity> readById(long id);

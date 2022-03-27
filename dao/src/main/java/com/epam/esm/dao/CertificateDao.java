@@ -21,7 +21,7 @@ public interface CertificateDao {
 
     void update(CertificateEntity certificate);
 
-    void delete(CertificateEntity certificate);
+    void delete(long id);
 
     void createLink(long certificateId, long tagId);
 

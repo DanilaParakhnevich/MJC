@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao {
-    void create (OrderEntity order, long userId);
+    void create (OrderEntity order);
 
     List<OrderEntity> readByUserId(long userId, long page, long pageSize);
 

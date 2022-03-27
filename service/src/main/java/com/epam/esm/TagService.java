@@ -28,14 +28,6 @@ public interface TagService {
     TagClientModel addIfNotExist(TagClientModel tag);
 
     /**
-     * Find list by certificate id.
-     * @param id certificate id
-     *
-     * @return the list
-     */
-    List<TagClientModel> readByCertificateId(long id);
-
-    /**
      * Find all list.
      *
      * @return the list
