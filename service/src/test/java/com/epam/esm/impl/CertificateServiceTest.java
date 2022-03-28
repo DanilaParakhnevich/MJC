@@ -102,7 +102,7 @@ class CertificateServiceTest {
     @Test
     void findByNameTest() {
         certificateClientModel.setTags(new ArrayList<>());
-        when(certificateRepository.findAllByTags("a"))
+        when(certificateRepository.findAllByTag("a"))
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByName("a", null),
                 Collections.singletonList(certificateClientModel));
@@ -110,7 +110,7 @@ class CertificateServiceTest {
 
     @Test
     void findByTagNameTest() {
-        when(certificateRepository.findAllByTags("a"))
+        when(certificateRepository.findAllByTag("a"))
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByTagName("a", null),
                 Collections.singletonList(mapper.toClientModel(addedCertificate)));

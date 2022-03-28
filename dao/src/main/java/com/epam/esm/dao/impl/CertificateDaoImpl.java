@@ -47,7 +47,7 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     @Override
-    public List<CertificateEntity> findAllByTags(String tagName, long page, long pageSize) {
+    public List<CertificateEntity> findAllByTag(String tagName, long page, long pageSize) {
         Query query = entityManager.createNativeQuery("select * from gift_certificate join certificate_by_tag on " +
                         "certificate_by_tag.id_certificate = gift_certificate.id join tag on tag.id = certificate_by_tag.id_tag " +
                         "where tag.name like :name",
@@ -55,6 +55,13 @@ public class CertificateDaoImpl implements CertificateDao {
         query.setFirstResult((int) ((page - 1) * pageSize));
         query.setMaxResults((int) pageSize);
         query.setParameter("name", tagName + "%");
+        return query.getResultList();
+    }
+
+    @Override
+    public List<CertificateEntity> findAllByTags(List<String> tags) {
+        Query query = entityManager.createNativeQuery(createQueryForReadByTags(tags),
+                CertificateEntity.class);
         return query.getResultList();
     }
 
@@ -113,6 +120,18 @@ public class CertificateDaoImpl implements CertificateDao {
         nativeQuery.setParameter(1, tagId);
         nativeQuery.setParameter(2, certificateId);
         nativeQuery.executeUpdate();
+    }
+
+    private String createQueryForReadByTags(List<String> tags) {
+        StringBuilder query = new StringBuilder().append("select DISTINCT * from gift_certificate where ");
+        for (String tag : tags) {
+            query.append("gift_certificate.id in (select gift_certificate.id from gift_certificate join certificate_by_tag on certificate_by_tag.id_certificate = gift_certificate.id " +
+                    "join tag on tag.id = certificate_by_tag.id_tag where tag.name = ").append('\'').append(tag).append('\'').append(')');
+            if (tags.indexOf(tag) != (tags.size() - 1)) {
+                query.append(" and ");
+            }
+        }
+        return query.toString();
     }
 
     @PersistenceContext

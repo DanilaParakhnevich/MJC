@@ -10,7 +10,7 @@ public interface OrderService {
 
     List<OrderClientModel> readAll (Map<String, String> parameters);
 
-    List<OrderClientModel> readByUserId (long userId, Map<String, String> parameters);
+    List<OrderClientModel> readByUserId (Map<String, String> parameters);
 
     OrderClientModel readById (long id);
 

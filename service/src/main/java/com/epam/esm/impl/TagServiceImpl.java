@@ -87,7 +87,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public void deleteById(long id) {
         Optional<TagEntity> tag = tagDao.readById(id);
-        if (tag.isPresent() && !certificateRepository.findAllByTags(tag.get().getName(), 1, 5).isEmpty()) {
+        if (tag.isPresent() && !certificateRepository.findAllByTag(tag.get().getName(), 1, 5).isEmpty()) {
             throw new TagAttachedException(ATTACHED);
         }
         if (tag.isPresent()) {

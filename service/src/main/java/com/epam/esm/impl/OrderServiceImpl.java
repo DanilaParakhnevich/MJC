@@ -2,7 +2,6 @@ package com.epam.esm.impl;
 
 import com.epam.esm.OrderService;
 import com.epam.esm.dao.OrderDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.OrderClientModel;
 import com.epam.esm.entity.OrderEntity;
 import com.epam.esm.handler.exception.BadParameterException;
@@ -22,8 +21,8 @@ import static com.epam.esm.handler.RequestParameter.*;
 public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     private OrderModelMapper orderModelMapper;
-    private TagDao tagDao;
     private PaginationParametersValidator paginationParametersValidator;
+    private static final String BAD_PARAM = "bad_param";
 
     @Override
     public List<OrderClientModel> search(Map<String, String> parameters) {
@@ -31,10 +30,10 @@ public class OrderServiceImpl implements OrderService {
         for (Map.Entry<String, String> parameter: parameters.entrySet()) {
             switch (parameter.getKey()) {
                 case ID: return Collections.singletonList(readById(Long.parseLong(parameter.getValue())));
-                case USER_ID: return readByUserId(Long.parseLong(parameter.getValue()), parameters);
+                case USER_ID: return readByUserId(parameters);
             }
         }
-        return new ArrayList<>();
+        throw new BadParameterException(BAD_PARAM);
     }
 
     @Override
@@ -55,12 +54,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderClientModel> readByUserId(long userId, Map<String, String> parameters) {
+    public List<OrderClientModel> readByUserId(Map<String, String> parameters) {
         paginationParametersValidator.validate(parameters);
-        List<OrderEntity> orders = orderDao.readByUserId(userId,
-                Long.parseLong(parameters.remove(PAGE)),
-                Long.parseLong(parameters.remove(PAGE_SIZE)));
-        return collect(orders);
+        if (parameters.containsKey("user_id")) {
+            List<OrderEntity> orders = orderDao.readByUserId(
+                    Long.parseLong(parameters.remove("user_id")),
+                    Long.parseLong(parameters.remove(PAGE)),
+                    Long.parseLong(parameters.remove(PAGE_SIZE)));
+            return collect(orders);
+        }
+        throw new BadParameterException(BAD_PARAM);
     }
 
     @Override
@@ -85,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
     private void validateSearchParameters(Map<String, String> parameters) {
         if (!parameters.containsKey(ID) && !parameters.containsKey(USER_ID)) {
-            throw new BadParameterException("bad.param");
+            throw new BadParameterException(BAD_PARAM);
         }
     }
 
@@ -97,11 +100,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     public void setOrderModelMapper(OrderModelMapper orderModelMapper) {
         this.orderModelMapper = orderModelMapper;
-    }
-
-    @Autowired
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
     }
 
     @Autowired

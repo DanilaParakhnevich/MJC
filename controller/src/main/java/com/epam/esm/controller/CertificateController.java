@@ -69,6 +69,18 @@ public class CertificateController {
     }
 
     /**
+     * Find by tags list.
+     *
+     * @param tags the tags' names
+     * @return the list
+     */
+    @GetMapping("/search/tags")
+    @ResponseStatus(OK)
+    public List<CertificateClientModel> search(@RequestParam(name = "tags") List<String> tags) {
+        return certificateService.findByTags(tags);
+    }
+
+    /**
      * Update certificate client model.
      *
      * @param certificate the certificate

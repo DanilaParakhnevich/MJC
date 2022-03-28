@@ -54,6 +54,14 @@ public interface CertificateService {
     List<CertificateClientModel> findByTagName(String name, Map<String, String> parameters) ;
 
     /**
+     * Find by tags.
+     *
+     * @param tags the tags
+     * @return the list
+     */
+    List<CertificateClientModel> findByTags(List<String> tags) ;
+
+    /**
      * Update certificate client model.
      *
      * @param certificate the certificate

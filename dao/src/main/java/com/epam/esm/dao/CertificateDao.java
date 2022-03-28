@@ -11,7 +11,9 @@ public interface CertificateDao {
 
     Optional<CertificateEntity> findByName(String name);
 
-    List<CertificateEntity> findAllByTags(String tagName, long page, long pageSize);
+    List<CertificateEntity> findAllByTag(String tagName, long page, long pageSize);
+
+    List<CertificateEntity> findAllByTags(List<String> tags);
 
     List<CertificateEntity> findAll(long page, long pageSize);
 

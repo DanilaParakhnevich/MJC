@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,5 +15,4 @@ public class UserClientModel implements ClientModel {
     private String mail;
     private String password;
     private BigDecimal balance;
-    private List<OrderClientModel> orders;
 }

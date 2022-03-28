@@ -118,7 +118,7 @@ public class CertificateServiceImpl implements CertificateService {
     public List<CertificateClientModel> findByTagName(String name, Map<String, String> parameters) {
         tagService.readByName(name);
         paginationParametersValidator.validate(parameters);
-        List<CertificateClientModel> certificates = certificateDao.findAllByTags(name,
+        List<CertificateClientModel> certificates = certificateDao.findAllByTag(name,
                 Long.parseLong(parameters.remove(PAGE)),
                 Long.parseLong( parameters.remove(PAGE_SIZE)))
                 .stream().map(a -> mapper.toClientModel(a))
@@ -127,6 +127,20 @@ public class CertificateServiceImpl implements CertificateService {
             throw new UnknownCertificateException(UNKNOWN + "/tag=" + name);
         }
         return sort(certificates, parameters);
+    }
+
+    @Override
+    public List<CertificateClientModel> findByTags(List<String> tags) {
+        for (String tag : tags) {
+            tagService.readByName(tag);
+        }
+        List<CertificateClientModel> certificates = certificateDao.findAllByTags(tags)
+                .stream().map(a -> mapper.toClientModel(a))
+                .collect(Collectors.toList());
+        if (certificates.isEmpty()) {
+            throw new UnknownCertificateException(UNKNOWN + "/tags=" + tags);
+        }
+        return certificates;
     }
 
     @Override

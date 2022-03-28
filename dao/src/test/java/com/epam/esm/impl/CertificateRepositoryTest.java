@@ -62,7 +62,7 @@ class CertificateRepositoryTest {
 
     @Test
     void findByTagName() {
-        assertEquals(firstTestCertificate, certificateRepository.findAllByTags("clear").get(0));
+        assertEquals(firstTestCertificate, certificateRepository.findAllByTag("clear").get(0));
     }
 
     @Test

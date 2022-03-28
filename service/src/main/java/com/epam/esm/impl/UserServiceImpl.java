@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
     private static final String NONEXISTENT_USER = "nonexistent.user";
     private static final String BAD_PARAM = "bad.param";
     private UserDao userDao;
-    private OrderService orderService;
     private UserModelMapper userMapper;
 
     @Override
@@ -45,15 +44,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserClientModel> readAll(Map<String, String> parameters) {
         checkPaginationParameters(parameters);
-        return feelWithOrders(userDao.readAll(Long.parseLong(parameters.remove(PAGE)),
-                Long.parseLong(parameters.remove(PAGE_SIZE))));
+        return userDao.readAll(Long.parseLong(parameters.remove(PAGE)),
+                Long.parseLong(parameters.remove(PAGE_SIZE)))
+                .stream()
+                .map(a -> userMapper.toClientModel(a))
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserClientModel readById(long id) {
         Optional<UserEntity> user = userDao.readById(id);
         if (user.isPresent()) {
-            return feelWithOrders(Collections.singletonList(user.get())).get(0);
+            return userMapper.toClientModel(user.get());
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/id=" + id);
     }
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
     public UserClientModel readByNickname(String nickname) {
         Optional<UserEntity> user = userDao.readByNickname(nickname);
         if (user.isPresent()) {
-            return feelWithOrders(Collections.singletonList(user.get())).get(0);
+            return userMapper.toClientModel(user.get());
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/nickname=" + nickname);
     }
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public UserClientModel readByMail(String mail) {
         Optional<UserEntity> user = userDao.readByMail(mail);
         if (user.isPresent()) {
-            return feelWithOrders(Collections.singletonList(user.get())).get(0);
+            return userMapper.toClientModel(user.get());
         }
         throw new UnknownUserException(NONEXISTENT_USER + "/mail=" + mail);
     }
@@ -85,20 +87,6 @@ public class UserServiceImpl implements UserService {
     private boolean isRequiredParameter(String parameter) {
         return parameter.equals(ID) || parameter.equals(MAIL)
                 || parameter.equals(NICKNAME);
-    }
-
-    private List<UserClientModel> feelWithOrders(List<UserEntity> users) {
-        List<UserClientModel> resultList = users.stream().map(a -> userMapper.toClientModel(a)).collect(Collectors.toList());
-        resultList.forEach(a -> a.setOrders(orderService.readByUserId(a.getId(), new HashMap<String, String>() {{
-            put("page", "1");
-            put("page_size", "100000");
-        }})));
-        return resultList;
-    }
-
-    @Autowired
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
     }
 
     @Autowired
