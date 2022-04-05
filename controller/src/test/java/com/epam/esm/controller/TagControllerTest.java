@@ -50,7 +50,7 @@ class TagControllerTest {
 
     @Test
     void findAll() throws Exception {
-        when(tagService.findAll())
+        when(tagService.readAll())
                 .thenReturn(Arrays
                         .asList(tag));
         mockMvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON))
@@ -62,7 +62,7 @@ class TagControllerTest {
 
     @Test
     void findById() throws Exception {
-        when(tagService.findById(1))
+        when(tagService.readById(1))
                 .thenReturn(tag);
         mockMvc.perform(get("/tags/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ class TagControllerTest {
     @Test
     void deleteTag() throws Exception {
         when(tagService.deleteById(1))
-                .thenReturn(true);
+                .thenThrow(Exception.class);
         mockMvc.perform(delete("/tags/1"))
                 .andExpect(content().string("true"));
     }

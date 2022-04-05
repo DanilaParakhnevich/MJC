@@ -9,6 +9,8 @@ import java.util.Map;
  * The interface Certificate service.
  */
 public interface CertificateService {
+
+    List<CertificateClientModel> findAllByParameter(Map<String, String> parameters);
     /**
      * Add certificate client model.
      *
@@ -16,15 +18,6 @@ public interface CertificateService {
      * @return the certificate client model
      */
     CertificateClientModel add(CertificateClientModel certificate);
-
-    /**
-     * Add tag to certificate boolean.
-     *
-     * @param certificateId the certificate id
-     * @param tagId         the tag id
-     * @return the boolean
-     */
-    boolean addTagToCertificate(long certificateId, long tagId);
 
     /**
      * Find all list.
@@ -59,6 +52,14 @@ public interface CertificateService {
      * @return the list
      */
     List<CertificateClientModel> findByTagName(String name, Map<String, String> parameters) ;
+
+    /**
+     * Find by tags.
+     *
+     * @param tags the tags
+     * @return the list
+     */
+    List<CertificateClientModel> findByTags(List<String> tags) ;
 
     /**
      * Update certificate client model.

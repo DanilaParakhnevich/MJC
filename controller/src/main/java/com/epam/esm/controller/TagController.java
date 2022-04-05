@@ -3,23 +3,17 @@ package com.epam.esm.controller;
 import com.epam.esm.TagService;
 import com.epam.esm.dto.TagClientModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
 /**
  * The type Tag controller.
  */
-@RestController()
+@RestController
 @RequestMapping("/tags")
 public class TagController {
     private TagService tagService;
@@ -43,8 +37,8 @@ public class TagController {
      */
     @GetMapping
     @ResponseStatus(OK)
-    public List<TagClientModel> findAll() {
-        return tagService.findAll();
+    public List<TagClientModel> findAll(@RequestParam Map<String, String> parameters) {
+        return tagService.readAll(parameters);
     }
 
     /**
@@ -56,19 +50,18 @@ public class TagController {
     @GetMapping("/{id}")
     @ResponseStatus(OK)
     public TagClientModel findById(@PathVariable long id) {
-        return tagService.findById(id);
+        return tagService.readById(id);
     }
 
     /**
      * Delete tag boolean.
      *
      * @param id the id
-     * @return the boolean
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public boolean deleteTag(@PathVariable long id) {
-        return tagService.deleteById(id);
+    public void deleteTag(@PathVariable long id) {
+        tagService.deleteById(id);
     }
 
     /**

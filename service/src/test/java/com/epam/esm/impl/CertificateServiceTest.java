@@ -6,6 +6,8 @@ import com.epam.esm.entity.TagEntity;
 import com.epam.esm.handler.CertificateHandler;
 import com.epam.esm.mapper.CertificateModelMapper;
 import com.epam.esm.mapper.CertificateModelMapperImpl;
+import com.epam.esm.dao.CertificateDao;
+import com.epam.esm.dao.TagDao;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.exception.*;
 import org.junit.jupiter.api.*;
@@ -29,10 +31,10 @@ class CertificateServiceTest {
     List<TagEntity> tags;
     CertificateModelMapper mapper;
     @Mock
-    CertificateDaoImpl certificateDAO;
+    CertificateDao certificateRepository;
 
     @Mock
-    TagDaoImpl tagDAO;
+    TagDao tagRepository;
 
     @Mock
     TagServiceImpl tagService;
@@ -43,10 +45,9 @@ class CertificateServiceTest {
         mapper = new CertificateModelMapperImpl();
         certificateValidator = new CertificateValidator();
         certificateService = new CertificateServiceImpl();
-        certificateService.setCertificateDao(certificateDAO);
+        certificateService.setCertificateDao(certificateRepository);
         certificateService.setValidator(certificateValidator);
-        certificateService.setTagDao(tagDAO);
-        tagService.setTagDAO(tagDAO);
+        tagService.setTagDao(tagRepository);
         certificateService.setTagService(tagService);
         handler = new CertificateHandler();
         certificateService.setHandler(handler);
@@ -71,17 +72,11 @@ class CertificateServiceTest {
         tags = Arrays.asList(new TagEntity(1, "a"), new TagEntity(2, "a"));
     }
 
-    @Test
-    void addTagToCertificateTest() {
-        when(certificateDAO.addTagToCertificate(1, 1))
-                .thenReturn(true);
-        assertTrue(certificateService.addTagToCertificate(1, 1));
-    }
 
     @Test
     void findAllTest() {
         addedCertificate.setTags(tags);
-        when(certificateDAO.findAll())
+        when(certificateRepository.findAll())
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findAll(null),
                 Collections.singletonList(mapper.toClientModel(addedCertificate)));
@@ -90,7 +85,7 @@ class CertificateServiceTest {
     @Test
     void findCertificateByIdTest() {
         certificateClientModel.setTags(new ArrayList<>());
-        when(certificateDAO.findById(1))
+        when(certificateRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(addedCertificate));
         assertEquals(certificateService.findById(1),
                 certificateClientModel);
@@ -98,7 +93,7 @@ class CertificateServiceTest {
 
     @Test
     void findCertificateByIdTestForThrowing() {
-        when(certificateDAO.findById(1))
+        when(certificateRepository.findById(1L))
                 .thenReturn(Optional.empty());
         assertThrows(UnknownCertificateException.class,
                 () -> certificateService.findById(1));
@@ -107,7 +102,7 @@ class CertificateServiceTest {
     @Test
     void findByNameTest() {
         certificateClientModel.setTags(new ArrayList<>());
-        when(certificateDAO.findByNamePart("a"))
+        when(certificateRepository.findAllByTag("a"))
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByName("a", null),
                 Collections.singletonList(certificateClientModel));
@@ -115,7 +110,7 @@ class CertificateServiceTest {
 
     @Test
     void findByTagNameTest() {
-        when(certificateDAO.findByTagName("a"))
+        when(certificateRepository.findAllByTag("a"))
                 .thenReturn(Collections.singletonList(addedCertificate));
         assertEquals(certificateService.findByTagName("a", null),
                 Collections.singletonList(mapper.toClientModel(addedCertificate)));
@@ -123,17 +118,17 @@ class CertificateServiceTest {
 
     @Test
     void updateTest() {
-        when(certificateDAO.findByNamePart(addedCertificate.getName()))
+        when(certificateRepository.findAllByNameContainingIgnoreCase(addedCertificate.getName()))
                 .thenReturn(Collections.singletonList(addedCertificate));
-        when(certificateDAO.update(addedCertificate))
-                .thenReturn(true);
+        when(certificateRepository.create(addedCertificate))
+                .thenReturn(addedCertificate);
         assertEquals(certificateService.update(certificateClientModel),
                         certificateClientModel);
     }
 
     @Test
     void updateTestForThrowing() {
-        when(certificateDAO.findByNamePart(addedCertificate.getName()))
+        when(certificateRepository.findAllByNameContainingIgnoreCase(addedCertificate.getName()))
                 .thenReturn(new ArrayList<>());
         assertThrows(UnknownCertificateException.class,
                 () -> certificateService.update(mapper
@@ -142,14 +137,14 @@ class CertificateServiceTest {
 
     @Test
     void deleteByIdTest() {
-        when(certificateDAO.findById(addedCertificate.getId()))
+        when(certificateRepository.findById(addedCertificate.getId()))
                 .thenReturn(Optional.ofNullable(addedCertificate));
         assertTrue(certificateService.deleteById(addedCertificate.getId()));
     }
 
     @Test
     void deleteByIdForThrowing() {
-        when(certificateDAO.findById(addedCertificate.getId()))
+        when(certificateRepository.findById(addedCertificate.getId()))
                 .thenReturn(Optional.empty());
         assertThrows(UnknownCertificateException.class,
                 () -> certificateService.deleteById(addedCertificate.getId()));

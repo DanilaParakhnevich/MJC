@@ -5,6 +5,7 @@ import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.validator.exception.UnknownTagException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface Tag service.
@@ -31,7 +32,7 @@ public interface TagService {
      *
      * @return the list
      */
-    List<TagClientModel> findAll();
+    List<TagClientModel> readAll(Map<String, String> parameters);
 
     /**
      * Find tag by id tag client model.
@@ -39,7 +40,7 @@ public interface TagService {
      * @param id the id
      * @return the tag client model
      */
-    TagClientModel findById(long id);
+    TagClientModel readById(long id);
 
     /**
      * Find tag by name tag client model.
@@ -47,14 +48,13 @@ public interface TagService {
      * @param name the name
      * @return the tag client model
      */
-    TagClientModel findByName(String name);
+    TagClientModel readByName(String name);
 
     /**
      * Delete by id boolean.
      *
      * @param id the id
-     * @return the boolean
      * @throws UnknownTagException the unknown tag exception
      */
-    boolean deleteById(long id) throws UnknownTagException;
+    void deleteById(long id) throws UnknownTagException;
 }

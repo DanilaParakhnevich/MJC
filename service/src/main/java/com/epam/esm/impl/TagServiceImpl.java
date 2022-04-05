@@ -1,11 +1,12 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.CertificateDao;
 import com.epam.esm.dto.TagClientModel;
 import com.epam.esm.entity.TagEntity;
-import com.epam.esm.TagDao;
 import com.epam.esm.TagService;
 import com.epam.esm.mapper.TagModelMapper;
+import com.epam.esm.dao.CertificateDao;
+import com.epam.esm.dao.TagDao;
+import com.epam.esm.handler.exception.BadParameterException;
 import com.epam.esm.validator.TagValidator;
 import com.epam.esm.validator.exception.TagAttachedException;
 import com.epam.esm.validator.exception.UnknownTagException;
@@ -14,8 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.epam.esm.handler.RequestParameter.PAGE;
+import static com.epam.esm.handler.RequestParameter.PAGE_SIZE;
 
 /**
  * The type Tag service.
@@ -24,39 +29,45 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final String UNKNOWN = "nonexistent.tag";
     private static final String ATTACHED = "attached.tag";
+    private static final String DUPLICATE = "duplicate.tag";
     private TagValidator validator;
     private TagModelMapper mapper;
-    private CertificateDao certificateDao;
+    private CertificateDao certificateRepository;
     private TagDao tagDao;
 
 
     @Override
     public TagClientModel add(TagClientModel tag) {
         validator.validate(tag);
-        tagDao.add(mapper.toEntity(tag));
+        tagDao.create(mapper.toEntity(tag));
         return mapper
                 .toClientModel(tagDao
-                        .findByName(tag.getName()).get());
+                        .readByName(tag.getName()).get());
     }
 
     @Override
     public TagClientModel addIfNotExist(TagClientModel tag) {
-        if (tag != null && !tagDao.findByName(tag.getName()).isPresent()) {
+        if (tag != null && !tagDao.readByName(tag.getName()).isPresent()) {
             return add(tag);
         }
-        return tag != null ? findByName(tag.getName()) : null;
+        return tag != null ? readByName(tag.getName()) : null;
     }
 
     @Override
-    public List<TagClientModel> findAll() {
-        return tagDao.findAll().stream()
+    public List<TagClientModel> readAll(Map<String, String> parameters) {
+        if (!parameters.containsKey(PAGE) || !parameters.containsKey(PAGE_SIZE)) {
+            throw new BadParameterException("bad.param");
+        }
+        return tagDao.readAll(Long.parseLong(parameters.get(PAGE)),
+                        Long.parseLong(parameters.get(PAGE_SIZE)))
+                .stream()
                 .map(mapper::toClientModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TagClientModel findById(long id) {
-        Optional<TagEntity> tag = tagDao.findById(id);
+    public TagClientModel readById(long id) {
+        Optional<TagEntity> tag = tagDao.readById(id);
         if (tag.isPresent()) {
             return mapper.toClientModel(tag.get());
         }
@@ -64,8 +75,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagClientModel findByName(String name) {
-        Optional<TagEntity> tag = tagDao.findByName(name);
+    public TagClientModel readByName(String name) {
+        Optional<TagEntity> tag = tagDao.readByName(name);
         if (tag.isPresent()) {
             return mapper.toClientModel(tag.get());
         }
@@ -74,12 +85,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public boolean deleteById(long id) {
-        Optional<TagEntity> tag = tagDao.findById(id);
-        if (tag.isPresent() && !certificateDao.findByTagName(tag.get().getName()).isEmpty()) {
+    public void deleteById(long id) {
+        Optional<TagEntity> tag = tagDao.readById(id);
+        if (tag.isPresent() && !certificateRepository.findAllByTag(tag.get().getName(), 1, 5).isEmpty()) {
             throw new TagAttachedException(ATTACHED);
-        } else if (tag.isPresent()) {
-            return tagDao.delete(id);
+        }
+        if (tag.isPresent()) {
+            tagDao.deleteById(tag.get().getId());
+            return;
         }
         throw new UnknownTagException(UNKNOWN + "/id=" + id);
     }
@@ -95,23 +108,13 @@ public class TagServiceImpl implements TagService {
     }
 
     /**
-     * Sets tag dao.
-     *
-     * @param tagDAO the tag dao
-     */
-    @Autowired
-    public void setTagDAO(TagDao tagDAO) {
-        this.tagDao = tagDAO;
-    }
-
-    /**
      * Sets certificate dao.
      *
-     * @param certificateDao the certificate dao
+     * @param certificateRepository the certificate dao
      */
     @Autowired
-    public void setCertificateDao(CertificateDao certificateDao) {
-        this.certificateDao = certificateDao;
+    public void setCertificateService(CertificateDao certificateRepository) {
+        this.certificateRepository = certificateRepository;
     }
 
     /**
@@ -122,5 +125,10 @@ public class TagServiceImpl implements TagService {
     @Autowired
     public void setMapper(TagModelMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Autowired
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
     }
 }

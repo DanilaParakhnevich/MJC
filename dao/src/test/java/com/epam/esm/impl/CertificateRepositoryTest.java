@@ -2,7 +2,7 @@ package com.epam.esm.impl;
 
 import com.epam.esm.config.TestConfig;
 import com.epam.esm.entity.CertificateEntity;
-import com.epam.esm.entity.TagEntity;
+import com.epam.esm.dao.CertificateDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,9 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CertificateDAOImplTest {
-    @Autowired
-    CertificateDaoImpl certificateDAO;
+class CertificateRepositoryTest {
+    private CertificateDao certificateRepository;
     private CertificateEntity testCertificate;
     private CertificateEntity firstTestCertificate;
     private CertificateEntity secondTestCertificate;
@@ -44,7 +43,7 @@ class CertificateDAOImplTest {
 
     @Test
     void add() throws ParseException {
-        CertificateEntity certificate = certificateDAO.add(testCertificate).get();
+        CertificateEntity certificate = certificateRepository.create(testCertificate);
         testCertificate.setLastUpdateDate(certificate.getLastUpdateDate());
         testCertificate.setCreateDate(certificate.getCreateDate());
         assertEquals(certificate, testCertificate);
@@ -53,38 +52,38 @@ class CertificateDAOImplTest {
     @Test
     void findById() {
         testCertificate.setId(1);
-        assertEquals(testCertificate, certificateDAO.findById(1).get());
+        assertEquals(testCertificate, certificateRepository.findById(1L).get());
     }
 
     @Test
     void findByNamePart() {
-        assertEquals(firstTestCertificate, certificateDAO.findByNamePart("swimming").get(0));
+        assertEquals(firstTestCertificate, certificateRepository.findAllByNameContainingIgnoreCase("swimming").get(0));
     }
 
     @Test
     void findByTagName() {
-        assertEquals(firstTestCertificate, certificateDAO.findByTagName("clear").get(0));
+        assertEquals(firstTestCertificate, certificateRepository.findAllByTag("clear").get(0));
     }
 
     @Test
     void findAll() {
         testCertificate.setId(1);
-        assertEquals(certificateDAO.findAll(), Arrays.asList(testCertificate, firstTestCertificate, secondTestCertificate));
+        assertEquals(certificateRepository.findAll(), Arrays.asList(testCertificate, firstTestCertificate, secondTestCertificate));
     }
 
     @Test
     void update() {
-        assertTrue(certificateDAO.update(firstTestCertificate));
+        assertTrue(certificateRepository.create(firstTestCertificate) == firstTestCertificate);
     }
 
     @Test
     void deleteById() {
-        certificateDAO.delete(1);
-        assertEquals(certificateDAO.findAll(), Arrays.asList(firstTestCertificate, secondTestCertificate));
+        certificateRepository.deleteById(1L);
+        assertEquals(certificateRepository.findAll(), Arrays.asList(firstTestCertificate, secondTestCertificate));
     }
 
-    @Test
-    void addTagToCertificate() {
-        assertTrue(certificateDAO.addTagToCertificate(1, 1));
+    @Autowired
+    public void setCertificateRepository(CertificateDao certificateRepository) {
+        this.certificateRepository = certificateRepository;
     }
 }
